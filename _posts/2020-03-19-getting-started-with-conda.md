@@ -2,7 +2,7 @@
 toc: true
 comments: true
 layout: post
-description: How to get started using Conda as well as a few "best practices" to avoid common pain-points.
+description: Getting started with Conda and a minimal set of "best practices" for daily use.
 categories: [python, conda]
 title: Managing Project-Specific Environments With Conda
 ---
