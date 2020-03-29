@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T04:57:50-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Getting Started with Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" rel="alternate" type="text/html" title="Getting Started with Conda" /><published>2020-03-19T00:00:00-05:00</published><updated>2020-03-19T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T05:08:17-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Getting Started with Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" rel="alternate" type="text/html" title="Getting Started with Conda" /><published>2020-03-19T00:00:00-05:00</published><updated>2020-03-19T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
 
 &lt;p&gt;Conda is an open source package and environment management system that runs on 
 Windows, Mac OS and Linux.&lt;/p&gt;
@@ -16,7 +16,7 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.&lt;/p&gt;
 
-&lt;h2 id=&quot;install-miniconda-in-your-ibex-home-directory&quot;&gt;Install Miniconda in your Ibex home directory&lt;/h2&gt;
+&lt;h2 id=&quot;install-miniconda&quot;&gt;Install Miniconda&lt;/h2&gt;
 
 &lt;p&gt;Download the 64-bit Python 3 install script for Miniconda.&lt;/p&gt;
 
@@ -71,9 +71,9 @@ the terms of the license).&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; ~/.condarc
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;conda-best-practices&quot;&gt;Conda “Best Practices”&lt;/h2&gt;
+&lt;h1 id=&quot;conda-best-practices&quot;&gt;Conda “Best Practices”&lt;/h1&gt;
 
-&lt;h3 id=&quot;tldr&quot;&gt;TLDR;&lt;/h3&gt;
+&lt;h2 id=&quot;tldr&quot;&gt;TLDR;&lt;/h2&gt;
 
 &lt;p&gt;Here is the basic recipe for using Conda to manage a project specific software stack.&lt;/p&gt;
 
@@ -87,7 +87,7 @@ the terms of the license).&lt;/p&gt;
 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/path/to/env&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;conda deactivate &lt;span class=&quot;c&quot;&gt;# done working on project (for now!)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;new-project-new-directory&quot;&gt;New project, new directory.&lt;/h3&gt;
+&lt;h2 id=&quot;new-project-new-directory&quot;&gt;New project, new directory.&lt;/h2&gt;
 
 &lt;p&gt;Every new project (no matter how small!) should live in its own directory. 
 A good reference to get started with organizing your project directory is 
@@ -97,7 +97,7 @@ A good reference to get started with organizing your project directory is
 &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;project-dir
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;new-project-new-environment&quot;&gt;New project, new environment&lt;/h3&gt;
+&lt;h2 id=&quot;new-project-new-environment&quot;&gt;New project, new environment&lt;/h2&gt;
 
 &lt;p&gt;Now that you have a new project directory you are ready to create a new environment 
 for your project. We will do this in two steps.&lt;/p&gt;
@@ -135,7 +135,7 @@ called &lt;code class=&quot;highlighter-rouge&quot;&gt;env&lt;/code&gt; inside y
 conda env create --prefix ./env --file environment.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;activating-an-environment&quot;&gt;Activating an environment&lt;/h3&gt;
+&lt;h2 id=&quot;activating-an-environment&quot;&gt;Activating an environment&lt;/h2&gt;
 
 &lt;p&gt;Activating environments is essential to making the software in environments work 
 well (or sometimes at all!). Activation of an environment does two things.&lt;/p&gt;
@@ -152,7 +152,7 @@ arbitrary environment variables that may be necessary for their operation.&lt;/p
 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/path/to/env&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# now the prompt indicates which environment is active!&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;updating-an-environment&quot;&gt;Updating an environment&lt;/h3&gt;
+&lt;h2 id=&quot;updating-an-environment&quot;&gt;Updating an environment&lt;/h2&gt;
 
 &lt;p&gt;You are unlikely to know ahead of time which packages (and version numbers!) you 
 will need to use for your research project. For example it may be the case that…&lt;/p&gt;
@@ -178,7 +178,7 @@ command.&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;create &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; ./env &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;deactivating-an-environment&quot;&gt;Deactivating an environment&lt;/h3&gt;
+&lt;h2 id=&quot;deactivating-an-environment&quot;&gt;Deactivating an environment&lt;/h2&gt;
 
 &lt;p&gt;When you are done working on your project it is a good idea to deactivate the 
 current environment. To deactivate the currently active environment use the 
@@ -188,11 +188,11 @@ current environment. To deactivate the currently active environment use the
 (base) $ # now you are back to the base environment
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;interested-in-learning-more&quot;&gt;Interested in Learning More?&lt;/h2&gt;
+&lt;h1 id=&quot;interested-in-learning-more&quot;&gt;Interested in Learning More?&lt;/h1&gt;
 
 &lt;p&gt;For more details on using Conda to manage the software stacks for you data science projects, 
 checkout the &lt;a href=&quot;https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/&quot;&gt;Introduction to Conda for (Data) Scientists&lt;/a&gt; 
-training materials that are being developed by the Carpentries Incubator.&lt;/p&gt;</content><author><name></name></author><summary type="html">Getting Started with Conda</summary></entry><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html">&lt;!--
+training materials that I am developing in collaboration with the &lt;a href=&quot;&quot;&gt;Carpentries Incubator&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Getting Started with Conda</summary></entry><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html">&lt;!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################

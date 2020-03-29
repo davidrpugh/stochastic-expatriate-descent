@@ -129,23 +129,23 @@ window.onload = wrap_img;
     <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#getting-started-with-conda">Getting Started with Conda</a>
 <ul>
-<li class="toc-entry toc-h2"><a href="#install-miniconda-in-your-ibex-home-directory">Install Miniconda in your Ibex home directory</a></li>
+<li class="toc-entry toc-h2"><a href="#install-miniconda">Install Miniconda</a></li>
 <li class="toc-entry toc-h2"><a href="#initializing-your-shell-for-conda">Initializing your shell for Conda</a></li>
 <li class="toc-entry toc-h2"><a href="#updating-conda">Updating Conda</a></li>
 <li class="toc-entry toc-h2"><a href="#uninstalling-miniconda">Uninstalling Miniconda</a></li>
-<li class="toc-entry toc-h2"><a href="#conda-best-practices">Conda “Best Practices”</a>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#conda-best-practices">Conda “Best Practices”</a>
 <ul>
-<li class="toc-entry toc-h3"><a href="#tldr">TLDR;</a></li>
-<li class="toc-entry toc-h3"><a href="#new-project-new-directory">New project, new directory.</a></li>
-<li class="toc-entry toc-h3"><a href="#new-project-new-environment">New project, new environment</a></li>
-<li class="toc-entry toc-h3"><a href="#activating-an-environment">Activating an environment</a></li>
-<li class="toc-entry toc-h3"><a href="#updating-an-environment">Updating an environment</a></li>
-<li class="toc-entry toc-h3"><a href="#deactivating-an-environment">Deactivating an environment</a></li>
+<li class="toc-entry toc-h2"><a href="#tldr">TLDR;</a></li>
+<li class="toc-entry toc-h2"><a href="#new-project-new-directory">New project, new directory.</a></li>
+<li class="toc-entry toc-h2"><a href="#new-project-new-environment">New project, new environment</a></li>
+<li class="toc-entry toc-h2"><a href="#activating-an-environment">Activating an environment</a></li>
+<li class="toc-entry toc-h2"><a href="#updating-an-environment">Updating an environment</a></li>
+<li class="toc-entry toc-h2"><a href="#deactivating-an-environment">Deactivating an environment</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h2"><a href="#interested-in-learning-more">Interested in Learning More?</a></li>
-</ul>
-</li>
+<li class="toc-entry toc-h1"><a href="#interested-in-learning-more">Interested in Learning More?</a></li>
 </ul><h1 id="getting-started-with-conda">
 <a class="anchor" href="#getting-started-with-conda" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started with Conda</h1>
 
@@ -165,8 +165,8 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.</p>
 
-<h2 id="install-miniconda-in-your-ibex-home-directory">
-<a class="anchor" href="#install-miniconda-in-your-ibex-home-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Miniconda in your Ibex home directory</h2>
+<h2 id="install-miniconda">
+<a class="anchor" href="#install-miniconda" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Miniconda</h2>
 
 <p>Download the 64-bit Python 3 install script for Miniconda.</p>
 
@@ -224,11 +224,11 @@ the terms of the license).</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> ~/.condarc
 </code></pre></div></div>
 
-<h2 id="conda-best-practices">
-<a class="anchor" href="#conda-best-practices" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conda “Best Practices”</h2>
+<h1 id="conda-best-practices">
+<a class="anchor" href="#conda-best-practices" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conda “Best Practices”</h1>
 
-<h3 id="tldr">
-<a class="anchor" href="#tldr" aria-hidden="true"><span class="octicon octicon-link"></span></a>TLDR;</h3>
+<h2 id="tldr">
+<a class="anchor" href="#tldr" aria-hidden="true"><span class="octicon octicon-link"></span></a>TLDR;</h2>
 
 <p>Here is the basic recipe for using Conda to manage a project specific software stack.</p>
 
@@ -242,8 +242,8 @@ the terms of the license).</p>
 <span class="o">(</span>/path/to/env<span class="o">)</span> <span class="nv">$ </span>conda deactivate <span class="c"># done working on project (for now!)</span>
 </code></pre></div></div>
 
-<h3 id="new-project-new-directory">
-<a class="anchor" href="#new-project-new-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>New project, new directory.</h3>
+<h2 id="new-project-new-directory">
+<a class="anchor" href="#new-project-new-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>New project, new directory.</h2>
 
 <p>Every new project (no matter how small!) should live in its own directory. 
 A good reference to get started with organizing your project directory is 
@@ -253,8 +253,8 @@ A good reference to get started with organizing your project directory is
 <span class="nb">cd </span>project-dir
 </code></pre></div></div>
 
-<h3 id="new-project-new-environment">
-<a class="anchor" href="#new-project-new-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>New project, new environment</h3>
+<h2 id="new-project-new-environment">
+<a class="anchor" href="#new-project-new-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>New project, new environment</h2>
 
 <p>Now that you have a new project directory you are ready to create a new environment 
 for your project. We will do this in two steps.</p>
@@ -292,8 +292,8 @@ called <code class="highlighter-rouge">env</code> inside your project directory.
 conda env create --prefix ./env --file environment.yml
 </code></pre></div></div>
 
-<h3 id="activating-an-environment">
-<a class="anchor" href="#activating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activating an environment</h3>
+<h2 id="activating-an-environment">
+<a class="anchor" href="#activating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activating an environment</h2>
 
 <p>Activating environments is essential to making the software in environments work 
 well (or sometimes at all!). Activation of an environment does two things.</p>
@@ -310,8 +310,8 @@ arbitrary environment variables that may be necessary for their operation.</p>
 <span class="o">(</span>/path/to/env<span class="o">)</span> <span class="nv">$ </span><span class="c"># now the prompt indicates which environment is active!</span>
 </code></pre></div></div>
 
-<h3 id="updating-an-environment">
-<a class="anchor" href="#updating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating an environment</h3>
+<h2 id="updating-an-environment">
+<a class="anchor" href="#updating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating an environment</h2>
 
 <p>You are unlikely to know ahead of time which packages (and version numbers!) you 
 will need to use for your research project. For example it may be the case that…</p>
@@ -337,8 +337,8 @@ command.</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda <span class="nb">env </span>create <span class="nt">--prefix</span> ./env <span class="nt">--file</span> environment.yml <span class="nt">--force</span>
 </code></pre></div></div>
 
-<h3 id="deactivating-an-environment">
-<a class="anchor" href="#deactivating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deactivating an environment</h3>
+<h2 id="deactivating-an-environment">
+<a class="anchor" href="#deactivating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deactivating an environment</h2>
 
 <p>When you are done working on your project it is a good idea to deactivate the 
 current environment. To deactivate the currently active environment use the 
@@ -348,14 +348,22 @@ current environment. To deactivate the currently active environment use the
 (base) $ # now you are back to the base environment
 </code></pre></div></div>
 
-<h2 id="interested-in-learning-more">
-<a class="anchor" href="#interested-in-learning-more" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interested in Learning More?</h2>
+<h1 id="interested-in-learning-more">
+<a class="anchor" href="#interested-in-learning-more" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interested in Learning More?</h1>
 
 <p>For more details on using Conda to manage the software stacks for you data science projects, 
 checkout the <a href="https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/">Introduction to Conda for (Data) Scientists</a> 
-training materials that are being developed by the Carpentries Incubator.</p>
+training materials that I am developing in collaboration with the <a href="">Carpentries Incubator</a>.</p>
 
-  </div><a class="u-url" href="/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" hidden></a>
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="davidrpugh/stochastic-expatriate-descent"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">
