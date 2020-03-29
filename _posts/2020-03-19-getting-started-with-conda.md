@@ -22,9 +22,29 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.
 
+## Conda? Miniconda? Anaconda? What's the difference?
+
+Users are often confused about the differences between Conda, Miniconda, and 
+Anaconda.
+
 <p align="center">
    <img alt="Conda vs. Miniconda vs. Anaconda" src="./assets/img/miniconda-vs-anaconda.png" width="500">
 </p>
+
+I suggest installing Miniconda which combines Conda with Python 3 (and a small 
+number of core systems packages) instead of the full Anaconda distribution. 
+Installing only Miniconda will encourage you to create separate environments 
+for each project (and to install only those packages that you actually need for each 
+project!) which will enhance portability and reproducibility of your research and 
+workflows. 
+
+Besides, if you *really* want a particular version of the full Anaconda 
+distribution you can always create an new conda environment and install it 
+using the following command.
+
+```bash
+conda create --name anaconda202002 anaconda=2020.02
+```
 
 ## Installing Miniconda
 
