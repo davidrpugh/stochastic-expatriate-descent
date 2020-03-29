@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T05:08:17-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Getting Started with Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" rel="alternate" type="text/html" title="Getting Started with Conda" /><published>2020-03-19T00:00:00-05:00</published><updated>2020-03-19T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T05:50:05-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Managing Project-Specific Data Science Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Data Science Environments With Conda" /><published>2020-03-19T00:00:00-05:00</published><updated>2020-03-19T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
 
 &lt;p&gt;Conda is an open source package and environment management system that runs on 
 Windows, Mac OS and Linux.&lt;/p&gt;
@@ -16,7 +16,9 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.&lt;/p&gt;
 
-&lt;h2 id=&quot;install-miniconda&quot;&gt;Install Miniconda&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/stochastic-expatriate-descent/_posts/assets/img/miniconda-vs-anaconda.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;installing-miniconda&quot;&gt;Installing Miniconda&lt;/h2&gt;
 
 &lt;p&gt;Download the 64-bit Python 3 install script for Miniconda.&lt;/p&gt;
 
@@ -37,6 +39,9 @@ the terms of the license).&lt;/p&gt;
 
 &lt;h2 id=&quot;initializing-your-shell-for-conda&quot;&gt;Initializing your shell for Conda&lt;/h2&gt;
 
+&lt;p&gt;After installing Miniconda you next need to configure your preferred shell to be 
+“conda-aware”.&lt;/p&gt;
+
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda init bash
 &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;base&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# now the prompt indicates that the base environment is active!&lt;/span&gt;
@@ -44,29 +49,42 @@ the terms of the license).&lt;/p&gt;
 
 &lt;h2 id=&quot;updating-conda&quot;&gt;Updating Conda&lt;/h2&gt;
 
-&lt;p&gt;It is a good idea to keep your &lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt; installation updated to the most recent version.&lt;/p&gt;
+&lt;p&gt;It is a good idea to keep your &lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt; installation updated to the most recent 
+version.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda update &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; base conda &lt;span class=&quot;nt&quot;&gt;--yes&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;uninstalling-miniconda&quot;&gt;Uninstalling Miniconda&lt;/h2&gt;
 
-&lt;p&gt;Uninitialize your shell to remove Conda related content from &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Whenever installing new software it is always a good idea to understand how to 
+&lt;em&gt;uninstall&lt;/em&gt; the software (just in case you have second thoughts!). Uninstalling 
+Miniconda is fairly straighforward.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Uninitialize your shell to remove Conda related content from &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda init &lt;span class=&quot;nt&quot;&gt;--reverse&lt;/span&gt; bash
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Remove the entire &lt;code class=&quot;highlighter-rouge&quot;&gt;~/miniconda3&lt;/code&gt; directory.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Remove the entire &lt;code class=&quot;highlighter-rouge&quot;&gt;~/miniconda3&lt;/code&gt; directory.&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; ~/miniconda3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Remove the entire &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.conda&lt;/code&gt; directory.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Remove the entire &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.conda&lt;/code&gt; directory.&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; ~/.conda
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;If present, remove your Conda configuration file.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;If present, remove your Conda configuration file.&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; ~/.condarc
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -87,7 +105,7 @@ the terms of the license).&lt;/p&gt;
 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/path/to/env&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;conda deactivate &lt;span class=&quot;c&quot;&gt;# done working on project (for now!)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;new-project-new-directory&quot;&gt;New project, new directory.&lt;/h2&gt;
+&lt;h2 id=&quot;new-project-new-directory&quot;&gt;New project, new directory&lt;/h2&gt;
 
 &lt;p&gt;Every new project (no matter how small!) should live in its own directory. 
 A good reference to get started with organizing your project directory is 
@@ -109,7 +127,7 @@ specific version numbers!) for the project.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;Here is an example of a typical environment file that could be used to run GPU 
-accelerated, distributed training of deep learning models developed using &lt;a href=&quot;&quot;&gt;PyTorch&lt;/a&gt;.&lt;/p&gt;
+accelerated, distributed training of deep learning models developed using &lt;a href=&quot;https://www.pytorch.org&quot;&gt;PyTorch&lt;/a&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;name: null
 
@@ -123,7 +141,7 @@ dependencies:
   - jupyterlab=1.2
   - pip=20.0
   - python=3.7
-  - pytorch=1.5
+  - pytorch=1.4
   - torchvision=0.5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -131,8 +149,7 @@ dependencies:
 you can use the following commands to create the environment as a sub-directory 
 called &lt;code class=&quot;highlighter-rouge&quot;&gt;env&lt;/code&gt; inside your project directory.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nano environment.yml # create your environment file
-conda env create --prefix ./env --file environment.yml
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda env create --prefix ./env --file environment.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;activating-an-environment&quot;&gt;Activating an environment&lt;/h2&gt;
@@ -140,10 +157,10 @@ conda env create --prefix ./env --file environment.yml
 &lt;p&gt;Activating environments is essential to making the software in environments work 
 well (or sometimes at all!). Activation of an environment does two things.&lt;/p&gt;
 
-&lt;ul&gt;
+&lt;ol&gt;
   &lt;li&gt;Adds entries to &lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt; for the environment.&lt;/li&gt;
   &lt;li&gt;Runs any activation scripts that the environment may contain.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;/ol&gt;
 
 &lt;p&gt;Step 2 is particularly important as activation scripts are how packages can set 
 arbitrary environment variables that may be necessary for their operation.&lt;/p&gt;
@@ -192,7 +209,7 @@ current environment. To deactivate the currently active environment use the
 
 &lt;p&gt;For more details on using Conda to manage the software stacks for you data science projects, 
 checkout the &lt;a href=&quot;https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/&quot;&gt;Introduction to Conda for (Data) Scientists&lt;/a&gt; 
-training materials that I am developing in collaboration with the &lt;a href=&quot;&quot;&gt;Carpentries Incubator&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Getting Started with Conda</summary></entry><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html">&lt;!--
+training materials that I have contributed to &lt;a href=&quot;https://carpentries.org/involved-lessons/&quot;&gt;The Carpentries Incubator&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Getting Started with Conda</summary></entry><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html">&lt;!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
