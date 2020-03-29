@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T06:50:21-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-19T00:00:00-05:00</published><updated>2020-03-19T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T06:56:13-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-19T00:00:00-05:00</published><updated>2020-03-19T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
 
 &lt;p&gt;Conda is an open source package and environment management system that runs on 
 Windows, Mac OS and Linux.&lt;/p&gt;
@@ -153,20 +153,20 @@ environment for your project. We will do this in two steps.&lt;/p&gt;
 accelerated, distributed training of deep learning models developed using 
 &lt;a href=&quot;https://www.pytorch.org&quot;&gt;PyTorch&lt;/a&gt;.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;name: null
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;null&lt;/span&gt;
 
-channels:
-  - pytorch
-  - conda-forge
-  - defaults
+&lt;span class=&quot;na&quot;&gt;channels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pytorch&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;conda-forge&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;defaults&lt;/span&gt;
 
-dependencies:
-  - cudatoolkit=10.1
-  - jupyterlab=1.2
-  - pip=20.0
-  - python=3.7
-  - pytorch=1.4
-  - torchvision=0.5
+&lt;span class=&quot;na&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;cudatoolkit=10.1&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jupyterlab=1.2&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pip=20.0&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;python=3.7&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pytorch=1.4&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;torchvision=0.5&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Once you have created an &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file inside your project directory 

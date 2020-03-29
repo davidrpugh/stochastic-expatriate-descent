@@ -312,20 +312,20 @@ environment for your project. We will do this in two steps.</p>
 accelerated, distributed training of deep learning models developed using 
 <a href="https://www.pytorch.org">PyTorch</a>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name: null
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="no">null</span>
 
-channels:
-  - pytorch
-  - conda-forge
-  - defaults
+<span class="na">channels</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">pytorch</span>
+  <span class="pi">-</span> <span class="s">conda-forge</span>
+  <span class="pi">-</span> <span class="s">defaults</span>
 
-dependencies:
-  - cudatoolkit=10.1
-  - jupyterlab=1.2
-  - pip=20.0
-  - python=3.7
-  - pytorch=1.4
-  - torchvision=0.5
+<span class="na">dependencies</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">cudatoolkit=10.1</span>
+  <span class="pi">-</span> <span class="s">jupyterlab=1.2</span>
+  <span class="pi">-</span> <span class="s">pip=20.0</span>
+  <span class="pi">-</span> <span class="s">python=3.7</span>
+  <span class="pi">-</span> <span class="s">pytorch=1.4</span>
+  <span class="pi">-</span> <span class="s">torchvision=0.5</span>
 </code></pre></div></div>
 
 <p>Once you have created an <code class="highlighter-rouge">environment.yml</code> file inside your project directory 
