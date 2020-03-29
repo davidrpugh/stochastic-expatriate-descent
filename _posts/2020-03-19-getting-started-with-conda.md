@@ -5,6 +5,7 @@ description: Using Conda to manage project specific software stacks.
 categories: [python, conda]
 title: Getting Started with Conda
 ---
+# Getting Started with Conda
 
 Conda is an open source package and environment management system that runs on 
 Windows, Mac OS and Linux.
