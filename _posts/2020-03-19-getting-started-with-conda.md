@@ -1,5 +1,6 @@
 ---
 toc: true
+comments: true
 layout: post
 description: Using Conda to manage project specific software stacks.
 categories: [python, conda]
@@ -21,7 +22,7 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.
 
-## Install Miniconda in your Ibex home directory
+## Install Miniconda
 
 Download the 64-bit Python 3 install script for Miniconda.
 
@@ -85,9 +86,9 @@ If present, remove your Conda configuration file.
 rm ~/.condarc
 ```
 
-## Conda "Best Practices"
+# Conda "Best Practices"
 
-### TLDR;
+## TLDR;
 
 Here is the basic recipe for using Conda to manage a project specific software stack.
 
@@ -102,7 +103,7 @@ Here is the basic recipe for using Conda to manage a project specific software s
 (/path/to/env) $ conda deactivate # done working on project (for now!)
 ```
 
-### New project, new directory.
+## New project, new directory.
 
 Every new project (no matter how small!) should live in its own directory. 
 A good reference to get started with organizing your project directory is 
@@ -113,7 +114,7 @@ mkdir project-dir
 cd project-dir
 ```
 
-### New project, new environment
+## New project, new environment
 
 Now that you have a new project directory you are ready to create a new environment 
 for your project. We will do this in two steps.
@@ -151,7 +152,7 @@ nano environment.yml # create your environment file
 conda env create --prefix ./env --file environment.yml
 ```
 
-### Activating an environment
+## Activating an environment
 
 Activating environments is essential to making the software in environments work 
 well (or sometimes at all!). Activation of an environment does two things.
@@ -167,7 +168,7 @@ conda activate ./env # activate the environment
 (/path/to/env) $ # now the prompt indicates which environment is active!
 ```
 
-### Updating an environment
+## Updating an environment
 
 You are unlikely to know ahead of time which packages (and version numbers!) you 
 will need to use for your research project. For example it may be the case that...
@@ -193,7 +194,7 @@ command.
 conda env create --prefix ./env --file environment.yml --force
 ```
 
-### Deactivating an environment
+## Deactivating an environment
 
 When you are done working on your project it is a good idea to deactivate the 
 current environment. To deactivate the currently active environment use the 
@@ -204,8 +205,8 @@ conda deactivate # done working on project (for now!)
 (base) $ # now you are back to the base environment
 ```
 
-## Interested in Learning More?
+# Interested in Learning More?
 
 For more details on using Conda to manage the software stacks for you data science projects, 
 checkout the [Introduction to Conda for (Data) Scientists](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/) 
-training materials that are being developed by the Carpentries Incubator.
+training materials that I am developing in collaboration with the [Carpentries Incubator]().
