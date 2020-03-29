@@ -1,4 +1,196 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T02:59:40-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html">&lt;!--
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-29T04:52:10-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Getting Started with Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" rel="alternate" type="text/html" title="Getting Started with Conda" /><published>2020-03-19T00:00:00-05:00</published><updated>2020-03-19T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html">&lt;p&gt;Conda is an open source package and environment management system that runs on 
+Windows, Mac OS and Linux.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Conda can quickly install, run, and update packages and their dependencies.&lt;/li&gt;
+  &lt;li&gt;Conda can create, save, load, and switch between project specific software environments on your local computer.&lt;/li&gt;
+  &lt;li&gt;Although Conda was created for Python programs, Conda can package and distribute software for any language such as R, Ruby, Lua, Scala, Java, JavaScript, C, C++, FORTRAN.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Conda as a &lt;em&gt;package manager&lt;/em&gt; helps you find and install packages. If you need a 
+package that requires a different version of Python, you do not need to switch to 
+a different environment manager, because Conda is also an &lt;em&gt;environment manager&lt;/em&gt;. 
+With just a few commands, you can set up a totally separate environment to run 
+that different version of Python, while continuing to run your usual version of 
+Python in your normal environment.&lt;/p&gt;
+
+&lt;h2 id=&quot;install-miniconda-in-your-ibex-home-directory&quot;&gt;Install Miniconda in your Ibex home directory&lt;/h2&gt;
+
+&lt;p&gt;Download the 64-bit Python 3 install script for Miniconda.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wget &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt; https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Run the Miniconda install script. The &lt;code class=&quot;highlighter-rouge&quot;&gt;-b&lt;/code&gt; runs the install script in batch mode 
+which doesn’t require manual intervention (and assumes that the user agrees to 
+the terms of the license).&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bash Miniconda3-latest-Linux-x86_64.sh &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Remove the install script.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm &lt;/span&gt;Miniconda3-latest-Linux-x86_64
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;initializing-your-shell-for-conda&quot;&gt;Initializing your shell for Conda&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda init bash
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;base&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# now the prompt indicates that the base environment is active!&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;updating-conda&quot;&gt;Updating Conda&lt;/h2&gt;
+
+&lt;p&gt;It is a good idea to keep your &lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt; installation updated to the most recent version.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda update &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; base conda &lt;span class=&quot;nt&quot;&gt;--yes&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;uninstalling-miniconda&quot;&gt;Uninstalling Miniconda&lt;/h2&gt;
+
+&lt;p&gt;Uninitialize your shell to remove Conda related content from &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda init &lt;span class=&quot;nt&quot;&gt;--reverse&lt;/span&gt; bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Remove the entire &lt;code class=&quot;highlighter-rouge&quot;&gt;~/miniconda3&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; ~/miniconda3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Remove the entire &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.conda&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; ~/.conda
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If present, remove your Conda configuration file.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; ~/.condarc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;conda-best-practices&quot;&gt;Conda “Best Practices”&lt;/h2&gt;
+
+&lt;h3 id=&quot;tldr&quot;&gt;TLDR;&lt;/h3&gt;
+
+&lt;p&gt;Here is the basic recipe for using Conda to manage a project specific software stack.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;base&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;project-dir
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;base&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;project-dir
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;base&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nano environment.yml &lt;span class=&quot;c&quot;&gt;# create the environment file&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;base&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;create &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; ./env &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;base&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;conda activate ./env &lt;span class=&quot;c&quot;&gt;# activate the environment&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/path/to/env&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nano environment.yml &lt;span class=&quot;c&quot;&gt;# forgot to add some deps&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/path/to/env&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;update &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; ./env &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--prune&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# update the environment&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/path/to/env&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;conda deactivate &lt;span class=&quot;c&quot;&gt;# done working on project (for now!)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;new-project-new-directory&quot;&gt;New project, new directory.&lt;/h3&gt;
+
+&lt;p&gt;Every new project (no matter how small!) should live in its own directory. 
+A good reference to get started with organizing your project directory is 
+&lt;a href=&quot;https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510&quot;&gt;Good Enough Practices for Scientific Computing&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;project-dir
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;project-dir
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;new-project-new-environment&quot;&gt;New project, new environment&lt;/h3&gt;
+
+&lt;p&gt;Now that you have a new project directory you are ready to create a new environment 
+for your project. We will do this in two steps.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Create an environment file that describes the software dependencies (including 
+specific version numbers!) for the project.&lt;/li&gt;
+  &lt;li&gt;Use the newly created environment file to build the software environment.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Here is an example of a typical environment file that could be used to run GPU 
+accelerated, distributed training of deep learning models developed using &lt;a href=&quot;&quot;&gt;PyTorch&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;name: null
+
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  - cudatoolkit=10.1
+  - jupyterlab=1.2
+  - pip=20.0
+  - python=3.7
+  - pytorch=1.5
+  - torchvision=0.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once you have created an &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file inside your project directory 
+you can use the following commands to create the environment as a sub-directory 
+called &lt;code class=&quot;highlighter-rouge&quot;&gt;env&lt;/code&gt; inside your project directory.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nano environment.yml # create your environment file
+conda env create --prefix ./env --file environment.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;activating-an-environment&quot;&gt;Activating an environment&lt;/h3&gt;
+
+&lt;p&gt;Activating environments is essential to making the software in environments work 
+well (or sometimes at all!). Activation of an environment does two things.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Adds entries to &lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt; for the environment.&lt;/li&gt;
+  &lt;li&gt;Runs any activation scripts that the environment may contain.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Step 2 is particularly important as activation scripts are how packages can set 
+arbitrary environment variables that may be necessary for their operation.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda activate ./env &lt;span class=&quot;c&quot;&gt;# activate the environment&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/path/to/env&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# now the prompt indicates which environment is active!&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;updating-an-environment&quot;&gt;Updating an environment&lt;/h3&gt;
+
+&lt;p&gt;You are unlikely to know ahead of time which packages (and version numbers!) you 
+will need to use for your research project. For example it may be the case that…&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;one of your core dependencies just released a new version (dependency version 
+number update).&lt;/li&gt;
+  &lt;li&gt;you need an additional package for data analysis (add a new dependency).&lt;/li&gt;
+  &lt;li&gt;you have found a better visualization package and no longer need to old 
+visualization package (add new dependency and remove old dependency).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If any of these occurs during the course of your research project, all you need 
+to do is update the contents of your &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file accordingly and then 
+run the following command.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;update &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; ./env &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--prune&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# update the environment&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Alternatively, you can simply rebuild the environment from scratch with the following 
+command.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;create &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; ./env &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;deactivating-an-environment&quot;&gt;Deactivating an environment&lt;/h3&gt;
+
+&lt;p&gt;When you are done working on your project it is a good idea to deactivate the 
+current environment. To deactivate the currently active environment use the 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;deactivate&lt;/code&gt; command as follows.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda deactivate # done working on project (for now!)
+(base) $ # now you are back to the base environment
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;interested-in-learning-more&quot;&gt;Interested in Learning More?&lt;/h2&gt;
+
+&lt;p&gt;For more details on using Conda to manage the software stacks for you data science projects, 
+checkout the &lt;a href=&quot;https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/&quot;&gt;Introduction to Conda for (Data) Scientists&lt;/a&gt; 
+training materials that are being developed by the Carpentries Incubator.&lt;/p&gt;</content><author><name></name></author><summary type="html">Conda is an open source package and environment management system that runs on Windows, Mac OS and Linux.</summary></entry><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/jupyter/2020/02/20/test.html">&lt;!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################

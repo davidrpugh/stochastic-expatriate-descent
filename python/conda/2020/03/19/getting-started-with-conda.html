@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Getting Started with Conda | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Getting Started with Conda" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Using Conda to manage project specific software stacks." />
+<meta property="og:description" content="Using Conda to manage project specific software stacks." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-19T00:00:00-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2020-03-19T00:00:00-05:00","dateModified":"2020-03-19T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html"},"description":"Using Conda to manage project specific software stacks.","@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html","headline":"Getting Started with Conda","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/stochastic-expatriate-descent/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" /><link rel="shortcut icon" type="image/x-icon" href="/stochastic-expatriate-descent/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Getting Started with Conda | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Getting Started with Conda" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Using Conda to manage project specific software stacks." />
+<meta property="og:description" content="Using Conda to manage project specific software stacks." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-19T00:00:00-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2020-03-19T00:00:00-05:00","dateModified":"2020-03-19T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html"},"description":"Using Conda to manage project specific software stacks.","@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html","headline":"Getting Started with Conda","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/stochastic-expatriate-descent/">Stochastic Expatriate Descent</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/stochastic-expatriate-descent/about/">About Me</a><a class="page-link" href="/stochastic-expatriate-descent/search/">Search</a><a class="page-link" href="/stochastic-expatriate-descent/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Getting Started with Conda</h1><p class="page-description">Using Conda to manage project specific software stacks.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-03-19T00:00:00-05:00" itemprop="datePublished">
+        Mar 19, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      4 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#conda">conda</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#install-miniconda-in-your-ibex-home-directory">Install Miniconda in your Ibex home directory</a></li>
+<li class="toc-entry toc-h2"><a href="#initializing-your-shell-for-conda">Initializing your shell for Conda</a></li>
+<li class="toc-entry toc-h2"><a href="#updating-conda">Updating Conda</a></li>
+<li class="toc-entry toc-h2"><a href="#uninstalling-miniconda">Uninstalling Miniconda</a></li>
+<li class="toc-entry toc-h2"><a href="#conda-best-practices">Conda “Best Practices”</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#tldr">TLDR;</a></li>
+<li class="toc-entry toc-h3"><a href="#new-project-new-directory">New project, new directory.</a></li>
+<li class="toc-entry toc-h3"><a href="#new-project-new-environment">New project, new environment</a></li>
+<li class="toc-entry toc-h3"><a href="#activating-an-environment">Activating an environment</a></li>
+<li class="toc-entry toc-h3"><a href="#updating-an-environment">Updating an environment</a></li>
+<li class="toc-entry toc-h3"><a href="#deactivating-an-environment">Deactivating an environment</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#interested-in-learning-more">Interested in Learning More?</a></li>
+</ul><p>Conda is an open source package and environment management system that runs on 
+Windows, Mac OS and Linux.</p>
+
+<ul>
+  <li>Conda can quickly install, run, and update packages and their dependencies.</li>
+  <li>Conda can create, save, load, and switch between project specific software environments on your local computer.</li>
+  <li>Although Conda was created for Python programs, Conda can package and distribute software for any language such as R, Ruby, Lua, Scala, Java, JavaScript, C, C++, FORTRAN.</li>
+</ul>
+
+<p>Conda as a <em>package manager</em> helps you find and install packages. If you need a 
+package that requires a different version of Python, you do not need to switch to 
+a different environment manager, because Conda is also an <em>environment manager</em>. 
+With just a few commands, you can set up a totally separate environment to run 
+that different version of Python, while continuing to run your usual version of 
+Python in your normal environment.</p>
+
+<h2 id="install-miniconda-in-your-ibex-home-directory">
+<a class="anchor" href="#install-miniconda-in-your-ibex-home-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Miniconda in your Ibex home directory</h2>
+
+<p>Download the 64-bit Python 3 install script for Miniconda.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">--quiet</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+</code></pre></div></div>
+
+<p>Run the Miniconda install script. The <code class="highlighter-rouge">-b</code> runs the install script in batch mode 
+which doesn’t require manual intervention (and assumes that the user agrees to 
+the terms of the license).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash Miniconda3-latest-Linux-x86_64.sh <span class="nt">-b</span>
+</code></pre></div></div>
+
+<p>Remove the install script.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm </span>Miniconda3-latest-Linux-x86_64
+</code></pre></div></div>
+
+<h2 id="initializing-your-shell-for-conda">
+<a class="anchor" href="#initializing-your-shell-for-conda" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initializing your shell for Conda</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda init bash
+<span class="nb">source</span> ~/.bashrc
+<span class="o">(</span>base<span class="o">)</span> <span class="nv">$ </span><span class="c"># now the prompt indicates that the base environment is active!</span>
+</code></pre></div></div>
+
+<h2 id="updating-conda">
+<a class="anchor" href="#updating-conda" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating Conda</h2>
+
+<p>It is a good idea to keep your <code class="highlighter-rouge">conda</code> installation updated to the most recent version.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda update <span class="nt">--name</span> base conda <span class="nt">--yes</span>
+</code></pre></div></div>
+
+<h2 id="uninstalling-miniconda">
+<a class="anchor" href="#uninstalling-miniconda" aria-hidden="true"><span class="octicon octicon-link"></span></a>Uninstalling Miniconda</h2>
+
+<p>Uninitialize your shell to remove Conda related content from <code class="highlighter-rouge">~/.bashrc</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda init <span class="nt">--reverse</span> bash
+</code></pre></div></div>
+
+<p>Remove the entire <code class="highlighter-rouge">~/miniconda3</code> directory.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> <span class="nt">-rf</span> ~/miniconda3
+</code></pre></div></div>
+
+<p>Remove the entire <code class="highlighter-rouge">~/.conda</code> directory.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> <span class="nt">-rf</span> ~/.conda
+</code></pre></div></div>
+
+<p>If present, remove your Conda configuration file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> ~/.condarc
+</code></pre></div></div>
+
+<h2 id="conda-best-practices">
+<a class="anchor" href="#conda-best-practices" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conda “Best Practices”</h2>
+
+<h3 id="tldr">
+<a class="anchor" href="#tldr" aria-hidden="true"><span class="octicon octicon-link"></span></a>TLDR;</h3>
+
+<p>Here is the basic recipe for using Conda to manage a project specific software stack.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>base<span class="o">)</span> <span class="nv">$ </span><span class="nb">mkdir </span>project-dir
+<span class="o">(</span>base<span class="o">)</span> <span class="nv">$ </span><span class="nb">cd </span>project-dir
+<span class="o">(</span>base<span class="o">)</span> <span class="nv">$ </span>nano environment.yml <span class="c"># create the environment file</span>
+<span class="o">(</span>base<span class="o">)</span> <span class="nv">$ </span>conda <span class="nb">env </span>create <span class="nt">--prefix</span> ./env <span class="nt">--file</span> environment.yml
+<span class="o">(</span>base<span class="o">)</span> <span class="nv">$ </span>conda activate ./env <span class="c"># activate the environment</span>
+<span class="o">(</span>/path/to/env<span class="o">)</span> <span class="nv">$ </span>nano environment.yml <span class="c"># forgot to add some deps</span>
+<span class="o">(</span>/path/to/env<span class="o">)</span> <span class="nv">$ </span>conda <span class="nb">env </span>update <span class="nt">--prefix</span> ./env <span class="nt">--file</span> environment.yml <span class="nt">--prune</span><span class="o">)</span> <span class="c"># update the environment</span>
+<span class="o">(</span>/path/to/env<span class="o">)</span> <span class="nv">$ </span>conda deactivate <span class="c"># done working on project (for now!)</span>
+</code></pre></div></div>
+
+<h3 id="new-project-new-directory">
+<a class="anchor" href="#new-project-new-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>New project, new directory.</h3>
+
+<p>Every new project (no matter how small!) should live in its own directory. 
+A good reference to get started with organizing your project directory is 
+<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510">Good Enough Practices for Scientific Computing</a>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>project-dir
+<span class="nb">cd </span>project-dir
+</code></pre></div></div>
+
+<h3 id="new-project-new-environment">
+<a class="anchor" href="#new-project-new-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>New project, new environment</h3>
+
+<p>Now that you have a new project directory you are ready to create a new environment 
+for your project. We will do this in two steps.</p>
+
+<ol>
+  <li>Create an environment file that describes the software dependencies (including 
+specific version numbers!) for the project.</li>
+  <li>Use the newly created environment file to build the software environment.</li>
+</ol>
+
+<p>Here is an example of a typical environment file that could be used to run GPU 
+accelerated, distributed training of deep learning models developed using <a href="">PyTorch</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name: null
+
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  - cudatoolkit=10.1
+  - jupyterlab=1.2
+  - pip=20.0
+  - python=3.7
+  - pytorch=1.5
+  - torchvision=0.5
+</code></pre></div></div>
+
+<p>Once you have created an <code class="highlighter-rouge">environment.yml</code> file inside your project directory 
+you can use the following commands to create the environment as a sub-directory 
+called <code class="highlighter-rouge">env</code> inside your project directory.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano environment.yml # create your environment file
+conda env create --prefix ./env --file environment.yml
+</code></pre></div></div>
+
+<h3 id="activating-an-environment">
+<a class="anchor" href="#activating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activating an environment</h3>
+
+<p>Activating environments is essential to making the software in environments work 
+well (or sometimes at all!). Activation of an environment does two things.</p>
+
+<ul>
+  <li>Adds entries to <code class="highlighter-rouge">PATH</code> for the environment.</li>
+  <li>Runs any activation scripts that the environment may contain.</li>
+</ul>
+
+<p>Step 2 is particularly important as activation scripts are how packages can set 
+arbitrary environment variables that may be necessary for their operation.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda activate ./env <span class="c"># activate the environment</span>
+<span class="o">(</span>/path/to/env<span class="o">)</span> <span class="nv">$ </span><span class="c"># now the prompt indicates which environment is active!</span>
+</code></pre></div></div>
+
+<h3 id="updating-an-environment">
+<a class="anchor" href="#updating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating an environment</h3>
+
+<p>You are unlikely to know ahead of time which packages (and version numbers!) you 
+will need to use for your research project. For example it may be the case that…</p>
+
+<ul>
+  <li>one of your core dependencies just released a new version (dependency version 
+number update).</li>
+  <li>you need an additional package for data analysis (add a new dependency).</li>
+  <li>you have found a better visualization package and no longer need to old 
+visualization package (add new dependency and remove old dependency).</li>
+</ul>
+
+<p>If any of these occurs during the course of your research project, all you need 
+to do is update the contents of your <code class="highlighter-rouge">environment.yml</code> file accordingly and then 
+run the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda <span class="nb">env </span>update <span class="nt">--prefix</span> ./env <span class="nt">--file</span> environment.yml <span class="nt">--prune</span> <span class="c"># update the environment</span>
+</code></pre></div></div>
+
+<p>Alternatively, you can simply rebuild the environment from scratch with the following 
+command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda <span class="nb">env </span>create <span class="nt">--prefix</span> ./env <span class="nt">--file</span> environment.yml <span class="nt">--force</span>
+</code></pre></div></div>
+
+<h3 id="deactivating-an-environment">
+<a class="anchor" href="#deactivating-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deactivating an environment</h3>
+
+<p>When you are done working on your project it is a good idea to deactivate the 
+current environment. To deactivate the currently active environment use the 
+<code class="highlighter-rouge">deactivate</code> command as follows.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda deactivate # done working on project (for now!)
+(base) $ # now you are back to the base environment
+</code></pre></div></div>
+
+<h2 id="interested-in-learning-more">
+<a class="anchor" href="#interested-in-learning-more" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interested in Learning More?</h2>
+
+<p>For more details on using Conda to manage the software stacks for you data science projects, 
+checkout the <a href="https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/">Introduction to Conda for (Data) Scientists</a> 
+training materials that are being developed by the Carpentries Incubator.</p>
+
+  </div><a class="u-url" href="/stochastic-expatriate-descent/python/conda/2020/03/19/getting-started-with-conda.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/stochastic-expatriate-descent/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/stochastic-expatriate-descent/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An expat scientist&#39;s musings about machine learning, deep learning, and living abroad.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/davidrpugh" title="davidrpugh"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/TheSandyCoder" title="TheSandyCoder"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
