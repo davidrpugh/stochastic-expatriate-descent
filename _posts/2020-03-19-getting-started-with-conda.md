@@ -2,7 +2,7 @@
 toc: true
 comments: true
 layout: post
-description: How to get started using Conda and some "best practices" to avoid common pain-points.
+description: How to get started using Conda as well as a few "best practices" to avoid common pain-points.
 categories: [python, conda]
 title: Managing Project-Specific Data Science Environments With Conda
 ---
@@ -22,10 +22,17 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.
 
-![]({{ site.baseurl }}/_posts/assets/img/miniconda-vs-anaconda.png)
-
+<p align="center">
+   <img alt="Conda vs. Miniconda vs. Anaconda" src="./assets/img/miniconda-vs-anaconda.png" width="500">
+</p>
 
 ## Installing Miniconda
+
+Download the 64-bit, Python 3 version of the 
+[appropriate Miniconda installer](https://docs.conda.io/en/latest/miniconda.html) 
+for your operating system from and follow the instructions. I will walk through 
+the steps for installing on Linux systems below as installing on Linux systems 
+is slightly more involved.
 
 Download the 64-bit Python 3 install script for Miniconda.
 
@@ -73,25 +80,25 @@ Whenever installing new software it is always a good idea to understand how to
 *uninstall* the software (just in case you have second thoughts!). Uninstalling 
 Miniconda is fairly straighforward.
 
-1. Uninitialize your shell to remove Conda related content from `~/.bashrc`.
+Uninitialize your shell to remove Conda related content from `~/.bashrc`.
 
 ```bash
 conda init --reverse bash
 ```
 
-2. Remove the entire `~/miniconda3` directory.
+Remove the entire `~/miniconda3` directory.
 
 ```bash
 rm -rf ~/miniconda3
 ```
 
-3. Remove the entire `~/.conda` directory.
+Remove the entire `~/.conda` directory.
 
 ```bash
 rm -rf ~/.conda
 ```
 
-4. If present, remove your Conda configuration file.
+If present, remove your Conda configuration file.
 
 ```bash
 rm ~/.condarc
@@ -99,9 +106,13 @@ rm ~/.condarc
 
 # Conda "Best Practices"
 
+In the following section I detail a minimal set of best practices for using 
+Conda to manage data science environments that I use in my own work.
+
 ## TLDR;
 
-Here is the basic recipe for using Conda to manage a project specific software stack.
+Here is the basic recipe for using Conda to manage a project specific software 
+stack.
 
 ```bash
 (base) $ mkdir project-dir
@@ -127,15 +138,16 @@ cd project-dir
 
 ## New project, new environment
 
-Now that you have a new project directory you are ready to create a new environment 
-for your project. We will do this in two steps.
+Now that you have a new project directory you are ready to create a new 
+environment for your project. We will do this in two steps.
 
-1. Create an environment file that describes the software dependencies (including 
-   specific version numbers!) for the project.
+1. Create an environment file that describes the software dependencies 
+   (including specific version numbers!) for the project.
 2. Use the newly created environment file to build the software environment.
 
 Here is an example of a typical environment file that could be used to run GPU 
-accelerated, distributed training of deep learning models developed using [PyTorch](https://www.pytorch.org).
+accelerated, distributed training of deep learning models developed using 
+[PyTorch](https://www.pytorch.org).
 
 ```
 name: null
@@ -217,6 +229,7 @@ conda deactivate # done working on project (for now!)
 
 # Interested in Learning More?
 
-For more details on using Conda to manage the software stacks for you data science projects, 
-checkout the [Introduction to Conda for (Data) Scientists](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/) 
+For more details on using Conda to manage software stacks for you data science projects, 
+checkout the 
+[Introduction to Conda for (Data) Scientists](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/) 
 training materials that I have contributed to [The Carpentries Incubator](https://carpentries.org/involved-lessons/).
