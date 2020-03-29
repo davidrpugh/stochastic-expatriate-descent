@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      6 min read
     
 </span></p>
 
@@ -129,6 +129,7 @@ window.onload = wrap_img;
     <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#getting-started-with-conda">Getting Started with Conda</a>
 <ul>
+<li class="toc-entry toc-h2"><a href="#conda-miniconda-anaconda-whats-the-difference">Conda? Miniconda? Anaconda? What’s the difference?</a></li>
 <li class="toc-entry toc-h2"><a href="#installing-miniconda">Installing Miniconda</a></li>
 <li class="toc-entry toc-h2"><a href="#initializing-your-shell-for-conda">Initializing your shell for Conda</a></li>
 <li class="toc-entry toc-h2"><a href="#updating-conda">Updating Conda</a></li>
@@ -165,9 +166,29 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.</p>
 
+<h2 id="conda-miniconda-anaconda-whats-the-difference">
+<a class="anchor" href="#conda-miniconda-anaconda-whats-the-difference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conda? Miniconda? Anaconda? What’s the difference?</h2>
+
+<p>Users are often confused about the differences between Conda, Miniconda, and 
+Anaconda.</p>
+
 <p align="center">
    <img alt="Conda vs. Miniconda vs. Anaconda" src="./assets/img/miniconda-vs-anaconda.png" width="500">
 </p>
+
+<p>I suggest installing Miniconda which combines Conda with Python 3 (and a small 
+number of core systems packages) instead of the full Anaconda distribution. 
+Installing only Miniconda will encourage you to create separate environments 
+for each project (and to install only those packages that you actually need for each 
+project!) which will enhance portability and reproducibility of your research and 
+workflows.</p>
+
+<p>Besides, if you <em>really</em> want a particular version of the full Anaconda 
+distribution you can always create an new conda environment and install it 
+using the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda create <span class="nt">--name</span> anaconda202002 <span class="nv">anaconda</span><span class="o">=</span>2020.02
+</code></pre></div></div>
 
 <h2 id="installing-miniconda">
 <a class="anchor" href="#installing-miniconda" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing Miniconda</h2>
