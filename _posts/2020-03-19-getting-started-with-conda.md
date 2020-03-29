@@ -4,7 +4,7 @@ comments: true
 layout: post
 description: How to get started using Conda as well as a few "best practices" to avoid common pain-points.
 categories: [python, conda]
-title: Managing Project-Specific Data Science Environments With Conda
+title: Managing Project-Specific Environments With Conda
 ---
 # Getting Started with Conda
 
