@@ -28,7 +28,7 @@ Users are often confused about the differences between Conda, Miniconda, and
 Anaconda.
 
 <p align="center">
-   <img alt="Conda vs. Miniconda vs. Anaconda" src="{{ site.baseurl }}/assets/img/miniconda-vs-anaconda.png" width="500">
+   <img alt="Conda vs. Miniconda vs. Anaconda" src="{{ site.baseurl }}/images/miniconda-vs-anaconda.png" width="500">
 </p>
 
 I suggest installing Miniconda which combines Conda with Python 3 (and a small 
