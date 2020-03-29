@@ -2,9 +2,9 @@
 toc: true
 comments: true
 layout: post
-description: Using Conda to manage project specific software stacks.
+description: How to get started using Conda and some "best practices" to avoid common pain-points.
 categories: [python, conda]
-title: Getting Started with Conda
+title: Managing Project-Specific Data Science Environments With Conda
 ---
 # Getting Started with Conda
 
@@ -22,7 +22,10 @@ With just a few commands, you can set up a totally separate environment to run
 that different version of Python, while continuing to run your usual version of 
 Python in your normal environment.
 
-## Install Miniconda
+![]({{ site.baseurl }}/_posts/assets/img/miniconda-vs-anaconda.png)
+
+
+## Installing Miniconda
 
 Download the 64-bit Python 3 install script for Miniconda.
 
@@ -46,6 +49,9 @@ rm Miniconda3-latest-Linux-x86_64
 
 ## Initializing your shell for Conda
 
+After installing Miniconda you next need to configure your preferred shell to be 
+"conda-aware".
+
 ```bash
 conda init bash
 source ~/.bashrc
@@ -54,7 +60,8 @@ source ~/.bashrc
 
 ## Updating Conda
 
-It is a good idea to keep your `conda` installation updated to the most recent version.
+It is a good idea to keep your `conda` installation updated to the most recent 
+version.
 
 ```bash
 conda update --name base conda --yes
@@ -62,25 +69,29 @@ conda update --name base conda --yes
 
 ## Uninstalling Miniconda
 
-Uninitialize your shell to remove Conda related content from `~/.bashrc`.
+Whenever installing new software it is always a good idea to understand how to 
+*uninstall* the software (just in case you have second thoughts!). Uninstalling 
+Miniconda is fairly straighforward.
+
+1. Uninitialize your shell to remove Conda related content from `~/.bashrc`.
 
 ```bash
 conda init --reverse bash
 ```
 
-Remove the entire `~/miniconda3` directory.
+2. Remove the entire `~/miniconda3` directory.
 
 ```bash
 rm -rf ~/miniconda3
 ```
 
-Remove the entire `~/.conda` directory.
+3. Remove the entire `~/.conda` directory.
 
 ```bash
 rm -rf ~/.conda
 ```
 
-If present, remove your Conda configuration file.
+4. If present, remove your Conda configuration file.
 
 ```bash
 rm ~/.condarc
@@ -103,7 +114,7 @@ Here is the basic recipe for using Conda to manage a project specific software s
 (/path/to/env) $ conda deactivate # done working on project (for now!)
 ```
 
-## New project, new directory.
+## New project, new directory
 
 Every new project (no matter how small!) should live in its own directory. 
 A good reference to get started with organizing your project directory is 
@@ -124,7 +135,7 @@ for your project. We will do this in two steps.
 2. Use the newly created environment file to build the software environment.
 
 Here is an example of a typical environment file that could be used to run GPU 
-accelerated, distributed training of deep learning models developed using [PyTorch]().
+accelerated, distributed training of deep learning models developed using [PyTorch](https://www.pytorch.org).
 
 ```
 name: null
@@ -139,7 +150,7 @@ dependencies:
   - jupyterlab=1.2
   - pip=20.0
   - python=3.7
-  - pytorch=1.5
+  - pytorch=1.4
   - torchvision=0.5
 ```
 
@@ -148,7 +159,6 @@ you can use the following commands to create the environment as a sub-directory
 called `env` inside your project directory.
 
 ```
-nano environment.yml # create your environment file
 conda env create --prefix ./env --file environment.yml
 ```
 
@@ -157,8 +167,8 @@ conda env create --prefix ./env --file environment.yml
 Activating environments is essential to making the software in environments work 
 well (or sometimes at all!). Activation of an environment does two things.
 
-* Adds entries to `PATH` for the environment.
-* Runs any activation scripts that the environment may contain.
+1. Adds entries to `PATH` for the environment.
+2. Runs any activation scripts that the environment may contain.
 
 Step 2 is particularly important as activation scripts are how packages can set 
 arbitrary environment variables that may be necessary for their operation. 
@@ -209,4 +219,4 @@ conda deactivate # done working on project (for now!)
 
 For more details on using Conda to manage the software stacks for you data science projects, 
 checkout the [Introduction to Conda for (Data) Scientists](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/) 
-training materials that I am developing in collaboration with the [Carpentries Incubator]().
+training materials that I have contributed to [The Carpentries Incubator](https://carpentries.org/involved-lessons/).
