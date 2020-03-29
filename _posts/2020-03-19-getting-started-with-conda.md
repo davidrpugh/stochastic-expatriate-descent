@@ -169,7 +169,7 @@ Here is an example of a typical environment file that could be used to run GPU
 accelerated, distributed training of deep learning models developed using 
 [PyTorch](https://www.pytorch.org).
 
-```
+```yaml
 name: null
 
 channels:
