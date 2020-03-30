@@ -254,25 +254,28 @@ Available Tensor Operations:
     [X] Gloo  
 ```
 
-# Listing the contents of the Conda environment
+## Listing the contents of the Conda environment
 
-To see the full list of packages installed into the environment run the following command.
+To see the full list of packages installed into the environment run the 
+following command.
 
 ```bash
-conda list --prefix $ENV_PREFIX
+conda activate $ENV_PREFIX # optional if environment already active
+conda list
 ```
 
 # Updating the Conda environment
 
-If you add (remove) dependencies to (from) the `environment.yml` file or the `requirements.txt` file 
-after the environment has already been created, then you can re-create the environment with the 
-following command.
+If you add (remove) dependencies to (from) the `environment.yml` file or the 
+`requirements.txt` file after the environment has already been created, then 
+you can re-create the environment with the following command.
 
 ```bash
 conda env create --prefix $ENV_PREFIX --file environment.yml --force
 ```
 
-However, whenever I add new dependencies I prefer to re-run the Bash script which will re-build both the Conda environment and JupyterLab.
+However, whenever I add new dependencies I prefer to re-run the Bash script 
+which will re-build both the Conda environment and JupyterLab.
 
 ```bash
 ./bin/create-conda-env.sh
@@ -280,7 +283,14 @@ However, whenever I add new dependencies I prefer to re-run the Bash script whic
 
 # Summary
 
-That's it! If you like my approach then you can make use of the template 
-repository on 
+Finding a reproducible process for building Horovod extensions for my deep 
+learning projects was tricky. Key to my solution is the use of meta-packages 
+from `conda-forge` to insure that the appropriate compilers are installed and 
+that the resulting Conda environment is aware of the system installed NVIDIA 
+CUDA Toolkit. The second key is to use the `--no-binary` flag in the 
+`requirements.txt` file to insure that Horovod is re-built whenever the Conda 
+environment is re-built.
+
+If you like my approach then you can make use of the template repository on 
 [GitHub](https://github.com/kaust-vislab/horovod-gpu-data-science-project) to 
-get started with you rnext Horovod data science project!
+get started with your next Horovod data science project!
