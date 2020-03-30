@@ -1,4 +1,236 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-30T05:40:43-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-29T00:00:00-05:00</published><updated>2020-03-29T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-30T12:16:12-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Building a Conda environment for distributed training with Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for distributed training with Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;getting-started-with-horovod&quot;&gt;Getting Started with Horovod&lt;/h1&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+   &lt;img alt=&quot;Horovod + NVIDIA FTW&quot; src=&quot;/stochastic-expatriate-descent/images/horovod-nvidia.jpg&quot; width=&quot;500&quot; /&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;&quot;&gt;Horovod&lt;/a&gt; is an open-source distributed training framework for 
+&lt;a href=&quot;https://www.tensorflow.org/&quot;&gt;TensorFlow&lt;/a&gt;, &lt;a href=&quot;https://keras.io/&quot;&gt;Keras&lt;/a&gt;, 
+&lt;a href=&quot;https://pytorch.org/&quot;&gt;PyTorch&lt;/a&gt;, and 
+&lt;a href=&quot;https://mxnet.incubator.apache.org/&quot;&gt;Apache MXNet&lt;/a&gt;. Horovod improves the speed, 
+scale, and resource utilization of deep learning training.&lt;/p&gt;
+
+&lt;p&gt;In this post I describe how I build Conda environments for my deep learning 
+projects where I plan to use Horovod to enable distributed training across 
+multiple GPUs (either on the same node or spread across multuple nodes). If 
+you like my approach then you can make use of the template repository on 
+&lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project&quot;&gt;GitHub&lt;/a&gt; to 
+get started with you rnext Horovod data science project!&lt;/p&gt;
+
+&lt;h2 id=&quot;installing-the-nvidia-cuda-toolkit&quot;&gt;Installing the NVIDIA CUDA Toolkit&lt;/h2&gt;
+
+&lt;p&gt;First thing you need to do is to install the 
+&lt;a href=&quot;https://developer.nvidia.com/cuda-toolkit-archive&quot;&gt;appropriate version&lt;/a&gt; 
+of the NVIDIA CUDA Toolkit on your workstation. For this blog post I am using 
+&lt;a href=&quot;https://developer.nvidia.com/cuda-10.1-download-archive-update2&quot;&gt;NVIDIA CUDA Toolkit 10.1&lt;/a&gt; 
+&lt;a href=&quot;https://docs.nvidia.com/cuda/archive/10.1/&quot;&gt;(documentation)&lt;/a&gt; which works with 
+all three deep learning frameworks that are currently supported by Horovod.&lt;/p&gt;
+
+&lt;h3 id=&quot;why-not-just-use-the-cudatoolkit-package-from-conda-forge&quot;&gt;Why not just use the &lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit&lt;/code&gt; package from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt;?&lt;/h3&gt;
+
+&lt;p&gt;Typically when installing PyTorch, TensorFlow, or Apache MXNet with GPU support 
+using Conda you simply add the appropriate version 
+&lt;a href=&quot;https://anaconda.org/anaconda/cudatoolkit&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit&lt;/code&gt;&lt;/a&gt; package to your 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, the &lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit&lt;/code&gt; package available from 
+&lt;a href=&quot;https://conda-forge.org/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt;&lt;/a&gt; does not include 
+&lt;a href=&quot;https://docs.nvidia.com/cuda/archive/10.1/cuda-compiler-driver-nvcc/index.html&quot;&gt;NVCC&lt;/a&gt; 
+and in order to use Horovod with either PyTorch, TensorFlow, or MXNet you need 
+to compile extensions.&lt;/p&gt;
+
+&lt;h3 id=&quot;but-what-about-the-cudatoolkit-dev-package-from-conda-forge&quot;&gt;But what about the &lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit-dev&lt;/code&gt; package from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt;?&lt;/h3&gt;
+
+&lt;p&gt;While there are 
+&lt;a href=&quot;https://anaconda.org/conda-forge/cudatoolkit-dev&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit-dev&lt;/code&gt;&lt;/a&gt; packages 
+available from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; that do include NVCC, I have had difficult getting 
+these packages to consistently install properly. The most robust approach to 
+obtain NVCC and still use Conda to manage all the other dependencies is to 
+install the NVIDIA CUDA Toolkit on your system and then install a meta-package 
+&lt;a href=&quot;https://anaconda.org/nvidia/nvcc_linux-64&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nvcc_linux-64&lt;/code&gt;&lt;/a&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; 
+which configures your Conda environment to use the NVCC installed on the system 
+together with the other CUDA Toolkit components installed inside the Conda 
+environment.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-environmentyml-file&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; File&lt;/h2&gt;
+
+&lt;p&gt;Check the &lt;a href=&quot;https://horovod.readthedocs.io/en/latest/install_include.html&quot;&gt;official installation guide&lt;/a&gt; for Horovod more details.&lt;/p&gt;
+
+&lt;h3 id=&quot;channel-priority&quot;&gt;Channel Priority&lt;/h3&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;null&lt;/span&gt;
+
+&lt;span class=&quot;na&quot;&gt;channels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pytorch&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;conda-forge&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;defaults&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h3&gt;
+
+&lt;p&gt;Below are the core required dependencies. Few things to note. Even though I have installed the NVIDIA CUDA Toolkit manually I still use Conda to manage the other required CUDA components such as &lt;code class=&quot;highlighter-rouge&quot;&gt;cudnn&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;nccl&lt;/code&gt; (and the optional &lt;code class=&quot;highlighter-rouge&quot;&gt;cupti&lt;/code&gt;). I use two meta-pacakges, &lt;code class=&quot;highlighter-rouge&quot;&gt;cxx-compiler&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;nvcc_linux-64&lt;/code&gt;, to make sure that suitable C, and C++ compilers are installed and that the resulting Conda environment is aware of the manually installed CUDA Toolkit. Horovod also requires some controller library to coordinate work between the various Horovod processes. Typically this will be some MPI implementation such as &lt;a href=&quot;&quot;&gt;OpenMPI&lt;/a&gt;. However, rather than specifying &lt;code class=&quot;highlighter-rouge&quot;&gt;openmpi&lt;/code&gt; directly I instead opt for &lt;a href=&quot;&quot;&gt;mpi4py&lt;/a&gt; Conda package which provides a cuda-aware build of OpenMPI for your OS (where possible). Horovo also support that &lt;a href=&quot;&quot;&gt;Gloo&lt;/a&gt; collective communications library that can be used in place of MPI. I include &lt;code class=&quot;highlighter-rouge&quot;&gt;cmake&lt;/code&gt; in order to insure that the Horovod extensions for Gloo are built.&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;bokeh=1.4&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;cmake=3.16&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# insures that the Gloo library extensions will be built&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;cudnn=7.6&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;cupti=10.1&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;cxx-compiler=1.0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# meta-pacakge that insures suitable C and C++ compilers are available&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jupyterlab=1.2&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mpi4py=3.0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# installs cuda-aware openmpi&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nccl=2.5&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nodejs=13&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nvcc_linux-64=10.1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# meta-package that configures environment to be &quot;cuda-aware&quot;&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pip=20.0&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;pip&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mxnet-cu101mkl==1.6.*&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# makes sure MXNET is installed prior to horovod&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;-r file:requirements.txt&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;python=3.7&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pytorch=1.4&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tensorboard=2.1&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tensorflow-gpu=2.1&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;torchvision=0.5&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The complete &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file is available on &lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/environment.yml&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-requirementstxt-file&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; File&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file is where all of the &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; dependencies, including 
+Horovod itself, are listed for installation. In addition to Horovod I 
+typically will also use &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; to install JupyterLab extensions to enable GPU and 
+CPU resource monitoring via &lt;a href=&quot;&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyterlab-nvdashboard&lt;/code&gt;&lt;/a&gt; 
+and Tensorboard support via &lt;a href=&quot;&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyter-tensorboard&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;horovod&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;0.19.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+jupyterlab-nvdashboard&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;0.2.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# server-side component; client-side component installed in postBuild&lt;/span&gt;
+jupyter-tensorboard&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;0.2.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# make sure horovod is re-compiled if environment is re-built&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;--no-binary&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;horovod
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note the use of the &lt;code class=&quot;highlighter-rouge&quot;&gt;--no-binary&lt;/code&gt; option at the end of the file. Including this 
+option insures that Horovod will be re-built whenever the Conda environment is 
+re-built.&lt;/p&gt;
+
+&lt;p&gt;The complete &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file is available on &lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/requirements.txt&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;building-conda-environment&quot;&gt;Building Conda Environment&lt;/h2&gt;
+
+&lt;p&gt;After adding any necessary dependencies that should be downloaded via &lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt; 
+to the &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file and any dependencies that should be downloaded 
+via &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; to the &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file you create the Conda environment in a 
+sub-directory &lt;code class=&quot;highlighter-rouge&quot;&gt;./env&lt;/code&gt;of your project directory by running the following 
+commands.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ENV_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;/env
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_CUDA_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$CUDA_HOME&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_NCCL_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_GPU_ALLREDUCE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;NCCL
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_GPU_BROADCAST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;NCCL
+conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;create &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;By default Horovod will try and build extensions for all detected frameworks. 
+See the Horovod documentation on 
+&lt;a href=&quot;https://horovod.readthedocs.io/en/latest/install_include.html#environment-variables&quot;&gt;environment variables&lt;/a&gt; 
+for the details on additional environment variables that can be set prior to 
+building Horovod.&lt;/p&gt;
+
+&lt;p&gt;Once the new environment has been created you can activate the environment 
+with the following command.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;the-postbuild-file&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;postBuild&lt;/code&gt; File&lt;/h2&gt;
+
+&lt;p&gt;If you wish to use any JupyterLab extensions included in the &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; 
+and &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; files then you need to rebuild the JupyterLab 
+application using the following commands to source the &lt;code class=&quot;highlighter-rouge&quot;&gt;postBuild&lt;/code&gt; script.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# optional if environment already active&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; postBuild
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;wrapping-it-all-up-in-a-bash-script&quot;&gt;Wrapping it all up in a Bash script&lt;/h2&gt;
+
+&lt;p&gt;I typically wrap these commands into a shell script &lt;code class=&quot;highlighter-rouge&quot;&gt;./bin/create-conda-env.sh&lt;/code&gt;. 
+Running the shell script will set the Horovod build variables, create the 
+Conda environment, activate the Conda environment, and built JupyterLab with 
+any additional extensions.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash --login&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ENV_PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;/env
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_CUDA_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$CUDA_HOME&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_NCCL_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_GPU_ALLREDUCE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;NCCL
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOROVOD_GPU_BROADCAST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;NCCL
+
+conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;create &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt;
+conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; postBuild
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The script should be run from the project root directory as follows.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/create-conda-env.sh &lt;span class=&quot;c&quot;&gt;# assumes that $CUDA_HOME is set properly&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;verifying-the-conda-environment&quot;&gt;Verifying the Conda environment&lt;/h2&gt;
+
+&lt;p&gt;After building the Conda environment you can check that Horovod has been built 
+with support for the deep learning frameworks TensorFlow, PyTorch, Apache 
+MXNet, and the contollers MPI and Gloo with the following command.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# optional if environment already active&lt;/span&gt;
+horovodrun &lt;span class=&quot;nt&quot;&gt;--check-build&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You should see output similar to the following.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Horovod v0.19.1:
+
+Available Frameworks:
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] TensorFlow
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] PyTorch
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] MXNet
+
+Available Controllers:
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] MPI
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] Gloo
+
+Available Tensor Operations:
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] NCCL
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; DDL
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; CCL
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] MPI
+    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] Gloo  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;listing-the-full-contents-of-the-conda-environment&quot;&gt;Listing the full contents of the Conda environment&lt;/h2&gt;
+
+&lt;p&gt;To see the full list of packages installed into the environment run the following command.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda list &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;updating-the-conda-environment&quot;&gt;Updating the Conda environment&lt;/h2&gt;
+
+&lt;p&gt;If you add (remove) dependencies to (from) the &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file or the &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file 
+after the environment has already been created, then you can re-create the environment with the 
+following command.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;create &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;However, whenever I add new dependencies I prefer to re-run the Bash script which will re-build both the Conda environment and JupyterLab.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/create-conda-env.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">Getting Started with Horovod</summary></entry><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-29T00:00:00-05:00</published><updated>2020-03-29T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
 
 &lt;p&gt;Conda is an open source package and environment management system that runs on 
 Windows, Mac OS and Linux.&lt;/p&gt;
@@ -958,123 +1190,4 @@ And another {% fn 2 %}
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/chart-preview.png" /><media:content medium="image" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/chart-preview.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">An Example Markdown Post</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/markdown/2020/01/14/test-markdown-post.html" rel="alternate" type="text/html" title="An Example Markdown Post" /><published>2020-01-14T00:00:00-06:00</published><updated>2020-01-14T00:00:00-06:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/markdown/2020/01/14/test-markdown-post</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/markdown/2020/01/14/test-markdown-post.html">&lt;h1 id=&quot;example-markdown-post&quot;&gt;Example Markdown Post&lt;/h1&gt;
-
-&lt;h2 id=&quot;basic-setup&quot;&gt;Basic setup&lt;/h2&gt;
-
-&lt;p&gt;Jekyll requires blog post files to be named according to the following format:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR-MONTH-DAY-filename.md&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Where &lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR&lt;/code&gt; is a four-digit number, &lt;code class=&quot;highlighter-rouge&quot;&gt;MONTH&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;DAY&lt;/code&gt; are both two-digit numbers, and &lt;code class=&quot;highlighter-rouge&quot;&gt;filename&lt;/code&gt; is whatever file name you choose, to remind yourself what this post is about. &lt;code class=&quot;highlighter-rouge&quot;&gt;.md&lt;/code&gt; is the file extension for markdown files.&lt;/p&gt;
-
-&lt;p&gt;The first line of the file should start with a single hash character, then a space, then your title. This is how you create a “&lt;em&gt;level 1 heading&lt;/em&gt;” in markdown. Then you can create level 2, 3, etc headings as you wish but repeating the hash character, such as you see in the line &lt;code class=&quot;highlighter-rouge&quot;&gt;## File names&lt;/code&gt; above.&lt;/p&gt;
-
-&lt;h2 id=&quot;basic-formatting&quot;&gt;Basic formatting&lt;/h2&gt;
-
-&lt;p&gt;You can use &lt;em&gt;italics&lt;/em&gt;, &lt;strong&gt;bold&lt;/strong&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;code font text&lt;/code&gt;, and create &lt;a href=&quot;https://www.markdownguide.org/cheat-sheet/&quot;&gt;links&lt;/a&gt;. Here’s a footnote &lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;. Here’s a horizontal rule:&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;lists&quot;&gt;Lists&lt;/h2&gt;
-
-&lt;p&gt;Here’s a list:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;item 1&lt;/li&gt;
-  &lt;li&gt;item 2&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;And a numbered list:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;item 1&lt;/li&gt;
-  &lt;li&gt;item 2&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;boxes-and-stuff&quot;&gt;Boxes and stuff&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a quotation&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;Toast Toast--warning googoo&quot;&gt;
-   &lt;span class=&quot;Toast-icon&quot;&gt;&lt;svg class=&quot;octicon octicon-alert&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 000 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 00.01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;
-   &lt;span class=&quot;Toast-content&quot;&gt;You can include alert boxes&lt;/span&gt;
-&lt;/div&gt;
-
-&lt;p&gt;…and…&lt;/p&gt;
-
-&lt;div class=&quot;Toast&quot;&gt;
-   &lt;span class=&quot;Toast-icon&quot;&gt;&lt;svg class=&quot;octicon octicon-info&quot; viewBox=&quot;0 0 14 16&quot; version=&quot;1.1&quot; width=&quot;14&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;
-   &lt;span class=&quot;Toast-content&quot;&gt;You can include info boxes&lt;/span&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;images&quot;&gt;Images&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;/stochastic-expatriate-descent/images/logo.png&quot; alt=&quot;&quot; title=&quot;fast.ai's logo&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;code&quot;&gt;Code&lt;/h2&gt;
-
-&lt;p&gt;You can format text and code per usual&lt;/p&gt;
-
-&lt;p&gt;General preformatted text:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Do a thing
-do_thing()
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Python code and output:&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Prints '2'
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Formatting text as shell commands:&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hello world&quot;&lt;/span&gt;
-./some_script.sh &lt;span class=&quot;nt&quot;&gt;--option&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;
-wget https://example.com/cat_photo1.png
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Formatting text as YAML:&lt;/p&gt;
-
-&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;value&lt;/span&gt;
-&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;another_key&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;another&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;value&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;tables&quot;&gt;Tables&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Column 1&lt;/th&gt;
-      &lt;th&gt;Column 2&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;A thing&lt;/td&gt;
-      &lt;td&gt;Another thing&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;tweetcards&quot;&gt;Tweetcards&lt;/h2&gt;
-
-&lt;div class=&quot;jekyll-twitter-plugin&quot;&gt;&lt;blockquote class=&quot;twitter-tweet&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;Altair 4.0 is released! &lt;a href=&quot;https://t.co/PCyrIOTcvv&quot;&gt;https://t.co/PCyrIOTcvv&lt;/a&gt;&lt;br /&gt;Try it with:&lt;br /&gt;&lt;br /&gt;  pip install -U altair&lt;br /&gt;&lt;br /&gt;The full list of changes is at &lt;a href=&quot;https://t.co/roXmzcsT58&quot;&gt;https://t.co/roXmzcsT58&lt;/a&gt; ...read on for some highlights. &lt;a href=&quot;https://t.co/vWJ0ZveKbZ&quot;&gt;pic.twitter.com/vWJ0ZveKbZ&lt;/a&gt;&lt;/p&gt;&amp;mdash; Jake VanderPlas (@jakevdp) &lt;a href=&quot;https://twitter.com/jakevdp/status/1204765621767901185?ref_src=twsrc%5Etfw&quot;&gt;December 11, 2019&lt;/a&gt;&lt;/blockquote&gt;
-&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;footnotes&quot;&gt;Footnotes&lt;/h2&gt;
-
-&lt;div class=&quot;footnotes&quot;&gt;
-  &lt;ol&gt;
-    &lt;li id=&quot;fn:1&quot;&gt;
-      &lt;p&gt;This is the footnote. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">Example Markdown Post</summary></entry></feed>
+&lt;/div&gt;</content><author><name></name></author><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/chart-preview.png" /><media:content medium="image" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/chart-preview.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

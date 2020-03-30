@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Building a Conda environment for distributed training with Horovod | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Building a Conda environment for distributed training with Horovod" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Getting started with distributed training of DNNs using Horovod." />
+<meta property="og:description" content="Getting started with distributed training of DNNs using Horovod." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Getting started with distributed training of DNNs using Horovod.","@type":"BlogPosting","headline":"Building a Conda environment for distributed training with Horovod","dateModified":"2020-03-30T00:00:00-05:00","datePublished":"2020-03-30T00:00:00-05:00","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/stochastic-expatriate-descent/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" /><link rel="shortcut icon" type="image/x-icon" href="/stochastic-expatriate-descent/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Building a Conda environment for distributed training with Horovod | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Building a Conda environment for distributed training with Horovod" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Getting started with distributed training of DNNs using Horovod." />
+<meta property="og:description" content="Getting started with distributed training of DNNs using Horovod." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Getting started with distributed training of DNNs using Horovod.","@type":"BlogPosting","headline":"Building a Conda environment for distributed training with Horovod","dateModified":"2020-03-30T00:00:00-05:00","datePublished":"2020-03-30T00:00:00-05:00","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/stochastic-expatriate-descent/">Stochastic Expatriate Descent</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/stochastic-expatriate-descent/about/">About Me</a><a class="page-link" href="/stochastic-expatriate-descent/search/">Search</a><a class="page-link" href="/stochastic-expatriate-descent/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Building a Conda environment for distributed training with Horovod</h1><p class="page-description">Getting started with distributed training of DNNs using Horovod.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-03-30T00:00:00-05:00" itemprop="datePublished">
+        Mar 30, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#conda">conda</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#deep-learning">deep-learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#pytorch">pytorch</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#tensorflow">tensorflow</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#nvidia">nvidia</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#horovod">horovod</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#getting-started-with-horovod">Getting Started with Horovod</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#installing-the-nvidia-cuda-toolkit">Installing the NVIDIA CUDA Toolkit</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#why-not-just-use-the-cudatoolkit-package-from-conda-forge">Why not just use the cudatoolkit package from conda-forge?</a></li>
+<li class="toc-entry toc-h3"><a href="#but-what-about-the-cudatoolkit-dev-package-from-conda-forge">But what about the cudatoolkit-dev package from conda-forge?</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#the-environmentyml-file">The environment.yml File</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#channel-priority">Channel Priority</a></li>
+<li class="toc-entry toc-h3"><a href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#the-requirementstxt-file">The requirements.txt File</a></li>
+<li class="toc-entry toc-h2"><a href="#building-conda-environment">Building Conda Environment</a></li>
+<li class="toc-entry toc-h2"><a href="#the-postbuild-file">The postBuild File</a></li>
+<li class="toc-entry toc-h2"><a href="#wrapping-it-all-up-in-a-bash-script">Wrapping it all up in a Bash script</a></li>
+<li class="toc-entry toc-h2"><a href="#verifying-the-conda-environment">Verifying the Conda environment</a></li>
+<li class="toc-entry toc-h2"><a href="#listing-the-full-contents-of-the-conda-environment">Listing the full contents of the Conda environment</a></li>
+<li class="toc-entry toc-h2"><a href="#updating-the-conda-environment">Updating the Conda environment</a></li>
+</ul>
+</li>
+</ul><h1 id="getting-started-with-horovod">
+<a class="anchor" href="#getting-started-with-horovod" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started with Horovod</h1>
+
+<p align="center">
+   <img alt="Horovod + NVIDIA FTW" src="/stochastic-expatriate-descent/images/horovod-nvidia.jpg" width="500">
+</p>
+<p><a href="">Horovod</a> is an open-source distributed training framework for 
+<a href="https://www.tensorflow.org/">TensorFlow</a>, <a href="https://keras.io/">Keras</a>, 
+<a href="https://pytorch.org/">PyTorch</a>, and 
+<a href="https://mxnet.incubator.apache.org/">Apache MXNet</a>. Horovod improves the speed, 
+scale, and resource utilization of deep learning training.</p>
+
+<p>In this post I describe how I build Conda environments for my deep learning 
+projects where I plan to use Horovod to enable distributed training across 
+multiple GPUs (either on the same node or spread across multuple nodes). If 
+you like my approach then you can make use of the template repository on 
+<a href="https://github.com/kaust-vislab/horovod-gpu-data-science-project">GitHub</a> to 
+get started with you rnext Horovod data science project!</p>
+
+<h2 id="installing-the-nvidia-cuda-toolkit">
+<a class="anchor" href="#installing-the-nvidia-cuda-toolkit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing the NVIDIA CUDA Toolkit</h2>
+
+<p>First thing you need to do is to install the 
+<a href="https://developer.nvidia.com/cuda-toolkit-archive">appropriate version</a> 
+of the NVIDIA CUDA Toolkit on your workstation. For this blog post I am using 
+<a href="https://developer.nvidia.com/cuda-10.1-download-archive-update2">NVIDIA CUDA Toolkit 10.1</a> 
+<a href="https://docs.nvidia.com/cuda/archive/10.1/">(documentation)</a> which works with 
+all three deep learning frameworks that are currently supported by Horovod.</p>
+
+<h3 id="why-not-just-use-the-cudatoolkit-package-from-conda-forge">
+<a class="anchor" href="#why-not-just-use-the-cudatoolkit-package-from-conda-forge" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why not just use the <code class="highlighter-rouge">cudatoolkit</code> package from <code class="highlighter-rouge">conda-forge</code>?</h3>
+
+<p>Typically when installing PyTorch, TensorFlow, or Apache MXNet with GPU support 
+using Conda you simply add the appropriate version 
+<a href="https://anaconda.org/anaconda/cudatoolkit"><code class="highlighter-rouge">cudatoolkit</code></a> package to your 
+<code class="highlighter-rouge">environment.yml</code> file.</p>
+
+<p>Unfortunately, the <code class="highlighter-rouge">cudatoolkit</code> package available from 
+<a href="https://conda-forge.org/"><code class="highlighter-rouge">conda-forge</code></a> does not include 
+<a href="https://docs.nvidia.com/cuda/archive/10.1/cuda-compiler-driver-nvcc/index.html">NVCC</a> 
+and in order to use Horovod with either PyTorch, TensorFlow, or MXNet you need 
+to compile extensions.</p>
+
+<h3 id="but-what-about-the-cudatoolkit-dev-package-from-conda-forge">
+<a class="anchor" href="#but-what-about-the-cudatoolkit-dev-package-from-conda-forge" aria-hidden="true"><span class="octicon octicon-link"></span></a>But what about the <code class="highlighter-rouge">cudatoolkit-dev</code> package from <code class="highlighter-rouge">conda-forge</code>?</h3>
+
+<p>While there are 
+<a href="https://anaconda.org/conda-forge/cudatoolkit-dev"><code class="highlighter-rouge">cudatoolkit-dev</code></a> packages 
+available from <code class="highlighter-rouge">conda-forge</code> that do include NVCC, I have had difficult getting 
+these packages to consistently install properly. The most robust approach to 
+obtain NVCC and still use Conda to manage all the other dependencies is to 
+install the NVIDIA CUDA Toolkit on your system and then install a meta-package 
+<a href="https://anaconda.org/nvidia/nvcc_linux-64"><code class="highlighter-rouge">nvcc_linux-64</code></a> from <code class="highlighter-rouge">conda-forge</code> 
+which configures your Conda environment to use the NVCC installed on the system 
+together with the other CUDA Toolkit components installed inside the Conda 
+environment.</p>
+
+<h2 id="the-environmentyml-file">
+<a class="anchor" href="#the-environmentyml-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code class="highlighter-rouge">environment.yml</code> File</h2>
+
+<p>Check the <a href="https://horovod.readthedocs.io/en/latest/install_include.html">official installation guide</a> for Horovod more details.</p>
+
+<h3 id="channel-priority">
+<a class="anchor" href="#channel-priority" aria-hidden="true"><span class="octicon octicon-link"></span></a>Channel Priority</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="no">null</span>
+
+<span class="na">channels</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">pytorch</span>
+  <span class="pi">-</span> <span class="s">conda-forge</span>
+  <span class="pi">-</span> <span class="s">defaults</span>
+</code></pre></div></div>
+
+<h3 id="dependencies">
+<a class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
+
+<p>Below are the core required dependencies. Few things to note. Even though I have installed the NVIDIA CUDA Toolkit manually I still use Conda to manage the other required CUDA components such as <code class="highlighter-rouge">cudnn</code> and <code class="highlighter-rouge">nccl</code> (and the optional <code class="highlighter-rouge">cupti</code>). I use two meta-pacakges, <code class="highlighter-rouge">cxx-compiler</code> and <code class="highlighter-rouge">nvcc_linux-64</code>, to make sure that suitable C, and C++ compilers are installed and that the resulting Conda environment is aware of the manually installed CUDA Toolkit. Horovod also requires some controller library to coordinate work between the various Horovod processes. Typically this will be some MPI implementation such as <a href="">OpenMPI</a>. However, rather than specifying <code class="highlighter-rouge">openmpi</code> directly I instead opt for <a href="">mpi4py</a> Conda package which provides a cuda-aware build of OpenMPI for your OS (where possible). Horovo also support that <a href="">Gloo</a> collective communications library that can be used in place of MPI. I include <code class="highlighter-rouge">cmake</code> in order to insure that the Horovod extensions for Gloo are built.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">dependencies</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bokeh=1.4</span>
+  <span class="pi">-</span> <span class="s">cmake=3.16</span> <span class="c1"># insures that the Gloo library extensions will be built</span>
+  <span class="pi">-</span> <span class="s">cudnn=7.6</span>
+  <span class="pi">-</span> <span class="s">cupti=10.1</span>
+  <span class="pi">-</span> <span class="s">cxx-compiler=1.0</span> <span class="c1"># meta-pacakge that insures suitable C and C++ compilers are available</span>
+  <span class="pi">-</span> <span class="s">jupyterlab=1.2</span>
+  <span class="pi">-</span> <span class="s">mpi4py=3.0</span> <span class="c1"># installs cuda-aware openmpi</span>
+  <span class="pi">-</span> <span class="s">nccl=2.5</span>
+  <span class="pi">-</span> <span class="s">nodejs=13</span>
+  <span class="pi">-</span> <span class="s">nvcc_linux-64=10.1</span> <span class="c1"># meta-package that configures environment to be "cuda-aware"</span>
+  <span class="pi">-</span> <span class="s">pip=20.0</span>
+  <span class="pi">-</span> <span class="na">pip</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mxnet-cu101mkl==1.6.*</span> <span class="c1"># makes sure MXNET is installed prior to horovod</span>
+    <span class="pi">-</span> <span class="s">-r file:requirements.txt</span>
+  <span class="pi">-</span> <span class="s">python=3.7</span>
+  <span class="pi">-</span> <span class="s">pytorch=1.4</span>
+  <span class="pi">-</span> <span class="s">tensorboard=2.1</span>
+  <span class="pi">-</span> <span class="s">tensorflow-gpu=2.1</span>
+  <span class="pi">-</span> <span class="s">torchvision=0.5</span> 
+</code></pre></div></div>
+
+<p>The complete <code class="highlighter-rouge">environment.yml</code> file is available on <a href="https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/environment.yml">GitHub</a>.</p>
+
+<h2 id="the-requirementstxt-file">
+<a class="anchor" href="#the-requirementstxt-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code class="highlighter-rouge">requirements.txt</code> File</h2>
+
+<p>The <code class="highlighter-rouge">requirements.txt</code> file is where all of the <code class="highlighter-rouge">pip</code> dependencies, including 
+Horovod itself, are listed for installation. In addition to Horovod I 
+typically will also use <code class="highlighter-rouge">pip</code> to install JupyterLab extensions to enable GPU and 
+CPU resource monitoring via <a href=""><code class="highlighter-rouge">jupyterlab-nvdashboard</code></a> 
+and Tensorboard support via <a href=""><code class="highlighter-rouge">jupyter-tensorboard</code></a>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">horovod</span><span class="o">==</span>0.19.<span class="k">*</span>
+jupyterlab-nvdashboard<span class="o">==</span>0.2.<span class="k">*</span> <span class="c"># server-side component; client-side component installed in postBuild</span>
+jupyter-tensorboard<span class="o">==</span>0.2.<span class="k">*</span>
+
+<span class="c"># make sure horovod is re-compiled if environment is re-built</span>
+<span class="nt">--no-binary</span><span class="o">=</span>horovod
+</code></pre></div></div>
+
+<p>Note the use of the <code class="highlighter-rouge">--no-binary</code> option at the end of the file. Including this 
+option insures that Horovod will be re-built whenever the Conda environment is 
+re-built.</p>
+
+<p>The complete <code class="highlighter-rouge">requirements.txt</code> file is available on <a href="https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/requirements.txt">GitHub</a>.</p>
+
+<h2 id="building-conda-environment">
+<a class="anchor" href="#building-conda-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building Conda Environment</h2>
+
+<p>After adding any necessary dependencies that should be downloaded via <code class="highlighter-rouge">conda</code> 
+to the <code class="highlighter-rouge">environment.yml</code> file and any dependencies that should be downloaded 
+via <code class="highlighter-rouge">pip</code> to the <code class="highlighter-rouge">requirements.txt</code> file you create the Conda environment in a 
+sub-directory <code class="highlighter-rouge">./env</code>of your project directory by running the following 
+commands.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">ENV_PREFIX</span><span class="o">=</span><span class="nv">$PWD</span>/env
+<span class="nb">export </span><span class="nv">HOROVOD_CUDA_HOME</span><span class="o">=</span><span class="nv">$CUDA_HOME</span>
+<span class="nb">export </span><span class="nv">HOROVOD_NCCL_HOME</span><span class="o">=</span><span class="nv">$ENV_PREFIX</span>
+<span class="nb">export </span><span class="nv">HOROVOD_GPU_ALLREDUCE</span><span class="o">=</span>NCCL
+<span class="nb">export </span><span class="nv">HOROVOD_GPU_BROADCAST</span><span class="o">=</span>NCCL
+conda <span class="nb">env </span>create <span class="nt">--prefix</span> <span class="nv">$ENV_PREFIX</span> <span class="nt">--file</span> environment.yml <span class="nt">--force</span>
+</code></pre></div></div>
+
+<p>By default Horovod will try and build extensions for all detected frameworks. 
+See the Horovod documentation on 
+<a href="https://horovod.readthedocs.io/en/latest/install_include.html#environment-variables">environment variables</a> 
+for the details on additional environment variables that can be set prior to 
+building Horovod.</p>
+
+<p>Once the new environment has been created you can activate the environment 
+with the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda activate <span class="nv">$ENV_PREFIX</span>
+</code></pre></div></div>
+
+<h2 id="the-postbuild-file">
+<a class="anchor" href="#the-postbuild-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code class="highlighter-rouge">postBuild</code> File</h2>
+
+<p>If you wish to use any JupyterLab extensions included in the <code class="highlighter-rouge">environment.yml</code> 
+and <code class="highlighter-rouge">requirements.txt</code> files then you need to rebuild the JupyterLab 
+application using the following commands to source the <code class="highlighter-rouge">postBuild</code> script.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda activate <span class="nv">$ENV_PREFIX</span> <span class="c"># optional if environment already active</span>
+<span class="nb">.</span> postBuild
+</code></pre></div></div>
+
+<h2 id="wrapping-it-all-up-in-a-bash-script">
+<a class="anchor" href="#wrapping-it-all-up-in-a-bash-script" aria-hidden="true"><span class="octicon octicon-link"></span></a>Wrapping it all up in a Bash script</h2>
+
+<p>I typically wrap these commands into a shell script <code class="highlighter-rouge">./bin/create-conda-env.sh</code>. 
+Running the shell script will set the Horovod build variables, create the 
+Conda environment, activate the Conda environment, and built JupyterLab with 
+any additional extensions.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash --login</span>
+
+<span class="nb">set</span> <span class="nt">-e</span>
+
+<span class="nb">export </span><span class="nv">ENV_PREFIX</span><span class="o">=</span><span class="nv">$PWD</span>/env
+<span class="nb">export </span><span class="nv">HOROVOD_CUDA_HOME</span><span class="o">=</span><span class="nv">$CUDA_HOME</span>
+<span class="nb">export </span><span class="nv">HOROVOD_NCCL_HOME</span><span class="o">=</span><span class="nv">$ENV_PREFIX</span>
+<span class="nb">export </span><span class="nv">HOROVOD_GPU_ALLREDUCE</span><span class="o">=</span>NCCL
+<span class="nb">export </span><span class="nv">HOROVOD_GPU_BROADCAST</span><span class="o">=</span>NCCL
+
+conda <span class="nb">env </span>create <span class="nt">--prefix</span> <span class="nv">$ENV_PREFIX</span> <span class="nt">--file</span> environment.yml <span class="nt">--force</span>
+conda activate <span class="nv">$ENV_PREFIX</span>
+<span class="nb">.</span> postBuild
+</code></pre></div></div>
+
+<p>The script should be run from the project root directory as follows.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./bin/create-conda-env.sh <span class="c"># assumes that $CUDA_HOME is set properly</span>
+</code></pre></div></div>
+
+<h2 id="verifying-the-conda-environment">
+<a class="anchor" href="#verifying-the-conda-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Verifying the Conda environment</h2>
+
+<p>After building the Conda environment you can check that Horovod has been built 
+with support for the deep learning frameworks TensorFlow, PyTorch, Apache 
+MXNet, and the contollers MPI and Gloo with the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda activate <span class="nv">$ENV_PREFIX</span> <span class="c"># optional if environment already active</span>
+horovodrun <span class="nt">--check-build</span>
+</code></pre></div></div>
+
+<p>You should see output similar to the following.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Horovod v0.19.1:
+
+Available Frameworks:
+    <span class="o">[</span>X] TensorFlow
+    <span class="o">[</span>X] PyTorch
+    <span class="o">[</span>X] MXNet
+
+Available Controllers:
+    <span class="o">[</span>X] MPI
+    <span class="o">[</span>X] Gloo
+
+Available Tensor Operations:
+    <span class="o">[</span>X] NCCL
+    <span class="o">[</span> <span class="o">]</span> DDL
+    <span class="o">[</span> <span class="o">]</span> CCL
+    <span class="o">[</span>X] MPI
+    <span class="o">[</span>X] Gloo  
+</code></pre></div></div>
+
+<h2 id="listing-the-full-contents-of-the-conda-environment">
+<a class="anchor" href="#listing-the-full-contents-of-the-conda-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listing the full contents of the Conda environment</h2>
+
+<p>To see the full list of packages installed into the environment run the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda list <span class="nt">--prefix</span> <span class="nv">$ENV_PREFIX</span>
+</code></pre></div></div>
+
+<h2 id="updating-the-conda-environment">
+<a class="anchor" href="#updating-the-conda-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating the Conda environment</h2>
+
+<p>If you add (remove) dependencies to (from) the <code class="highlighter-rouge">environment.yml</code> file or the <code class="highlighter-rouge">requirements.txt</code> file 
+after the environment has already been created, then you can re-create the environment with the 
+following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda <span class="nb">env </span>create <span class="nt">--prefix</span> <span class="nv">$ENV_PREFIX</span> <span class="nt">--file</span> environment.yml <span class="nt">--force</span>
+</code></pre></div></div>
+
+<p>However, whenever I add new dependencies I prefer to re-run the Bash script which will re-build both the Conda environment and JupyterLab.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./bin/create-conda-env.sh
+</code></pre></div></div>
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="davidrpugh/stochastic-expatriate-descent"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/stochastic-expatriate-descent/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/stochastic-expatriate-descent/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An expat scientist&#39;s musings about machine learning, deep learning, and living abroad.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/davidrpugh" title="davidrpugh"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/TheSandyCoder" title="TheSandyCoder"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
