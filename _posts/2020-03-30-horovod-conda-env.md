@@ -4,7 +4,7 @@ comments: true
 layout: post
 description: Getting started with distributed training of DNNs using Horovod.
 categories: [python, conda, deep-learning, pytorch, tensorflow, nvidia, horovod]
-title: Building a Conda environment for distributed training with Horovod
+title: Building a Conda environment for Horovod
 ---
 # Getting Started with Horovod
 
@@ -24,7 +24,7 @@ you like my approach then you can make use of the template repository on
 [GitHub](https://github.com/kaust-vislab/horovod-gpu-data-science-project) to 
 get started with you rnext Horovod data science project!
 
-## Installing the NVIDIA CUDA Toolkit
+# Installing the NVIDIA CUDA Toolkit
 
 First thing you need to do is to install the 
 [appropriate version](https://developer.nvidia.com/cuda-toolkit-archive) 
@@ -33,7 +33,7 @@ of the NVIDIA CUDA Toolkit on your workstation. For this blog post I am using
 [(documentation)](https://docs.nvidia.com/cuda/archive/10.1/) which works with 
 all three deep learning frameworks that are currently supported by Horovod.
 
-### Why not just use the `cudatoolkit` package from `conda-forge`?
+## Why not just use the `cudatoolkit` package?
 
 Typically when installing PyTorch, TensorFlow, or Apache MXNet with GPU support 
 using Conda you simply add the appropriate version 
@@ -46,24 +46,28 @@ Unfortunately, the `cudatoolkit` package available from
 and in order to use Horovod with either PyTorch, TensorFlow, or MXNet you need 
 to compile extensions.
 
-### But what about the `cudatoolkit-dev` package from `conda-forge`?
+## OK, but what about the `cudatoolkit-dev` package?
 
 While there are 
 [`cudatoolkit-dev`](https://anaconda.org/conda-forge/cudatoolkit-dev) packages 
 available from `conda-forge` that do include NVCC, I have had difficult getting 
-these packages to consistently install properly. The most robust approach to 
-obtain NVCC and still use Conda to manage all the other dependencies is to 
-install the NVIDIA CUDA Toolkit on your system and then install a meta-package 
+these packages to consistently install properly. 
+
+## 
+
+The most robust approach to obtain NVCC and still use Conda to manage all the 
+other dependencies is to install the NVIDIA CUDA Toolkit on your system and then 
+install a meta-package 
 [`nvcc_linux-64`](https://anaconda.org/nvidia/nvcc_linux-64) from `conda-forge` 
 which configures your Conda environment to use the NVCC installed on the system 
 together with the other CUDA Toolkit components installed inside the Conda 
 environment.
 
-## The `environment.yml` File
+# The `environment.yml` File
 
 Check the [official installation guide](https://horovod.readthedocs.io/en/latest/install_include.html) for Horovod more details.
 
-### Channel Priority
+## Channel Priority
 
 ```yaml
 name: null
@@ -74,9 +78,30 @@ channels:
   - defaults
 ```
 
-### Dependencies
+## Dependencies
 
-Below are the core required dependencies. Few things to note. Even though I have installed the NVIDIA CUDA Toolkit manually I still use Conda to manage the other required CUDA components such as `cudnn` and `nccl` (and the optional `cupti`). I use two meta-pacakges, `cxx-compiler` and `nvcc_linux-64`, to make sure that suitable C, and C++ compilers are installed and that the resulting Conda environment is aware of the manually installed CUDA Toolkit. Horovod also requires some controller library to coordinate work between the various Horovod processes. Typically this will be some MPI implementation such as [OpenMPI](). However, rather than specifying `openmpi` directly I instead opt for [mpi4py]() Conda package which provides a cuda-aware build of OpenMPI for your OS (where possible). Horovo also support that [Gloo]() collective communications library that can be used in place of MPI. I include `cmake` in order to insure that the Horovod extensions for Gloo are built.
+There are a few things worth noting about the dependencies.
+
+1. Even though I have installed the NVIDIA CUDA Toolkit manually I still use 
+   Conda to manage the other required CUDA components such as `cudnn` and `nccl` 
+   (and the optional `cupti`).
+2. I use two meta-pacakges, `cxx-compiler` and `nvcc_linux-64`, to make sure 
+   that suitable C, and C++ compilers are installed and that the resulting 
+   Conda environment is aware of the manually installed CUDA Toolkit. 
+3. Horovod requires some controller library to coordinate work between the 
+   various Horovod processes. Typically this will be some MPI implementation 
+   such as [OpenMPI](https://www.open-mpi.org/). However, rather than 
+   specifying the `openmpi` package directly I instead opt for 
+   [mpi4py](https://mpi4py.readthedocs.io/en/stable/) Conda package which 
+   provides a cuda-aware build of OpenMPI (where possible). 
+4. Horovod also support that [Gloo](https://github.com/facebookincubator/gloo) 
+   collective communications library that can be used in place of MPI. I 
+   include `cmake` in order to insure that the Horovod extensions for Gloo are 
+   built.
+
+Below are the core required dependencies. The complete `environment.yml` file 
+is available on 
+[GitHub](https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/environment.yml).
 
 ```yaml
 dependencies:
@@ -101,15 +126,13 @@ dependencies:
   - torchvision=0.5 
 ```
 
-The complete `environment.yml` file is available on [GitHub](https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/environment.yml).
-
-## The `requirements.txt` File
+# The `requirements.txt` File
 
 The `requirements.txt` file is where all of the `pip` dependencies, including 
 Horovod itself, are listed for installation. In addition to Horovod I 
 typically will also use `pip` to install JupyterLab extensions to enable GPU and 
-CPU resource monitoring via [`jupyterlab-nvdashboard`]() 
-and Tensorboard support via [`jupyter-tensorboard`]().
+CPU resource monitoring via [`jupyterlab-nvdashboard`](https://github.com/rapidsai/jupyterlab-nvdashboard) 
+and Tensorboard support via [`jupyter-tensorboard`](https://github.com/lspvic/jupyter_tensorboard).
 
 ```bash
 horovod==0.19.*
@@ -127,7 +150,7 @@ re-built.
 The complete `requirements.txt` file is available on [GitHub](https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/requirements.txt).
 
 
-## Building Conda Environment 
+# Building Conda Environment 
 
 After adding any necessary dependencies that should be downloaded via `conda` 
 to the `environment.yml` file and any dependencies that should be downloaded 
@@ -191,13 +214,14 @@ conda activate $ENV_PREFIX
 . postBuild
 ```
 
+I typically put scripts inside a `./bin` directory in my project root directory. 
 The script should be run from the project root directory as follows.
 
 ```bash
 ./bin/create-conda-env.sh # assumes that $CUDA_HOME is set properly
 ```
 
-## Verifying the Conda environment
+# Verifying the Conda environment
 
 After building the Conda environment you can check that Horovod has been built 
 with support for the deep learning frameworks TensorFlow, PyTorch, Apache 
@@ -230,7 +254,7 @@ Available Tensor Operations:
     [X] Gloo  
 ```
 
-## Listing the full contents of the Conda environment
+# Listing the contents of the Conda environment
 
 To see the full list of packages installed into the environment run the following command.
 
@@ -238,7 +262,7 @@ To see the full list of packages installed into the environment run the followin
 conda list --prefix $ENV_PREFIX
 ```
 
-## Updating the Conda environment
+# Updating the Conda environment
 
 If you add (remove) dependencies to (from) the `environment.yml` file or the `requirements.txt` file 
 after the environment has already been created, then you can re-create the environment with the 
@@ -253,3 +277,10 @@ However, whenever I add new dependencies I prefer to re-run the Bash script whic
 ```bash
 ./bin/create-conda-env.sh
 ```
+
+# Summary
+
+That's it! If you like my approach then you can make use of the template 
+repository on 
+[GitHub](https://github.com/kaust-vislab/horovod-gpu-data-science-project) to 
+get started with you rnext Horovod data science project!
