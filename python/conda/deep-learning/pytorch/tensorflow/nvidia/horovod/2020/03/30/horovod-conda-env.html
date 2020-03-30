@@ -162,8 +162,11 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#wrapping-it-all-up-in-a-bash-script">Wrapping it all up in a Bash script</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h1"><a href="#verifying-the-conda-environment">Verifying the Conda environment</a></li>
-<li class="toc-entry toc-h1"><a href="#listing-the-contents-of-the-conda-environment">Listing the contents of the Conda environment</a></li>
+<li class="toc-entry toc-h1"><a href="#verifying-the-conda-environment">Verifying the Conda environment</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#listing-the-contents-of-the-conda-environment">Listing the contents of the Conda environment</a></li>
+</ul>
+</li>
 <li class="toc-entry toc-h1"><a href="#updating-the-conda-environment">Updating the Conda environment</a></li>
 <li class="toc-entry toc-h1"><a href="#summary">Summary</a></li>
 </ul><h1 id="getting-started-with-horovod">
@@ -417,25 +420,28 @@ Available Tensor Operations:
     <span class="o">[</span>X] Gloo  
 </code></pre></div></div>
 
-<h1 id="listing-the-contents-of-the-conda-environment">
-<a class="anchor" href="#listing-the-contents-of-the-conda-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listing the contents of the Conda environment</h1>
+<h2 id="listing-the-contents-of-the-conda-environment">
+<a class="anchor" href="#listing-the-contents-of-the-conda-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listing the contents of the Conda environment</h2>
 
-<p>To see the full list of packages installed into the environment run the following command.</p>
+<p>To see the full list of packages installed into the environment run the 
+following command.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda list <span class="nt">--prefix</span> <span class="nv">$ENV_PREFIX</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda activate <span class="nv">$ENV_PREFIX</span> <span class="c"># optional if environment already active</span>
+conda list
 </code></pre></div></div>
 
 <h1 id="updating-the-conda-environment">
 <a class="anchor" href="#updating-the-conda-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating the Conda environment</h1>
 
-<p>If you add (remove) dependencies to (from) the <code class="highlighter-rouge">environment.yml</code> file or the <code class="highlighter-rouge">requirements.txt</code> file 
-after the environment has already been created, then you can re-create the environment with the 
-following command.</p>
+<p>If you add (remove) dependencies to (from) the <code class="highlighter-rouge">environment.yml</code> file or the 
+<code class="highlighter-rouge">requirements.txt</code> file after the environment has already been created, then 
+you can re-create the environment with the following command.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda <span class="nb">env </span>create <span class="nt">--prefix</span> <span class="nv">$ENV_PREFIX</span> <span class="nt">--file</span> environment.yml <span class="nt">--force</span>
 </code></pre></div></div>
 
-<p>However, whenever I add new dependencies I prefer to re-run the Bash script which will re-build both the Conda environment and JupyterLab.</p>
+<p>However, whenever I add new dependencies I prefer to re-run the Bash script 
+which will re-build both the Conda environment and JupyterLab.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./bin/create-conda-env.sh
 </code></pre></div></div>
@@ -443,10 +449,17 @@ following command.</p>
 <h1 id="summary">
 <a class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h1>
 
-<p>That’s it! If you like my approach then you can make use of the template 
-repository on 
+<p>Finding a reproducible process for building Horovod extensions for my deep 
+learning projects was tricky. Key to my solution is the use of meta-packages 
+from <code class="highlighter-rouge">conda-forge</code> to insure that the appropriate compilers are installed and 
+that the resulting Conda environment is aware of the system installed NVIDIA 
+CUDA Toolkit. The second key is to use the <code class="highlighter-rouge">--no-binary</code> flag in the 
+<code class="highlighter-rouge">requirements.txt</code> file to insure that Horovod is re-built whenever the Conda 
+environment is re-built.</p>
+
+<p>If you like my approach then you can make use of the template repository on 
 <a href="https://github.com/kaust-vislab/horovod-gpu-data-science-project">GitHub</a> to 
-get started with you rnext Horovod data science project!</p>
+get started with your next Horovod data science project!</p>
 
   </div><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js"

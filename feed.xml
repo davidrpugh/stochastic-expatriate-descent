@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-30T12:35:14-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;getting-started-with-horovod&quot;&gt;Getting Started with Horovod&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-30T12:42:48-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;getting-started-with-horovod&quot;&gt;Getting Started with Horovod&lt;/h1&gt;
 
 &lt;p align=&quot;center&quot;&gt;
    &lt;img alt=&quot;Horovod + NVIDIA FTW&quot; src=&quot;/stochastic-expatriate-descent/images/horovod-nvidia.jpg&quot; width=&quot;500&quot; /&gt;
@@ -237,33 +237,43 @@ Available Tensor Operations:
     &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] Gloo  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h1 id=&quot;listing-the-contents-of-the-conda-environment&quot;&gt;Listing the contents of the Conda environment&lt;/h1&gt;
+&lt;h2 id=&quot;listing-the-contents-of-the-conda-environment&quot;&gt;Listing the contents of the Conda environment&lt;/h2&gt;
 
-&lt;p&gt;To see the full list of packages installed into the environment run the following command.&lt;/p&gt;
+&lt;p&gt;To see the full list of packages installed into the environment run the 
+following command.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda list &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# optional if environment already active&lt;/span&gt;
+conda list
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;updating-the-conda-environment&quot;&gt;Updating the Conda environment&lt;/h1&gt;
 
-&lt;p&gt;If you add (remove) dependencies to (from) the &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file or the &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file 
-after the environment has already been created, then you can re-create the environment with the 
-following command.&lt;/p&gt;
+&lt;p&gt;If you add (remove) dependencies to (from) the &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file or the 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file after the environment has already been created, then 
+you can re-create the environment with the following command.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda &lt;span class=&quot;nb&quot;&gt;env &lt;/span&gt;create &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; environment.yml &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;However, whenever I add new dependencies I prefer to re-run the Bash script which will re-build both the Conda environment and JupyterLab.&lt;/p&gt;
+&lt;p&gt;However, whenever I add new dependencies I prefer to re-run the Bash script 
+which will re-build both the Conda environment and JupyterLab.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/create-conda-env.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;summary&quot;&gt;Summary&lt;/h1&gt;
 
-&lt;p&gt;That’s it! If you like my approach then you can make use of the template 
-repository on 
+&lt;p&gt;Finding a reproducible process for building Horovod extensions for my deep 
+learning projects was tricky. Key to my solution is the use of meta-packages 
+from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; to insure that the appropriate compilers are installed and 
+that the resulting Conda environment is aware of the system installed NVIDIA 
+CUDA Toolkit. The second key is to use the &lt;code class=&quot;highlighter-rouge&quot;&gt;--no-binary&lt;/code&gt; flag in the 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file to insure that Horovod is re-built whenever the Conda 
+environment is re-built.&lt;/p&gt;
+
+&lt;p&gt;If you like my approach then you can make use of the template repository on 
 &lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project&quot;&gt;GitHub&lt;/a&gt; to 
-get started with you rnext Horovod data science project!&lt;/p&gt;</content><author><name></name></author><summary type="html">Getting Started with Horovod</summary></entry><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-29T00:00:00-05:00</published><updated>2020-03-29T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
+get started with your next Horovod data science project!&lt;/p&gt;</content><author><name></name></author><summary type="html">Getting Started with Horovod</summary></entry><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-29T00:00:00-05:00</published><updated>2020-03-29T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
 
 &lt;p&gt;Conda is an open source package and environment management system that runs on 
 Windows, Mac OS and Linux.&lt;/p&gt;
