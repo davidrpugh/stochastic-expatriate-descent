@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-30T12:16:12-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Building a Conda environment for distributed training with Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for distributed training with Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;getting-started-with-horovod&quot;&gt;Getting Started with Horovod&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-30T12:35:14-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;getting-started-with-horovod&quot;&gt;Getting Started with Horovod&lt;/h1&gt;
 
 &lt;p align=&quot;center&quot;&gt;
    &lt;img alt=&quot;Horovod + NVIDIA FTW&quot; src=&quot;/stochastic-expatriate-descent/images/horovod-nvidia.jpg&quot; width=&quot;500&quot; /&gt;
@@ -16,7 +16,7 @@ you like my approach then you can make use of the template repository on
 &lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project&quot;&gt;GitHub&lt;/a&gt; to 
 get started with you rnext Horovod data science project!&lt;/p&gt;
 
-&lt;h2 id=&quot;installing-the-nvidia-cuda-toolkit&quot;&gt;Installing the NVIDIA CUDA Toolkit&lt;/h2&gt;
+&lt;h1 id=&quot;installing-the-nvidia-cuda-toolkit&quot;&gt;Installing the NVIDIA CUDA Toolkit&lt;/h1&gt;
 
 &lt;p&gt;First thing you need to do is to install the 
 &lt;a href=&quot;https://developer.nvidia.com/cuda-toolkit-archive&quot;&gt;appropriate version&lt;/a&gt; 
@@ -25,7 +25,7 @@ of the NVIDIA CUDA Toolkit on your workstation. For this blog post I am using
 &lt;a href=&quot;https://docs.nvidia.com/cuda/archive/10.1/&quot;&gt;(documentation)&lt;/a&gt; which works with 
 all three deep learning frameworks that are currently supported by Horovod.&lt;/p&gt;
 
-&lt;h3 id=&quot;why-not-just-use-the-cudatoolkit-package-from-conda-forge&quot;&gt;Why not just use the &lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit&lt;/code&gt; package from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt;?&lt;/h3&gt;
+&lt;h2 id=&quot;why-not-just-use-the-cudatoolkit-package&quot;&gt;Why not just use the &lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit&lt;/code&gt; package?&lt;/h2&gt;
 
 &lt;p&gt;Typically when installing PyTorch, TensorFlow, or Apache MXNet with GPU support 
 using Conda you simply add the appropriate version 
@@ -38,24 +38,28 @@ using Conda you simply add the appropriate version
 and in order to use Horovod with either PyTorch, TensorFlow, or MXNet you need 
 to compile extensions.&lt;/p&gt;
 
-&lt;h3 id=&quot;but-what-about-the-cudatoolkit-dev-package-from-conda-forge&quot;&gt;But what about the &lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit-dev&lt;/code&gt; package from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt;?&lt;/h3&gt;
+&lt;h2 id=&quot;ok-but-what-about-the-cudatoolkit-dev-package&quot;&gt;OK, but what about the &lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit-dev&lt;/code&gt; package?&lt;/h2&gt;
 
 &lt;p&gt;While there are 
 &lt;a href=&quot;https://anaconda.org/conda-forge/cudatoolkit-dev&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cudatoolkit-dev&lt;/code&gt;&lt;/a&gt; packages 
 available from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; that do include NVCC, I have had difficult getting 
-these packages to consistently install properly. The most robust approach to 
-obtain NVCC and still use Conda to manage all the other dependencies is to 
-install the NVIDIA CUDA Toolkit on your system and then install a meta-package 
+these packages to consistently install properly.&lt;/p&gt;
+
+&lt;p&gt;##&lt;/p&gt;
+
+&lt;p&gt;The most robust approach to obtain NVCC and still use Conda to manage all the 
+other dependencies is to install the NVIDIA CUDA Toolkit on your system and then 
+install a meta-package 
 &lt;a href=&quot;https://anaconda.org/nvidia/nvcc_linux-64&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nvcc_linux-64&lt;/code&gt;&lt;/a&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;conda-forge&lt;/code&gt; 
 which configures your Conda environment to use the NVCC installed on the system 
 together with the other CUDA Toolkit components installed inside the Conda 
 environment.&lt;/p&gt;
 
-&lt;h2 id=&quot;the-environmentyml-file&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; File&lt;/h2&gt;
+&lt;h1 id=&quot;the-environmentyml-file&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; File&lt;/h1&gt;
 
 &lt;p&gt;Check the &lt;a href=&quot;https://horovod.readthedocs.io/en/latest/install_include.html&quot;&gt;official installation guide&lt;/a&gt; for Horovod more details.&lt;/p&gt;
 
-&lt;h3 id=&quot;channel-priority&quot;&gt;Channel Priority&lt;/h3&gt;
+&lt;h2 id=&quot;channel-priority&quot;&gt;Channel Priority&lt;/h2&gt;
 
 &lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;null&lt;/span&gt;
 
@@ -65,9 +69,32 @@ environment.&lt;/p&gt;
   &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;defaults&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h3&gt;
+&lt;h2 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h2&gt;
 
-&lt;p&gt;Below are the core required dependencies. Few things to note. Even though I have installed the NVIDIA CUDA Toolkit manually I still use Conda to manage the other required CUDA components such as &lt;code class=&quot;highlighter-rouge&quot;&gt;cudnn&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;nccl&lt;/code&gt; (and the optional &lt;code class=&quot;highlighter-rouge&quot;&gt;cupti&lt;/code&gt;). I use two meta-pacakges, &lt;code class=&quot;highlighter-rouge&quot;&gt;cxx-compiler&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;nvcc_linux-64&lt;/code&gt;, to make sure that suitable C, and C++ compilers are installed and that the resulting Conda environment is aware of the manually installed CUDA Toolkit. Horovod also requires some controller library to coordinate work between the various Horovod processes. Typically this will be some MPI implementation such as &lt;a href=&quot;&quot;&gt;OpenMPI&lt;/a&gt;. However, rather than specifying &lt;code class=&quot;highlighter-rouge&quot;&gt;openmpi&lt;/code&gt; directly I instead opt for &lt;a href=&quot;&quot;&gt;mpi4py&lt;/a&gt; Conda package which provides a cuda-aware build of OpenMPI for your OS (where possible). Horovo also support that &lt;a href=&quot;&quot;&gt;Gloo&lt;/a&gt; collective communications library that can be used in place of MPI. I include &lt;code class=&quot;highlighter-rouge&quot;&gt;cmake&lt;/code&gt; in order to insure that the Horovod extensions for Gloo are built.&lt;/p&gt;
+&lt;p&gt;There are a few things worth noting about the dependencies.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Even though I have installed the NVIDIA CUDA Toolkit manually I still use 
+Conda to manage the other required CUDA components such as &lt;code class=&quot;highlighter-rouge&quot;&gt;cudnn&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;nccl&lt;/code&gt; 
+(and the optional &lt;code class=&quot;highlighter-rouge&quot;&gt;cupti&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;I use two meta-pacakges, &lt;code class=&quot;highlighter-rouge&quot;&gt;cxx-compiler&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;nvcc_linux-64&lt;/code&gt;, to make sure 
+that suitable C, and C++ compilers are installed and that the resulting 
+Conda environment is aware of the manually installed CUDA Toolkit.&lt;/li&gt;
+  &lt;li&gt;Horovod requires some controller library to coordinate work between the 
+various Horovod processes. Typically this will be some MPI implementation 
+such as &lt;a href=&quot;https://www.open-mpi.org/&quot;&gt;OpenMPI&lt;/a&gt;. However, rather than 
+specifying the &lt;code class=&quot;highlighter-rouge&quot;&gt;openmpi&lt;/code&gt; package directly I instead opt for 
+&lt;a href=&quot;https://mpi4py.readthedocs.io/en/stable/&quot;&gt;mpi4py&lt;/a&gt; Conda package which 
+provides a cuda-aware build of OpenMPI (where possible).&lt;/li&gt;
+  &lt;li&gt;Horovod also support that &lt;a href=&quot;https://github.com/facebookincubator/gloo&quot;&gt;Gloo&lt;/a&gt; 
+collective communications library that can be used in place of MPI. I 
+include &lt;code class=&quot;highlighter-rouge&quot;&gt;cmake&lt;/code&gt; in order to insure that the Horovod extensions for Gloo are 
+built.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Below are the core required dependencies. The complete &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file 
+is available on 
+&lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/environment.yml&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;bokeh=1.4&lt;/span&gt;
@@ -91,15 +118,13 @@ environment.&lt;/p&gt;
   &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;torchvision=0.5&lt;/span&gt; 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The complete &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file is available on &lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/environment.yml&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-requirementstxt-file&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; File&lt;/h2&gt;
+&lt;h1 id=&quot;the-requirementstxt-file&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; File&lt;/h1&gt;
 
 &lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file is where all of the &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; dependencies, including 
 Horovod itself, are listed for installation. In addition to Horovod I 
 typically will also use &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; to install JupyterLab extensions to enable GPU and 
-CPU resource monitoring via &lt;a href=&quot;&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyterlab-nvdashboard&lt;/code&gt;&lt;/a&gt; 
-and Tensorboard support via &lt;a href=&quot;&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyter-tensorboard&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+CPU resource monitoring via &lt;a href=&quot;https://github.com/rapidsai/jupyterlab-nvdashboard&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyterlab-nvdashboard&lt;/code&gt;&lt;/a&gt; 
+and Tensorboard support via &lt;a href=&quot;https://github.com/lspvic/jupyter_tensorboard&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyter-tensorboard&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;horovod&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;0.19.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
 jupyterlab-nvdashboard&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;0.2.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# server-side component; client-side component installed in postBuild&lt;/span&gt;
@@ -115,7 +140,7 @@ re-built.&lt;/p&gt;
 
 &lt;p&gt;The complete &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file is available on &lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project/blob/master/requirements.txt&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;building-conda-environment&quot;&gt;Building Conda Environment&lt;/h2&gt;
+&lt;h1 id=&quot;building-conda-environment&quot;&gt;Building Conda Environment&lt;/h1&gt;
 
 &lt;p&gt;After adding any necessary dependencies that should be downloaded via &lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt; 
 to the &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file and any dependencies that should be downloaded 
@@ -175,12 +200,13 @@ conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; postBuild
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The script should be run from the project root directory as follows.&lt;/p&gt;
+&lt;p&gt;I typically put scripts inside a &lt;code class=&quot;highlighter-rouge&quot;&gt;./bin&lt;/code&gt; directory in my project root directory. 
+The script should be run from the project root directory as follows.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/create-conda-env.sh &lt;span class=&quot;c&quot;&gt;# assumes that $CUDA_HOME is set properly&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;verifying-the-conda-environment&quot;&gt;Verifying the Conda environment&lt;/h2&gt;
+&lt;h1 id=&quot;verifying-the-conda-environment&quot;&gt;Verifying the Conda environment&lt;/h1&gt;
 
 &lt;p&gt;After building the Conda environment you can check that Horovod has been built 
 with support for the deep learning frameworks TensorFlow, PyTorch, Apache 
@@ -211,14 +237,14 @@ Available Tensor Operations:
     &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;X] Gloo  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;listing-the-full-contents-of-the-conda-environment&quot;&gt;Listing the full contents of the Conda environment&lt;/h2&gt;
+&lt;h1 id=&quot;listing-the-contents-of-the-conda-environment&quot;&gt;Listing the contents of the Conda environment&lt;/h1&gt;
 
 &lt;p&gt;To see the full list of packages installed into the environment run the following command.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda list &lt;span class=&quot;nt&quot;&gt;--prefix&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;updating-the-conda-environment&quot;&gt;Updating the Conda environment&lt;/h2&gt;
+&lt;h1 id=&quot;updating-the-conda-environment&quot;&gt;Updating the Conda environment&lt;/h1&gt;
 
 &lt;p&gt;If you add (remove) dependencies to (from) the &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt; file or the &lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt; file 
 after the environment has already been created, then you can re-create the environment with the 
@@ -230,7 +256,14 @@ following command.&lt;/p&gt;
 &lt;p&gt;However, whenever I add new dependencies I prefer to re-run the Bash script which will re-build both the Conda environment and JupyterLab.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./bin/create-conda-env.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">Getting Started with Horovod</summary></entry><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-29T00:00:00-05:00</published><updated>2020-03-29T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;summary&quot;&gt;Summary&lt;/h1&gt;
+
+&lt;p&gt;That’s it! If you like my approach then you can make use of the template 
+repository on 
+&lt;a href=&quot;https://github.com/kaust-vislab/horovod-gpu-data-science-project&quot;&gt;GitHub&lt;/a&gt; to 
+get started with you rnext Horovod data science project!&lt;/p&gt;</content><author><name></name></author><summary type="html">Getting Started with Horovod</summary></entry><entry><title type="html">Managing Project-Specific Environments With Conda</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html" rel="alternate" type="text/html" title="Managing Project-Specific Environments With Conda" /><published>2020-03-29T00:00:00-05:00</published><updated>2020-03-29T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/data-science/machine-learning/deep-learning/2020/03/29/getting-started-with-conda.html">&lt;h1 id=&quot;getting-started-with-conda&quot;&gt;Getting Started with Conda&lt;/h1&gt;
 
 &lt;p&gt;Conda is an open source package and environment management system that runs on 
 Windows, Mac OS and Linux.&lt;/p&gt;
