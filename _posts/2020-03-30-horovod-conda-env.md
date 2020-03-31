@@ -6,7 +6,7 @@ description: Getting started with distributed training of DNNs using Horovod.
 categories: [python, conda, deep-learning, pytorch, tensorflow, nvidia, horovod]
 title: Building a Conda environment for Horovod
 ---
-# Getting Started with Horovod
+# What is Horovod?
 
 <p align="center">
    <img alt="Horovod + NVIDIA FTW" src="{{ site.baseurl }}/images/horovod-nvidia.jpg" width="500">
@@ -46,14 +46,14 @@ Unfortunately, the `cudatoolkit` package available from
 and in order to use Horovod with either PyTorch, TensorFlow, or MXNet you need 
 to compile extensions.
 
-## OK, but what about the `cudatoolkit-dev` package?
+## What about the `cudatoolkit-dev` package?
 
 While there are 
 [`cudatoolkit-dev`](https://anaconda.org/conda-forge/cudatoolkit-dev) packages 
 available from `conda-forge` that do include NVCC, I have had difficult getting 
 these packages to consistently install properly. 
 
-## 
+## Use the `nvcc_linux-64` meta-pacakge!
 
 The most robust approach to obtain NVCC and still use Conda to manage all the 
 other dependencies is to install the NVIDIA CUDA Toolkit on your system and then 
@@ -63,11 +63,17 @@ which configures your Conda environment to use the NVCC installed on the system
 together with the other CUDA Toolkit components installed inside the Conda 
 environment.
 
-# The `environment.yml` File
+# The `environment.yml` file
 
-Check the [official installation guide](https://horovod.readthedocs.io/en/latest/install_include.html) for Horovod more details.
+I prefer to specify as many dependencies as possible in the Conda 
+`environment.yml` file and only specify dependencies in `requirements.txt` 
+that are not available via Conda channels. Check the 
+[official Horovod installation guide](https://horovod.readthedocs.io/en/latest/install_include.html) 
+for details of required dependencies.
 
 ## Channel Priority
+
+I use the recommended channel priorities. Note that `conda-forge` has priority over `defaults`. 
 
 ```yaml
 name: null
