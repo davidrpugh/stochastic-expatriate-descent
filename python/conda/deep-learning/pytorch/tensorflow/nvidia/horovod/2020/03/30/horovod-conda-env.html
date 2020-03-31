@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      6 min read
+      7 min read
     
 </span></p>
 
@@ -142,14 +142,15 @@ window.onload = wrap_img;
 
   <div class="post-content e-content" itemprop="articleBody">
     <ul class="section-nav">
-<li class="toc-entry toc-h1"><a href="#getting-started-with-horovod">Getting Started with Horovod</a></li>
+<li class="toc-entry toc-h1"><a href="#what-is-horovod">What is Horovod?</a></li>
 <li class="toc-entry toc-h1"><a href="#installing-the-nvidia-cuda-toolkit">Installing the NVIDIA CUDA Toolkit</a>
 <ul>
 <li class="toc-entry toc-h2"><a href="#why-not-just-use-the-cudatoolkit-package">Why not just use the cudatoolkit package?</a></li>
-<li class="toc-entry toc-h2"><a href="#ok-but-what-about-the-cudatoolkit-dev-package">OK, but what about the cudatoolkit-dev package?</a></li>
+<li class="toc-entry toc-h2"><a href="#what-about-the-cudatoolkit-dev-package">What about the cudatoolkit-dev package?</a></li>
+<li class="toc-entry toc-h2"><a href="#use-the-nvcc_linux-64-meta-pacakge">Use the nvcc_linux-64 meta-pacakge!</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h1"><a href="#the-environmentyml-file">The environment.yml File</a>
+<li class="toc-entry toc-h1"><a href="#the-environmentyml-file">The environment.yml file</a>
 <ul>
 <li class="toc-entry toc-h2"><a href="#channel-priority">Channel Priority</a></li>
 <li class="toc-entry toc-h2"><a href="#dependencies">Dependencies</a></li>
@@ -169,8 +170,8 @@ window.onload = wrap_img;
 </li>
 <li class="toc-entry toc-h1"><a href="#updating-the-conda-environment">Updating the Conda environment</a></li>
 <li class="toc-entry toc-h1"><a href="#summary">Summary</a></li>
-</ul><h1 id="getting-started-with-horovod">
-<a class="anchor" href="#getting-started-with-horovod" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started with Horovod</h1>
+</ul><h1 id="what-is-horovod">
+<a class="anchor" href="#what-is-horovod" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Horovod?</h1>
 
 <p align="center">
    <img alt="Horovod + NVIDIA FTW" src="/stochastic-expatriate-descent/images/horovod-nvidia.jpg" width="500">
@@ -212,15 +213,16 @@ using Conda you simply add the appropriate version
 and in order to use Horovod with either PyTorch, TensorFlow, or MXNet you need 
 to compile extensions.</p>
 
-<h2 id="ok-but-what-about-the-cudatoolkit-dev-package">
-<a class="anchor" href="#ok-but-what-about-the-cudatoolkit-dev-package" aria-hidden="true"><span class="octicon octicon-link"></span></a>OK, but what about the <code class="highlighter-rouge">cudatoolkit-dev</code> package?</h2>
+<h2 id="what-about-the-cudatoolkit-dev-package">
+<a class="anchor" href="#what-about-the-cudatoolkit-dev-package" aria-hidden="true"><span class="octicon octicon-link"></span></a>What about the <code class="highlighter-rouge">cudatoolkit-dev</code> package?</h2>
 
 <p>While there are 
 <a href="https://anaconda.org/conda-forge/cudatoolkit-dev"><code class="highlighter-rouge">cudatoolkit-dev</code></a> packages 
 available from <code class="highlighter-rouge">conda-forge</code> that do include NVCC, I have had difficult getting 
 these packages to consistently install properly.</p>
 
-<p>##</p>
+<h2 id="use-the-nvcc_linux-64-meta-pacakge">
+<a class="anchor" href="#use-the-nvcc_linux-64-meta-pacakge" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use the <code class="highlighter-rouge">nvcc_linux-64</code> meta-pacakge!</h2>
 
 <p>The most robust approach to obtain NVCC and still use Conda to manage all the 
 other dependencies is to install the NVIDIA CUDA Toolkit on your system and then 
@@ -231,12 +233,18 @@ together with the other CUDA Toolkit components installed inside the Conda
 environment.</p>
 
 <h1 id="the-environmentyml-file">
-<a class="anchor" href="#the-environmentyml-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code class="highlighter-rouge">environment.yml</code> File</h1>
+<a class="anchor" href="#the-environmentyml-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code class="highlighter-rouge">environment.yml</code> file</h1>
 
-<p>Check the <a href="https://horovod.readthedocs.io/en/latest/install_include.html">official installation guide</a> for Horovod more details.</p>
+<p>I prefer to specify as many dependencies as possible in the Conda 
+<code class="highlighter-rouge">environment.yml</code> file and only specify dependencies in <code class="highlighter-rouge">requirements.txt</code> 
+that are not available via Conda channels. Check the 
+<a href="https://horovod.readthedocs.io/en/latest/install_include.html">official Horovod installation guide</a> 
+for details of required dependencies.</p>
 
 <h2 id="channel-priority">
 <a class="anchor" href="#channel-priority" aria-hidden="true"><span class="octicon octicon-link"></span></a>Channel Priority</h2>
+
+<p>I use the recommended channel priorities. Note that <code class="highlighter-rouge">conda-forge</code> has priority over <code class="highlighter-rouge">defaults</code>.</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="no">null</span>
 
