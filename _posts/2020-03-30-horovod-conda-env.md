@@ -9,9 +9,6 @@ title: Building a Conda environment for Horovod
 ---
 # What is Horovod?
 
-<p align="center">
-   <img alt="Horovod + NVIDIA FTW" src="{{ site.baseurl }}/images/horovod-nvidia.jpg" width="500">
-</p>
 [Horovod]() is an open-source distributed training framework for 
 [TensorFlow](https://www.tensorflow.org/), [Keras](https://keras.io/), 
 [PyTorch](https://pytorch.org/), and 

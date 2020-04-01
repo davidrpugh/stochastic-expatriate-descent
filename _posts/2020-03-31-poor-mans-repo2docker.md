@@ -2,6 +2,7 @@
 toc: true
 comments: true
 layout: post
+image: images/conda-docker.png
 description: A solution to the environment and package management problems that plague data science projects.
 categories: [python, conda, docker, data-science]
 title: Conda, pip, and Docker FTW!

@@ -2,6 +2,7 @@
 toc: true
 comments: true
 layout: post
+image: images/conda-logo.svg
 description: Getting started with Conda and a minimal set of "best practices" for daily use.
 categories: [python, conda, data-science, machine-learning, deep-learning]
 title: Managing Project-Specific Environments With Conda
