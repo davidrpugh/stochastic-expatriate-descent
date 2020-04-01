@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-04-01T03:02:30-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Conda, pip, and Docker FTW!</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html" rel="alternate" type="text/html" title="Conda, pip, and Docker FTW!" /><published>2020-03-31T00:00:00-05:00</published><updated>2020-03-31T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html">&lt;h1 id=&quot;conda-pip-and-docker-ftw&quot;&gt;Conda, pip, and docker FTW!&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-04-01T03:21:32-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Conda, pip, and Docker FTW!</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html" rel="alternate" type="text/html" title="Conda, pip, and Docker FTW!" /><published>2020-03-31T00:00:00-05:00</published><updated>2020-03-31T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html">&lt;h1 id=&quot;conda-pip-and-docker-ftw&quot;&gt;Conda, pip, and docker FTW!&lt;/h1&gt;
 
 &lt;h2 id=&quot;environment-management-problem&quot;&gt;Environment management problem&lt;/h2&gt;
 
@@ -6,7 +6,7 @@
 
 &lt;h2 id=&quot;why-not-just-use-conda--pip&quot;&gt;Why not just use Conda (+ pip)?&lt;/h2&gt;
 
-&lt;h1 id=&quot;the-dockerfile&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt;&lt;/h1&gt;
+&lt;h2 id=&quot;the-dockerfile&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt;&lt;/h2&gt;
 
 &lt;p&gt;For the parent image I use &lt;a href=&quot;http://releases.ubuntu.com/16.04/&quot;&gt;Ubuntu 16.04&lt;/a&gt; 
 which is one of the most commonly used flavor of Linux in the data science 
@@ -167,6 +167,107 @@ launch a JupyterLab server by default when executing containers.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# default command will be to launch JupyterLab server for development
 CMD [ &quot;jupyter&quot;, &quot;lab&quot;, &quot;--no-browser&quot;, &quot;--ip&quot;, &quot;0.0.0.0&quot; ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;building-the-docker-image&quot;&gt;Building the Docker image&lt;/h2&gt;
+
+&lt;p&gt;The following command builds a new image for your project with a custom &lt;code class=&quot;highlighter-rouge&quot;&gt;$USER&lt;/code&gt; 
+(and associated &lt;code class=&quot;highlighter-rouge&quot;&gt;$UID&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;$GID&lt;/code&gt;) as well as a particular &lt;code class=&quot;highlighter-rouge&quot;&gt;$IMAGE_NAME&lt;/code&gt; and 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$IMAGE_TAG&lt;/code&gt;. This command should be run within the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; sub-directory of 
+the project as the Docker build context is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;../&lt;/code&gt; which should be the 
+project root directory.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker image build &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--build-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--build-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$UID&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--build-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$GID&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; Dockerfile &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--tag&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$IMAGE_NAME&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$IMAGE_TAG&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  ../
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;running-a-docker-container&quot;&gt;Running a Docker container&lt;/h2&gt;
+
+&lt;p&gt;Once the image is built, the following command will run a container based on 
+the image &lt;code class=&quot;highlighter-rouge&quot;&gt;$IMAGE_NAME:$IMAGE_TAG&lt;/code&gt;. This command should be run from within the 
+project’s root directory.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker container run &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--tty&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--volume&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/bin:/home/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/app/bin &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--volume&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/data:/home/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/app/data &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--volume&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/doc:/home/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/app/doc &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--volume&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/notebooks:/home/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/app/notebooks &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--volume&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/results:/home/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/app/results &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--volume&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/src:/home/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/app/src &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--publish&lt;/span&gt; 8888:8888 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;$IMAGE_NAME&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$IMAGE_TAG&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;using-docker-compose&quot;&gt;Using Docker Compose&lt;/h2&gt;
+
+&lt;p&gt;It is quite easy to make typos whilst writing the above docker commands by hand. 
+A less error-prone approach is to use 
+&lt;a href=&quot;https://docs.docker.com/compose/&quot;&gt;Docker Compose&lt;/a&gt;. The above docker commands can 
+be encapsulated into the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; configuration file as follows.&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;3.7&quot;&lt;/span&gt;
+
+&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;jupyterlab-server&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;username=${USER}&lt;/span&gt;
+        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;uid=${UID}&lt;/span&gt;
+        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;gid=${GID}&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;dockerfile&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;docker/Dockerfile&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;8888:8888&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../bin:/home/${USER}/app/bin&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../data:/home/${USER}/app/data&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../doc:/home/${USER}/app/doc&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../notebooks:/home/${USER}/app/notebooks&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../results:/home/${USER}/app/results&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../src:/home/${USER}/app/src&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;stdin_open&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;tty&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The above &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; file relies on 
+&lt;a href=&quot;https://docs.docker.com/compose/environment-variables/#the-env-file&quot;&gt;variable substitution&lt;/a&gt;.
+to obtain the values for &lt;code class=&quot;highlighter-rouge&quot;&gt;$USER&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;$UID&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;$GID&lt;/code&gt;. These values can be 
+stored in an a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; as follows.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;USER=$USER
+UID=$UID
+GID=$GID
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can test your &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; file by running the following command in 
+the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; sub-directory of the project.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose config
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This command takes the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; file and substitutes the values 
+provided in the &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; file and then returns the result.&lt;/p&gt;
+
+&lt;p&gt;Once you are confident that values in the &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; file are being substituted 
+properly into the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; file, the following command can be used 
+to bring up a container based on your project’s Docker image and launch the 
+JupyterLab server. This command should also be run from within the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; 
+sub-directory of the project.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose up &lt;span class=&quot;nt&quot;&gt;--build&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When you are done developing and have shutdown the JupyterLab server, the following command tears down the networking infrastructure for the running container.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose down
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">Conda, pip, and docker FTW!</summary></entry><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;what-is-horovod&quot;&gt;What is Horovod?&lt;/h1&gt;
 
 &lt;p align=&quot;center&quot;&gt;

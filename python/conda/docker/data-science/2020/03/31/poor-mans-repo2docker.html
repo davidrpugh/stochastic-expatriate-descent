@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      4 min read
+      6 min read
     
 </span></p>
 
@@ -138,9 +138,7 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#environment-management-problem">Environment management problem</a></li>
 <li class="toc-entry toc-h2"><a href="#package-management-problem">Package management problem</a></li>
 <li class="toc-entry toc-h2"><a href="#why-not-just-use-conda--pip">Why not just use Conda (+ pip)?</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h1"><a href="#the-dockerfile">The Dockerfile</a>
+<li class="toc-entry toc-h2"><a href="#the-dockerfile">The Dockerfile</a>
 <ul>
 <li class="toc-entry toc-h3"><a href="#make-bash-the-default-shell">Make bash the default shell</a></li>
 <li class="toc-entry toc-h3"><a href="#create-a-non-root-user">Create a non-root user</a></li>
@@ -150,6 +148,11 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#build-the-conda-environment">Build the Conda environment</a></li>
 <li class="toc-entry toc-h3"><a href="#insure-conda-environment-is-properly-activated-at-runtime">Insure Conda environment is properly activated at runtime</a></li>
 <li class="toc-entry toc-h3"><a href="#specify-a-default-command-for-the-docker-container">Specify a default command for the Docker container</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#building-the-docker-image">Building the Docker image</a></li>
+<li class="toc-entry toc-h2"><a href="#running-a-docker-container">Running a Docker container</a></li>
+<li class="toc-entry toc-h2"><a href="#using-docker-compose">Using Docker Compose</a></li>
 </ul>
 </li>
 </ul><h1 id="conda-pip-and-docker-ftw">
@@ -164,9 +167,9 @@ window.onload = wrap_img;
 <h2 id="why-not-just-use-conda--pip">
 <a class="anchor" href="#why-not-just-use-conda--pip" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why not just use Conda (+ pip)?</h2>
 
-<h1 id="the-dockerfile">
+<h2 id="the-dockerfile">
 <a class="anchor" href="#the-dockerfile" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code class="highlighter-rouge">Dockerfile</code>
-</h1>
+</h2>
 
 <p>For the parent image I use <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04</a> 
 which is one of the most commonly used flavor of Linux in the data science 
@@ -337,6 +340,109 @@ launch a JupyterLab server by default when executing containers.</p>
 CMD [ "jupyter", "lab", "--no-browser", "--ip", "0.0.0.0" ]
 </code></pre></div></div>
 
+<h2 id="building-the-docker-image">
+<a class="anchor" href="#building-the-docker-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building the Docker image</h2>
+
+<p>The following command builds a new image for your project with a custom <code class="highlighter-rouge">$USER</code> 
+(and associated <code class="highlighter-rouge">$UID</code> and <code class="highlighter-rouge">$GID</code>) as well as a particular <code class="highlighter-rouge">$IMAGE_NAME</code> and 
+<code class="highlighter-rouge">$IMAGE_TAG</code>. This command should be run within the <code class="highlighter-rouge">docker</code> sub-directory of 
+the project as the Docker build context is set to <code class="highlighter-rouge">../</code> which should be the 
+project root directory.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image build <span class="se">\</span>
+  <span class="nt">--build-arg</span> <span class="nv">username</span><span class="o">=</span><span class="nv">$USER</span> <span class="se">\</span>
+  <span class="nt">--build-arg</span> <span class="nv">uid</span><span class="o">=</span><span class="nv">$UID</span> <span class="se">\</span>
+  <span class="nt">--build-arg</span> <span class="nv">gid</span><span class="o">=</span><span class="nv">$GID</span> <span class="se">\</span>
+  <span class="nt">--file</span> Dockerfile <span class="se">\</span>
+  <span class="nt">--tag</span> <span class="nv">$IMAGE_NAME</span>:<span class="nv">$IMAGE_TAG</span> <span class="se">\</span>
+  ../
+</code></pre></div></div>
+
+<h2 id="running-a-docker-container">
+<a class="anchor" href="#running-a-docker-container" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running a Docker container</h2>
+
+<p>Once the image is built, the following command will run a container based on 
+the image <code class="highlighter-rouge">$IMAGE_NAME:$IMAGE_TAG</code>. This command should be run from within the 
+project’s root directory.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker container run <span class="se">\</span>
+  <span class="nt">--rm</span> <span class="se">\</span>
+  <span class="nt">--tty</span> <span class="se">\</span>
+  <span class="nt">--volume</span> <span class="k">${</span><span class="nv">pwd</span><span class="k">}</span>/bin:/home/<span class="nv">$USER</span>/app/bin <span class="se">\</span>
+  <span class="nt">--volume</span> <span class="k">${</span><span class="nv">pwd</span><span class="k">}</span>/data:/home/<span class="nv">$USER</span>/app/data <span class="se">\ </span>
+  <span class="nt">--volume</span> <span class="k">${</span><span class="nv">pwd</span><span class="k">}</span>/doc:/home/<span class="nv">$USER</span>/app/doc <span class="se">\</span>
+  <span class="nt">--volume</span> <span class="k">${</span><span class="nv">pwd</span><span class="k">}</span>/notebooks:/home/<span class="nv">$USER</span>/app/notebooks <span class="se">\</span>
+  <span class="nt">--volume</span> <span class="k">${</span><span class="nv">pwd</span><span class="k">}</span>/results:/home/<span class="nv">$USER</span>/app/results <span class="se">\</span>
+  <span class="nt">--volume</span> <span class="k">${</span><span class="nv">pwd</span><span class="k">}</span>/src:/home/<span class="nv">$USER</span>/app/src <span class="se">\</span>
+  <span class="nt">--publish</span> 8888:8888 <span class="se">\</span>
+  <span class="nv">$IMAGE_NAME</span>:<span class="nv">$IMAGE_TAG</span>
+</code></pre></div></div>
+
+<h2 id="using-docker-compose">
+<a class="anchor" href="#using-docker-compose" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Docker Compose</h2>
+
+<p>It is quite easy to make typos whilst writing the above docker commands by hand. 
+A less error-prone approach is to use 
+<a href="https://docs.docker.com/compose/">Docker Compose</a>. The above docker commands can 
+be encapsulated into the <code class="highlighter-rouge">docker-compose.yml</code> configuration file as follows.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">3.7"</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">jupyterlab-server</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">args</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">username=${USER}</span>
+        <span class="pi">-</span> <span class="s">uid=${UID}</span>
+        <span class="pi">-</span> <span class="s">gid=${GID}</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">../</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">docker/Dockerfile</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8888:8888"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">../bin:/home/${USER}/app/bin</span>
+      <span class="pi">-</span> <span class="s">../data:/home/${USER}/app/data</span>
+      <span class="pi">-</span> <span class="s">../doc:/home/${USER}/app/doc</span>
+      <span class="pi">-</span> <span class="s">../notebooks:/home/${USER}/app/notebooks</span>
+      <span class="pi">-</span> <span class="s">../results:/home/${USER}/app/results</span>
+      <span class="pi">-</span> <span class="s">../src:/home/${USER}/app/src</span>
+    <span class="na">init</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">stdin_open</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">tty</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<p>The above <code class="highlighter-rouge">docker-compose.yml</code> file relies on 
+<a href="https://docs.docker.com/compose/environment-variables/#the-env-file">variable substitution</a>.
+to obtain the values for <code class="highlighter-rouge">$USER</code>, <code class="highlighter-rouge">$UID</code>, and <code class="highlighter-rouge">$GID</code>. These values can be 
+stored in an a file called <code class="highlighter-rouge">.env</code> as follows.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USER=$USER
+UID=$UID
+GID=$GID
+</code></pre></div></div>
+
+<p>You can test your <code class="highlighter-rouge">docker-compose.yml</code> file by running the following command in 
+the <code class="highlighter-rouge">docker</code> sub-directory of the project.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose config
+</code></pre></div></div>
+
+<p>This command takes the <code class="highlighter-rouge">docker-compose.yml</code> file and substitutes the values 
+provided in the <code class="highlighter-rouge">.env</code> file and then returns the result.</p>
+
+<p>Once you are confident that values in the <code class="highlighter-rouge">.env</code> file are being substituted 
+properly into the <code class="highlighter-rouge">docker-compose.yml</code> file, the following command can be used 
+to bring up a container based on your project’s Docker image and launch the 
+JupyterLab server. This command should also be run from within the <code class="highlighter-rouge">docker</code> 
+sub-directory of the project.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>When you are done developing and have shutdown the JupyterLab server, the following command tears down the networking infrastructure for the running container.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose down
+</code></pre></div></div>
 
   </div><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js"
