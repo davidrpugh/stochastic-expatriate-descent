@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      6 min read
+      8 min read
     
 </span></p>
 
@@ -135,9 +135,6 @@ window.onload = wrap_img;
     <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#conda-pip-and-docker-ftw">Conda, pip, and docker FTW!</a>
 <ul>
-<li class="toc-entry toc-h2"><a href="#environment-management-problem">Environment management problem</a></li>
-<li class="toc-entry toc-h2"><a href="#package-management-problem">Package management problem</a></li>
-<li class="toc-entry toc-h2"><a href="#why-not-just-use-conda--pip">Why not just use Conda (+ pip)?</a></li>
 <li class="toc-entry toc-h2"><a href="#the-dockerfile">The Dockerfile</a>
 <ul>
 <li class="toc-entry toc-h3"><a href="#make-bash-the-default-shell">Make bash the default shell</a></li>
@@ -158,14 +155,21 @@ window.onload = wrap_img;
 </ul><h1 id="conda-pip-and-docker-ftw">
 <a class="anchor" href="#conda-pip-and-docker-ftw" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conda, pip, and docker FTW!</h1>
 
-<h2 id="environment-management-problem">
-<a class="anchor" href="#environment-management-problem" aria-hidden="true"><span class="octicon octicon-link"></span></a>Environment management problem</h2>
+<p><a href="https://docs.conda.io/en/latest/">Conda</a> is an open source package and environment management system that runs on Windows, Mac OS and Linux.</p>
 
-<h2 id="package-management-problem">
-<a class="anchor" href="#package-management-problem" aria-hidden="true"><span class="octicon octicon-link"></span></a>Package management problem</h2>
+<ul>
+  <li>Conda can quickly install, run, and update packages and their dependencies.</li>
+  <li>Conda can create, save, load, and switch between project specific software environments on your local computer.</li>
+  <li>Although Conda was created for Python programs, Conda can package and distribute software for any language such as R, Ruby, Lua, Scala, Java, JavaScript, C, C++, FORTRAN.</li>
+</ul>
 
-<h2 id="why-not-just-use-conda--pip">
-<a class="anchor" href="#why-not-just-use-conda--pip" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why not just use Conda (+ pip)?</h2>
+<p>Conda as a package manager helps you find and install packages. If you need a package that requires a different version of Python, you do not need to switch to a different environment manager, because Conda is also an environment manager. With just a few commands, you can set up a totally separate environment to run that different version of Python, while continuing to run your usual version of Python in your normal environment. While Conda is my default package and environment management solution, not every Python package that I might need to use is available via Conda. Fortunately, Conda plays nicely with <a href="https://pip.pypa.io/en/stable/"><code class="highlighter-rouge">pip</code></a> which is the default Python package management tool.</p>
+
+<p><a href="https://www.docker.com/">Docker</a> is a tool designed to make it easier to create, deploy, and run applications by using containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and deploy it as one package.</p>
+
+<p>While Conda (+ pip) solves most of my day-to-day data science environment and package management issues, incorporating Docker into my Conda (+ pip) development workflow has made it much easier to port my data science workflows from from my laptop/workstation to remote cloud computing resources.</p>
+
+<p>Getting Conda (+ pip) to work as expected inside Docker containers turned out to be much more challenging that I expected. This blog post shows how I eventually combined Conda (+ pip) and Docker. In the following I assume that you have organized your project directory similar to my <a href="https://github.com/kaust-vislab/python-data-science-project">Python data science project template</a>. In particular, I will assume that you store all Docker related files in a <code class="highlighter-rouge">docker</code> sub-directory within your project root directory.</p>
 
 <h2 id="the-dockerfile">
 <a class="anchor" href="#the-dockerfile" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code class="highlighter-rouge">Dockerfile</code>
