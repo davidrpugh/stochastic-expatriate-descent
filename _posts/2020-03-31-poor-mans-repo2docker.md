@@ -8,11 +8,19 @@ title: Conda, pip, and Docker FTW!
 ---
 # Conda, pip, and docker FTW!
 
-## Environment management problem
+[Conda](https://docs.conda.io/en/latest/) is an open source package and environment management system that runs on Windows, Mac OS and Linux.
 
-## Package management problem
+* Conda can quickly install, run, and update packages and their dependencies.
+* Conda can create, save, load, and switch between project specific software environments on your local computer.
+* Although Conda was created for Python programs, Conda can package and distribute software for any language such as R, Ruby, Lua, Scala, Java, JavaScript, C, C++, FORTRAN.
 
-## Why not just use Conda (+ pip)?
+Conda as a package manager helps you find and install packages. If you need a package that requires a different version of Python, you do not need to switch to a different environment manager, because Conda is also an environment manager. With just a few commands, you can set up a totally separate environment to run that different version of Python, while continuing to run your usual version of Python in your normal environment. While Conda is my default package and environment management solution, not every Python package that I might need to use is available via Conda. Fortunately, Conda plays nicely with [`pip`](https://pip.pypa.io/en/stable/) which is the default Python package management tool.
+
+[Docker](https://www.docker.com/) is a tool designed to make it easier to create, deploy, and run applications by using containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and deploy it as one package.
+
+While Conda (+ pip) solves most of my day-to-day data science environment and package management issues, incorporating Docker into my Conda (+ pip) development workflow has made it much easier to port my data science workflows from from my laptop/workstation to remote cloud computing resources.
+
+Getting Conda (+ pip) to work as expected inside Docker containers turned out to be much more challenging that I expected. This blog post shows how I eventually combined Conda (+ pip) and Docker. In the following I assume that you have organized your project directory similar to my [Python data science project template](https://github.com/kaust-vislab/python-data-science-project). In particular, I will assume that you store all Docker related files in a `docker` sub-directory within your project root directory.
 
 ## The `Dockerfile`
 
