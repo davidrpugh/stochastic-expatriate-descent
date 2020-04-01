@@ -1,4 +1,173 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-03-31T01:51:25-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;what-is-horovod&quot;&gt;What is Horovod?&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-04-01T03:02:30-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Conda, pip, and Docker FTW!</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html" rel="alternate" type="text/html" title="Conda, pip, and Docker FTW!" /><published>2020-03-31T00:00:00-05:00</published><updated>2020-03-31T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html">&lt;h1 id=&quot;conda-pip-and-docker-ftw&quot;&gt;Conda, pip, and docker FTW!&lt;/h1&gt;
+
+&lt;h2 id=&quot;environment-management-problem&quot;&gt;Environment management problem&lt;/h2&gt;
+
+&lt;h2 id=&quot;package-management-problem&quot;&gt;Package management problem&lt;/h2&gt;
+
+&lt;h2 id=&quot;why-not-just-use-conda--pip&quot;&gt;Why not just use Conda (+ pip)?&lt;/h2&gt;
+
+&lt;h1 id=&quot;the-dockerfile&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt;&lt;/h1&gt;
+
+&lt;p&gt;For the parent image I use &lt;a href=&quot;http://releases.ubuntu.com/16.04/&quot;&gt;Ubuntu 16.04&lt;/a&gt; 
+which is one of the most commonly used flavor of Linux in the data science 
+community (and also happens to be the same OS installed on my workstation).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM ubuntu:16.04
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;make-bash-the-default-shell&quot;&gt;Make &lt;code class=&quot;highlighter-rouge&quot;&gt;bash&lt;/code&gt; the default shell&lt;/h3&gt;
+
+&lt;p&gt;The default shell used to run &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; commands when building Docker 
+images is &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;. Unfortunately &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt; is currently not one of the shells 
+supported by the &lt;code class=&quot;highlighter-rouge&quot;&gt;conda init&lt;/code&gt; command. Fortunately it is possible to change the 
+default shell used to run &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; commands using the 
+&lt;a href=&quot;https://docs.docker.com/engine/reference/builder/#shell&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SHELL&lt;/code&gt;&lt;/a&gt; instruction.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SHELL [ &quot;/bin/bash&quot;, &quot;--login&quot;, &quot;-c&quot; ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note the use of the &lt;code class=&quot;highlighter-rouge&quot;&gt;--login&lt;/code&gt; flag which insures that both &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.profile&lt;/code&gt; and 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt; are sourced properly. Proper sourcing of both &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.profile&lt;/code&gt; and 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt; is necessary in order to use various &lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt; commands to build the 
+Conda environment inside the Docker image.&lt;/p&gt;
+
+&lt;h3 id=&quot;create-a-non-root-user&quot;&gt;Create a non-root user&lt;/h3&gt;
+
+&lt;p&gt;It is a 
+&lt;a href=&quot;https://snyk.io/blog/10-docker-image-security-best-practices/&quot;&gt;Docker security “best practice”&lt;/a&gt; 
+to create a non-root user inside your Docker images. My preferred approach to 
+create a non-root user uses build arguments to customize the &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;uid&lt;/code&gt;, 
+and &lt;code class=&quot;highlighter-rouge&quot;&gt;gid&lt;/code&gt;the non-root user. I use standard defaults for the &lt;code class=&quot;highlighter-rouge&quot;&gt;uid&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;gid&lt;/code&gt;; 
+the default username is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;al-khawarizmi&lt;/code&gt; in honor of the 9th-century 
+Iranian mathematician 
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Muhammad_ibn_Musa_al-Khwarizmi&quot;&gt;Muhammad ibn Musa al-Khwarizmi&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Create a non-root user
+ARG username=al-khawarizmi
+ARG uid=1000
+ARG gid=100
+ENV USER $username
+ENV UID $uid
+ENV GID $gid
+ENV HOME /home/$USER
+
+RUN adduser --disabled-password \
+    --gecos &quot;Non-root user&quot; \
+    --uid $UID \
+    --gid $GID \
+    --home $HOME \
+    $USER
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;copy-over-the-config-files-for-the-conda-environment&quot;&gt;Copy over the config files for the Conda environment&lt;/h3&gt;
+
+&lt;p&gt;After creating the non-root user I copy over all of the config files that I 
+will need to create the Conda environment (i.e., &lt;code class=&quot;highlighter-rouge&quot;&gt;environment.yml&lt;/code&gt;, 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;requirements.txt&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;postBuild&lt;/code&gt;). I also copy over a Bash script that I will 
+use as the Docker &lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt; (more on this below).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;COPY environment.yml requirements.txt /tmp/
+RUN chown $UID:$GID /tmp/environment.yml /tmp/requirements.txt
+
+COPY postBuild /usr/local/bin/postBuild.sh
+RUN chown $UID:$GID /usr/local/bin/postBuild.sh &amp;amp;&amp;amp; \
+    chmod u+x /usr/local/bin/postBuild.sh
+
+COPY docker/entrypoint.sh /usr/local/bin/
+RUN chown $UID:$GID /usr/local/bin/entrypoint.sh &amp;amp;&amp;amp; \
+    chmod u+x /usr/local/bin/entrypoint.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Newer versions of Docker support copying files as a non-root user, however 
+the version of Docker available on DockerHub does not yet support copying 
+as a non-root user so if you want to setup 
+&lt;a href=&quot;https://docs.docker.com/docker-hub/builds/&quot;&gt;automated builds&lt;/a&gt; for your Git 
+repositories you will need to copy everything as root.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-miniconda-as-the-non-root-user&quot;&gt;Install Miniconda as the non-root user.&lt;/h3&gt;
+
+&lt;p&gt;After copying over the config files as root, I switch over to the non-root 
+user and install &lt;a href=&quot;https://docs.conda.io/en/latest/miniconda.html&quot;&gt;Miniconda&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;USER $USER
+
+# install miniconda
+ENV MINICONDA_VERSION 4.8.2
+ENV CONDA_DIR $HOME/miniconda3
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-$MINICONDA_VERSION-Linux-x86_64.sh -O ~/miniconda.sh &amp;amp;&amp;amp; \
+    chmod +x ~/miniconda.sh &amp;amp;&amp;amp; \
+    ~/miniconda.sh -b -p $CONDA_DIR &amp;amp;&amp;amp; \
+    rm ~/miniconda.sh
+
+# make non-activate conda commands available
+ENV PATH=$CONDA_DIR/bin:$PATH
+
+# make conda activate command available from /bin/bash --login shells
+RUN echo &quot;. $CONDA_DIR/etc/profile.d/conda.sh&quot; &amp;gt;&amp;gt; ~/.profile
+
+# make conda activate command available from /bin/bash --interative shells
+RUN conda init bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;create-a-project-directory&quot;&gt;Create a project directory&lt;/h3&gt;
+
+&lt;p&gt;Next I create a project directory inside the non-root user home directory. The 
+Conda environment will be created in a &lt;code class=&quot;highlighter-rouge&quot;&gt;env&lt;/code&gt; sub-directory inside the project 
+directory and all other project files and directories can then be mounted into 
+this directory.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# create a project directory inside user home
+ENV PROJECT_DIR $HOME/app
+RUN mkdir $PROJECT_DIR
+WORKDIR $PROJECT_DIR
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;build-the-conda-environment&quot;&gt;Build the Conda environment&lt;/h3&gt;
+
+&lt;p&gt;Now I am ready to build the Conda environment. Note that I can use nearly the 
+same sequence of &lt;code class=&quot;highlighter-rouge&quot;&gt;conda&lt;/code&gt; commands that I would use to build a Conda environment 
+for a project on my laptop or workstation.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# build the conda environment
+ENV ENV_PREFIX $PWD/env
+RUN conda update --name base --channel defaults conda &amp;amp;&amp;amp; \
+    conda env create --prefix $ENV_PREFIX --file /tmp/environment.yml --force &amp;amp;&amp;amp; \
+    conda clean --all --yes
+
+# run the postBuild script to install any JupyterLab extensions
+RUN conda activate $ENV_PREFIX &amp;amp;&amp;amp; \
+    /usr/local/bin/postBuild.sh &amp;amp;&amp;amp; \
+    conda deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;insure-conda-environment-is-properly-activated-at-runtime&quot;&gt;Insure Conda environment is properly activated at runtime&lt;/h3&gt;
+
+&lt;p&gt;Almost finished! Second to last step is to use an 
+&lt;a href=&quot;https://docs.docker.com/engine/reference/builder/#entrypoint&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt;&lt;/a&gt; 
+script to insure that the Conda environment is properly activated at runtime.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ENTRYPOINT [ &quot;/usr/local/bin/entrypoint.sh&quot; ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Here is the &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/bin/entrypoint.sh&lt;/code&gt; script for reference.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash --login&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;
+
+conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$@&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;specify-a-default-command-for-the-docker-container&quot;&gt;Specify a default command for the Docker container&lt;/h3&gt;
+
+&lt;p&gt;Finally, I use the &lt;a href=&quot;https://docs.docker.com/engine/reference/builder/#cmd&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CMD&lt;/code&gt;&lt;/a&gt; 
+instruction to specify a default command to run when a Docker container is 
+launched. Since I install JupyerLab in all of my Conda environments I tend to 
+launch a JupyterLab server by default when executing containers.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# default command will be to launch JupyterLab server for development
+CMD [ &quot;jupyter&quot;, &quot;lab&quot;, &quot;--no-browser&quot;, &quot;--ip&quot;, &quot;0.0.0.0&quot; ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">Conda, pip, and docker FTW!</summary></entry><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;what-is-horovod&quot;&gt;What is Horovod?&lt;/h1&gt;
 
 &lt;p align=&quot;center&quot;&gt;
    &lt;img alt=&quot;Horovod + NVIDIA FTW&quot; src=&quot;/stochastic-expatriate-descent/images/horovod-nvidia.jpg&quot; width=&quot;500&quot; /&gt;
