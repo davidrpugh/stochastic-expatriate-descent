@@ -2,6 +2,7 @@
 toc: true
 comments: true
 layout: post
+image: images/horovod-nvidia.jpg
 description: Getting started with distributed training of DNNs using Horovod.
 categories: [python, conda, deep-learning, pytorch, tensorflow, nvidia, horovod]
 title: Building a Conda environment for Horovod
