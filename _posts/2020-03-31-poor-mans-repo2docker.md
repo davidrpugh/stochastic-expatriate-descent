@@ -5,9 +5,9 @@ layout: post
 image: images/conda-docker.png
 description: A solution to the environment and package management problems that plague data science projects.
 categories: [python, conda, docker, data-science]
-title: Conda, pip, and Docker FTW!
+title: Conda (+ pip) and Docker FTW!
 ---
-# Conda, pip, and docker FTW!
+# Conda (+ pip) and Docker FTW!
 
 [Conda](https://docs.conda.io/en/latest/) is an open source package and 
 environment management system that runs on Windows, Mac OS and Linux.
@@ -37,12 +37,12 @@ While Conda (+ pip) solves most of my day-to-day data science environment and
 package management issues, incorporating [Docker](https://www.docker.com/) 
 into my Conda (+ pip) development workflow has made it much easier to port my 
 data science workflows from from my laptop/workstation to remote cloud 
-computing resources.
+computing resources. Getting Conda (+ pip) to work as expected inside Docker 
+containers turned out to be much more challenging that I expected. 
 
-Getting Conda (+ pip) to work as expected inside Docker containers turned out 
-to be much more challenging that I expected. This blog post shows how I 
-eventually combined Conda (+ pip) and Docker. In the following I assume that 
-you have organized your project directory similar to my 
+This blog post shows how I eventually combined Conda (+ pip) and Docker. 
+In the following I assume that you have organized your project directory 
+similar to my 
 [Python data science project template](https://github.com/kaust-vislab/python-data-science-project). 
 In particular, I will assume that you store all Docker related files in a 
 `docker` sub-directory within your project root directory.
@@ -54,6 +54,8 @@ write a good `Dockerfile`. In this section I will take you step by step
 through the various pieces of the `Dockerfile` that I developed. Hopefully you 
 can use this `Dockerfile` without modification on you next data science 
 project.
+
+### Use a standard base image
 
 Every `Dockefile` has a base or parent image. For the parent image I use 
 [Ubuntu 16.04](http://releases.ubuntu.com/16.04/) 
@@ -88,9 +90,8 @@ It is a
 to create a non-root user inside your Docker images. My preferred approach to 
 create a non-root user uses build arguments to customize the `username`, `uid`, 
 and `gid`the non-root user. I use standard defaults for the `uid` and `gid`; 
-the default username is set to `al-khawarizmi` in honor of the 9th-century 
-Iranian mathematician 
-[Muhammad ibn Musa al-Khwarizmi](https://en.wikipedia.org/wiki/Muhammad_ibn_Musa_al-Khwarizmi)
+the default username is set to 
+[`al-khawarizmi`](https://en.wikipedia.org/wiki/Muhammad_ibn_Musa_al-Khwarizmi). 
 
 ```
 # Create a non-root user
@@ -219,8 +220,10 @@ exec "$@"
 
 Finally, I use the [`CMD`](https://docs.docker.com/engine/reference/builder/#cmd) 
 instruction to specify a default command to run when a Docker container is 
-launched. Since I install JupyerLab in all of my Conda environments I tend to 
-launch a JupyterLab server by default when executing containers.
+launched. Since I install 
+[JupyerLab](https://jupyterlab.readthedocs.io/en/stable/) in all of my Conda 
+environments I tend to launch a JupyterLab server by default when executing 
+containers.
 
 ```
 # default command will be to launch JupyterLab server for development
@@ -329,8 +332,39 @@ sub-directory of the project.
 docker-compose up --build
 ```
 
-When you are done developing and have shutdown the JupyterLab server, the following command tears down the networking infrastructure for the running container.
+When you are done developing and have shutdown the JupyterLab server, the 
+following command tears down the networking infrastructure for the running 
+container.
 
 ```bash
 docker-compose down
 ```
+
+# Summary
+
+In this post I walked through a `Dockerfile` that can be used to inject a 
+Conda (+ pip) environment into into a Docker image. I also detailed how to 
+build the resulting image and launch containers using Docker Compose. 
+
+If you are looking for a production-quality solution that generalizes the 
+approach outlined above, then I would encourage you to check out 
+[`jupyter-repo2docker`](https://repo2docker.readthedocs.io/en/latest/). 
+
+`jupyter-repo2docker` is a tool to build, run, and push Docker images from 
+source code repositories. `repo2docker` fetches a repository (from GitHub, 
+GitLab, Zenodo, Figshare, Dataverse installations, a Git repository or a local 
+directory) and builds a container image in which the code can be executed. The 
+image build process is based on the configuration files found in the repository.
+
+The Conda (+ pip) and Docker combination has significantly increased my data 
+science development velocity while at the same time increasing the portability 
+and reproducibility of my data science workflows. 
+
+Hopefully this post can help you combine these three great tools together on 
+your next data science project!
+
+
+
+
+
+
