@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-04-01T05:37:45-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Conda, pip, and Docker FTW!</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html" rel="alternate" type="text/html" title="Conda, pip, and Docker FTW!" /><published>2020-03-31T00:00:00-05:00</published><updated>2020-03-31T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html">&lt;h1 id=&quot;conda-pip-and-docker-ftw&quot;&gt;Conda, pip, and docker FTW!&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" rel="self" type="application/atom+xml" /><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/" rel="alternate" type="text/html" /><updated>2020-04-01T06:04:07-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml</id><title type="html">Stochastic Expatriate Descent</title><subtitle>An expat scientist's musings about machine learning, deep learning, and living abroad.</subtitle><entry><title type="html">Conda (+ pip) and Docker FTW!</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html" rel="alternate" type="text/html" title="Conda (+ pip) and Docker FTW!" /><published>2020-03-31T00:00:00-05:00</published><updated>2020-03-31T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/docker/data-science/2020/03/31/poor-mans-repo2docker.html">&lt;h1 id=&quot;conda--pip-and-docker-ftw&quot;&gt;Conda (+ pip) and Docker FTW!&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://docs.conda.io/en/latest/&quot;&gt;Conda&lt;/a&gt; is an open source package and 
 environment management system that runs on Windows, Mac OS and Linux.&lt;/p&gt;
@@ -30,12 +30,12 @@ which is the default Python package management tool.&lt;/p&gt;
 package management issues, incorporating &lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt; 
 into my Conda (+ pip) development workflow has made it much easier to port my 
 data science workflows from from my laptop/workstation to remote cloud 
-computing resources.&lt;/p&gt;
+computing resources. Getting Conda (+ pip) to work as expected inside Docker 
+containers turned out to be much more challenging that I expected.&lt;/p&gt;
 
-&lt;p&gt;Getting Conda (+ pip) to work as expected inside Docker containers turned out 
-to be much more challenging that I expected. This blog post shows how I 
-eventually combined Conda (+ pip) and Docker. In the following I assume that 
-you have organized your project directory similar to my 
+&lt;p&gt;This blog post shows how I eventually combined Conda (+ pip) and Docker. 
+In the following I assume that you have organized your project directory 
+similar to my 
 &lt;a href=&quot;https://github.com/kaust-vislab/python-data-science-project&quot;&gt;Python data science project template&lt;/a&gt;. 
 In particular, I will assume that you store all Docker related files in a 
 &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; sub-directory within your project root directory.&lt;/p&gt;
@@ -47,6 +47,8 @@ write a good &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code
 through the various pieces of the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; that I developed. Hopefully you 
 can use this &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; without modification on you next data science 
 project.&lt;/p&gt;
+
+&lt;h3 id=&quot;use-a-standard-base-image&quot;&gt;Use a standard base image&lt;/h3&gt;
 
 &lt;p&gt;Every &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockefile&lt;/code&gt; has a base or parent image. For the parent image I use 
 &lt;a href=&quot;http://releases.ubuntu.com/16.04/&quot;&gt;Ubuntu 16.04&lt;/a&gt; 
@@ -79,9 +81,8 @@ Conda environment inside the Docker image.&lt;/p&gt;
 to create a non-root user inside your Docker images. My preferred approach to 
 create a non-root user uses build arguments to customize the &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;uid&lt;/code&gt;, 
 and &lt;code class=&quot;highlighter-rouge&quot;&gt;gid&lt;/code&gt;the non-root user. I use standard defaults for the &lt;code class=&quot;highlighter-rouge&quot;&gt;uid&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;gid&lt;/code&gt;; 
-the default username is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;al-khawarizmi&lt;/code&gt; in honor of the 9th-century 
-Iranian mathematician 
-&lt;a href=&quot;https://en.wikipedia.org/wiki/Muhammad_ibn_Musa_al-Khwarizmi&quot;&gt;Muhammad ibn Musa al-Khwarizmi&lt;/a&gt;&lt;/p&gt;
+the default username is set to 
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Muhammad_ibn_Musa_al-Khwarizmi&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;al-khawarizmi&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Create a non-root user
 ARG username=al-khawarizmi
@@ -203,8 +204,10 @@ conda activate &lt;span class=&quot;nv&quot;&gt;$ENV_PREFIX&lt;/span&gt;
 
 &lt;p&gt;Finally, I use the &lt;a href=&quot;https://docs.docker.com/engine/reference/builder/#cmd&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CMD&lt;/code&gt;&lt;/a&gt; 
 instruction to specify a default command to run when a Docker container is 
-launched. Since I install JupyerLab in all of my Conda environments I tend to 
-launch a JupyterLab server by default when executing containers.&lt;/p&gt;
+launched. Since I install 
+&lt;a href=&quot;https://jupyterlab.readthedocs.io/en/stable/&quot;&gt;JupyerLab&lt;/a&gt; in all of my Conda 
+environments I tend to launch a JupyterLab server by default when executing 
+containers.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# default command will be to launch JupyterLab server for development
 CMD [ &quot;jupyter&quot;, &quot;lab&quot;, &quot;--no-browser&quot;, &quot;--ip&quot;, &quot;0.0.0.0&quot; ]
@@ -306,10 +309,35 @@ sub-directory of the project.&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose up &lt;span class=&quot;nt&quot;&gt;--build&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;When you are done developing and have shutdown the JupyterLab server, the following command tears down the networking infrastructure for the running container.&lt;/p&gt;
+&lt;p&gt;When you are done developing and have shutdown the JupyterLab server, the 
+following command tears down the networking infrastructure for the running 
+container.&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose down
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">Conda, pip, and docker FTW!</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/conda-docker.png" /><media:content medium="image" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/conda-docker.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;what-is-horovod&quot;&gt;What is Horovod?&lt;/h1&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;summary&quot;&gt;Summary&lt;/h1&gt;
+
+&lt;p&gt;In this post I walked through a &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; that can be used to inject a 
+Conda (+ pip) environment into into a Docker image. I also detailed how to 
+build the resulting image and launch containers using Docker Compose.&lt;/p&gt;
+
+&lt;p&gt;If you are looking for a production-quality solution that generalizes the 
+approach outlined above, then I would encourage you to check out 
+&lt;a href=&quot;https://repo2docker.readthedocs.io/en/latest/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyter-repo2docker&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;jupyter-repo2docker&lt;/code&gt; is a tool to build, run, and push Docker images from 
+source code repositories. &lt;code class=&quot;highlighter-rouge&quot;&gt;repo2docker&lt;/code&gt; fetches a repository (from GitHub, 
+GitLab, Zenodo, Figshare, Dataverse installations, a Git repository or a local 
+directory) and builds a container image in which the code can be executed. The 
+image build process is based on the configuration files found in the repository.&lt;/p&gt;
+
+&lt;p&gt;The Conda (+ pip) and Docker combination has significantly increased my data 
+science development velocity while at the same time increasing the portability 
+and reproducibility of my data science workflows.&lt;/p&gt;
+
+&lt;p&gt;Hopefully this post can help you combine these three great tools together on 
+your next data science project!&lt;/p&gt;</content><author><name></name></author><summary type="html">Conda (+ pip) and Docker FTW!</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/conda-docker.png" /><media:content medium="image" url="https://davidrpugh.github.io/stochastic-expatriate-descent/images/conda-docker.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Building a Conda environment for Horovod</title><link href="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html" rel="alternate" type="text/html" title="Building a Conda environment for Horovod" /><published>2020-03-30T00:00:00-05:00</published><updated>2020-03-30T00:00:00-05:00</updated><id>https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env</id><content type="html" xml:base="https://davidrpugh.github.io/stochastic-expatriate-descent/python/conda/deep-learning/pytorch/tensorflow/nvidia/horovod/2020/03/30/horovod-conda-env.html">&lt;h1 id=&quot;what-is-horovod&quot;&gt;What is Horovod?&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&quot;&quot;&gt;Horovod&lt;/a&gt; is an open-source distributed training framework for 
 &lt;a href=&quot;https://www.tensorflow.org/&quot;&gt;TensorFlow&lt;/a&gt;, &lt;a href=&quot;https://keras.io/&quot;&gt;Keras&lt;/a&gt;, 
