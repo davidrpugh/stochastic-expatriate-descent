@@ -14,7 +14,7 @@ title: Conda, pip, and Docker FTW!
 
 ## Why not just use Conda (+ pip)?
 
-# The `Dockerfile`
+## The `Dockerfile`
 
 For the parent image I use [Ubuntu 16.04](http://releases.ubuntu.com/16.04/) 
 which is one of the most commonly used flavor of Linux in the data science 
@@ -187,3 +187,110 @@ launch a JupyterLab server by default when executing containers.
 CMD [ "jupyter", "lab", "--no-browser", "--ip", "0.0.0.0" ]
 ```
 
+## Building the Docker image
+
+The following command builds a new image for your project with a custom `$USER` 
+(and associated `$UID` and `$GID`) as well as a particular `$IMAGE_NAME` and 
+`$IMAGE_TAG`. This command should be run within the `docker` sub-directory of 
+the project as the Docker build context is set to `../` which should be the 
+project root directory.
+
+```bash
+docker image build \
+  --build-arg username=$USER \
+  --build-arg uid=$UID \
+  --build-arg gid=$GID \
+  --file Dockerfile \
+  --tag $IMAGE_NAME:$IMAGE_TAG \
+  ../
+```
+
+## Running a Docker container
+
+Once the image is built, the following command will run a container based on 
+the image `$IMAGE_NAME:$IMAGE_TAG`. This command should be run from within the 
+project's root directory.
+
+```bash
+docker container run \
+  --rm \
+  --tty \
+  --volume ${pwd}/bin:/home/$USER/app/bin \
+  --volume ${pwd}/data:/home/$USER/app/data \ 
+  --volume ${pwd}/doc:/home/$USER/app/doc \
+  --volume ${pwd}/notebooks:/home/$USER/app/notebooks \
+  --volume ${pwd}/results:/home/$USER/app/results \
+  --volume ${pwd}/src:/home/$USER/app/src \
+  --publish 8888:8888 \
+  $IMAGE_NAME:$IMAGE_TAG
+```
+
+## Using Docker Compose
+
+It is quite easy to make typos whilst writing the above docker commands by hand. 
+A less error-prone approach is to use 
+[Docker Compose](https://docs.docker.com/compose/). The above docker commands can 
+be encapsulated into the `docker-compose.yml` configuration file as follows.
+
+```yaml
+version: "3.7"
+
+services:
+  jupyterlab-server:
+    build:
+      args:
+        - username=${USER}
+        - uid=${UID}
+        - gid=${GID}
+      context: ../
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../bin:/home/${USER}/app/bin
+      - ../data:/home/${USER}/app/data
+      - ../doc:/home/${USER}/app/doc
+      - ../notebooks:/home/${USER}/app/notebooks
+      - ../results:/home/${USER}/app/results
+      - ../src:/home/${USER}/app/src
+    init: true
+    stdin_open: true
+    tty: true
+```
+
+The above `docker-compose.yml` file relies on 
+[variable substitution](https://docs.docker.com/compose/environment-variables/#the-env-file).
+to obtain the values for `$USER`, `$UID`, and `$GID`. These values can be 
+stored in an a file called `.env` as follows.
+
+```
+USER=$USER
+UID=$UID
+GID=$GID
+```
+
+You can test your `docker-compose.yml` file by running the following command in 
+the `docker` sub-directory of the project.
+
+```bash
+docker-compose config
+```
+
+This command takes the `docker-compose.yml` file and substitutes the values 
+provided in the `.env` file and then returns the result.
+
+Once you are confident that values in the `.env` file are being substituted 
+properly into the `docker-compose.yml` file, the following command can be used 
+to bring up a container based on your project's Docker image and launch the 
+JupyterLab server. This command should also be run from within the `docker` 
+sub-directory of the project.
+
+```bash
+docker-compose up --build
+```
+
+When you are done developing and have shutdown the JupyterLab server, the following command tears down the networking infrastructure for the running container.
+
+```bash
+docker-compose down
+```
