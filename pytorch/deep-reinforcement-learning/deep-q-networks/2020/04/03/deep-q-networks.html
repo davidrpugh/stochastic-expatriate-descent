@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Deep Q-Networks | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Deep Q-Networks" />
+<meta name="author" content="David R. Pugh" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Notes on the famous Deep Q-Networks paper from Deepmind." />
+<meta property="og:description" content="Notes on the famous Deep Q-Networks paper from Deepmind." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-03T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-03T00:00:00-05:00","headline":"Deep Q-Networks","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg","description":"Notes on the famous Deep Q-Networks paper from Deepmind.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html","dateModified":"2020-04-03T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/stochastic-expatriate-descent/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" /><link rel="shortcut icon" type="image/x-icon" href="/stochastic-expatriate-descent/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Deep Q-Networks | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Deep Q-Networks" />
+<meta name="author" content="David R. Pugh" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Notes on the famous Deep Q-Networks paper from Deepmind." />
+<meta property="og:description" content="Notes on the famous Deep Q-Networks paper from Deepmind." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-03T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-03T00:00:00-05:00","headline":"Deep Q-Networks","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg","description":"Notes on the famous Deep Q-Networks paper from Deepmind.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html","dateModified":"2020-04-03T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/stochastic-expatriate-descent/">Stochastic Expatriate Descent</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/stochastic-expatriate-descent/about/">About Me</a><a class="page-link" href="/stochastic-expatriate-descent/search/">Search</a><a class="page-link" href="/stochastic-expatriate-descent/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Deep Q-Networks</h1><p class="page-description">Notes on the famous Deep Q-Networks paper from Deepmind.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-04-03T00:00:00-05:00" itemprop="datePublished">
+        Apr 3, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">David R. Pugh</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      4 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#pytorch">pytorch</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#deep-reinforcement-learning">deep-reinforcement-learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#deep-q-networks">deep-q-networks</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/davidrpugh/stochastic-expatriate-descent/tree/2020-04-03-deep-q-networks/_notebooks/2020-04-03-deep-q-networks.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/davidrpugh/stochastic-expatriate-descent/2020-04-03-deep-q-networks?filepath=_notebooks%2F2020-04-03-deep-q-networks.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/davidrpugh/stochastic-expatriate-descent/blob/2020-04-03-deep-q-networks/_notebooks/2020-04-03-deep-q-networks.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Approximating-the-state-action-function,-$Q(s,a)$">Approximating the state-action function, $Q(s,a)$ </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Experience-Replay">Experience Replay </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#The-Loss-Function">The Loss Function </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-04-03-deep-q-networks.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>conda install --yes --channel pytorch <span class="nv">pytorch</span><span class="o">=</span><span class="m">1</span>.4
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Collecting package metadata (current_repodata.json): done
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /Users/pughdr/Research/stochastic-expatriate-descent/env
+
+  added / updated specs:
+    - pytorch=1.4
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    certifi-2019.11.28         |           py37_1         156 KB
+    intel-openmp-2020.0        |              166         896 KB
+    mkl-2020.0                 |              166        93.5 MB
+    ninja-1.9.0                |   py37h04f5b5a_0          90 KB
+    openssl-1.1.1f             |       h1de35cc_0         2.2 MB
+    pytorch-1.4.0              |          py3.7_0        34.5 MB  pytorch
+    ------------------------------------------------------------
+                                           Total:       131.3 MB
+
+The following NEW packages will be INSTALLED:
+
+  intel-openmp       pkgs/main/osx-64::intel-openmp-2020.0-166
+  mkl                pkgs/main/osx-64::mkl-2020.0-166
+  ninja              pkgs/main/osx-64::ninja-1.9.0-py37h04f5b5a_0
+  pytorch            pytorch/osx-64::pytorch-1.4.0-py3.7_0
+
+The following packages will be UPDATED:
+
+  ca-certificates    conda-forge::ca-certificates-2019.11.~ --&gt; pkgs/main::ca-certificates-2020.1.1-0
+  openssl            conda-forge::openssl-1.1.1e-h0b31af3_0 --&gt; pkgs/main::openssl-1.1.1f-h1de35cc_0
+
+The following packages will be SUPERSEDED by a higher-priority channel:
+
+  certifi            conda-forge::certifi-2019.11.28-py37h~ --&gt; pkgs/main::certifi-2019.11.28-py37_1
+
+
+
+Downloading and Extracting Packages
+certifi-2019.11.28   | 156 KB    | ##################################### | 100% 
+openssl-1.1.1f       | 2.2 MB    | ##################################### | 100% 
+intel-openmp-2020.0  | 896 KB    | ##################################### | 100% 
+pytorch-1.4.0        | 34.5 MB   | ##################################### | 100% 
+mkl-2020.0           | 93.5 MB   | ##################################### | 100% 
+ninja-1.9.0          | 90 KB     | ##################################### | 100% 
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: done
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">functional</span> <span class="k">as</span> <span class="n">F</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf">https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Use deep convolutional neural network to approximate that optimal action-value function</p>
+<p>
+$$ Q^*(s, a) = \max_{\pi} \mathbb{E}\Bigg[\sum_{s=0}^{\infty} \gamma^s r_{t+s} | s_t=s, a_t=a, \pi \Bigg] $$
+</p>
+<p>which is the maximum sum of rewards $r_t$ discounted by $\gamma$ at each time-step $t$ achievable by a behaviour policy $\pi = P(a|s)$, after making an observation of the state $s$ and taking an action $a$.</p>
+<p>Reinforcement learning is known to be unstable or even to diverge when a non-linear function approximator such as a neural network is used to represent the $Q$ function. Why?</p>
+<ol>
+<li>Correlations present in the sequence of observations of the state $s$. In reinforcement learning applications the sequence state observations is a time-series which will almost surely be auto-correlated. But surely this would also be true of any application of deep neural networks to model time series data. </li>
+<li>Small updates to $Q$ may significantly change the policy, $\pi$ and therefore change the data distribution.</li>
+<li>Correlations between the action-values, $Q$, and the target values $r + \gamma \max_{a'} Q(s', a')$</li>
+</ol>
+<p>In the paper they address these issue by...</p>
+<ul>
+<li>A biologically inspired mechanism they refer to as <em>experience replay</em> that randomizes over the data which removes correlations in the sequence of observations of the state $s$ and smoothes over changes in the data distribution (issues 1 and 2 above).</li>
+<li>Using an iterative update rule that adjusts the action-values, $Q$, towards target values that are only periodically updated, thereby reducing correlations with the target (issue 3 above).</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Approximating-the-state-action-function,-$Q(s,a)$">
+<a class="anchor" href="#Approximating-the-state-action-function,-%24Q(s,a)%24" aria-hidden="true"><span class="octicon octicon-link"></span></a>Approximating the state-action function, $Q(s,a)$<a class="anchor-link" href="#Approximating-the-state-action-function,-%24Q(s,a)%24"> </a>
+</h2>
+<p>They parameterize an approximate value function $Q(s,a; \theta_i)$ using the deep convolutional neural network shown in the figure below. Note that $\theta_i$ are the parameters or weights of the $Q$-network at iteration $i$.</p>
+<p><img src="/stochastic-expatriate-descent/images/copied_from_nb/../images/q-network-architecture.jpg" alt=""></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_deep_q_network</span><span class="p">(</span><span class="n">state_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">action_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+    <span class="n">deep_q_network</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="n">state_size</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">512</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">action_size</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">deep_q_network</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Experience-Replay">
+<a class="anchor" href="#Experience-Replay" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experience Replay<a class="anchor-link" href="#Experience-Replay"> </a>
+</h3>
+<p>To perform <em>experience replay</em> the authors store the agent's experiences $e_t$ as represented by the tuple</p>
+<p>
+$$ e_t = (s_t, a_t, r_t, s_{t+1}) $$
+</p>
+<p>consisting of the observed state in period $t$, the reward received in period $t$, the action taken in period $t$, and the resulting state in period $t+1$. The dataset of agent experiences at period $t$ consists of the set of past experiences.</p>
+<p>
+$$ D_t = \{e1, e2, ..., e_t \} $$
+</p>
+<p>Depending on the task it may note be feasible for the agent to store the entire history of past experiences.</p>
+<p>During learning Q-learning updates are computed based on samples (or minibatches) of experience $(s,a,r,s')$, drawn uniformly at random from the pool of stored samples $D_t$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-Loss-Function">
+<a class="anchor" href="#The-Loss-Function" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Loss Function<a class="anchor-link" href="#The-Loss-Function"> </a>
+</h2>
+<p>The $Q$-learning update at iteration $i$ uses the following loss function</p>
+<p>
+$$ \mathcal{L_i}(\theta_i) = \mathbb{E}_{(s, a, r, s') \sim U(D)} \Bigg[\bigg(r + \gamma \max_{a'} Q\big(s', a'; \theta_i^{-}\big) - Q\big(s, a; \theta_i\big)\bigg)^2\Bigg] $$
+</p>
+<p>where $\gamma$ is the discount factor determining the agent’s horizon, $\theta_i$ are the parameters of the $Q$-network at iteration $i$ and $\theta_i^{-}$ are the $Q$-network parameters used to compute the target at iteration $i$. The target network parameters $\theta_i^{-}$ are only updated with the Q$-network parameters $\theta_i$ every $C$ steps and are held fixed between individual updates.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">expected_q_network</span> <span class="o">=</span> <span class="n">create_deep_q_network</span><span class="p">(</span><span class="n">state_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">action_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">target_q_network</span> <span class="o">=</span> <span class="n">create_deep_q_network</span><span class="p">(</span><span class="n">state_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">action_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">expected_q_values</span> <span class="o">=</span> <span class="err">?</span><span class="o">??</span>
+<span class="n">target_q_values</span> <span class="o">=</span> <span class="err">?</span><span class="o">??</span>
+
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">expected_q_values</span><span class="p">,</span> <span class="n">target_q_values</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-14-f483aa612782&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> target_q_network <span class="ansi-blue-fg">=</span> create_deep_q_network<span class="ansi-blue-fg">(</span>state_size<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">,</span> action_size<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> 
+<span class="ansi-green-fg">----&gt; 4</span><span class="ansi-red-fg"> </span>loss_fn <span class="ansi-blue-fg">=</span> F<span class="ansi-blue-fg">.</span>mse_loss<span class="ansi-blue-fg">(</span>expected_q_network<span class="ansi-blue-fg">,</span> target_q_network<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Research/stochastic-expatriate-descent/env/lib/python3.7/site-packages/torch/nn/functional.py</span> in <span class="ansi-cyan-fg">mse_loss</span><span class="ansi-blue-fg">(input, target, size_average, reduce, reduction)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2201</span>     See <span class="ansi-blue-fg">:</span><span class="ansi-green-fg">class</span><span class="ansi-blue-fg">:</span><span class="ansi-red-fg">`</span><span class="ansi-blue-fg">~</span>torch<span class="ansi-blue-fg">.</span>nn<span class="ansi-blue-fg">.</span>MSELoss<span class="ansi-red-fg">`</span> <span class="ansi-green-fg">for</span> details<span class="ansi-blue-fg">.</span>
+<span class="ansi-green-intense-fg ansi-bold">   2202</span>     """
+<span class="ansi-green-fg">-&gt; 2203</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> <span class="ansi-blue-fg">(</span>target<span class="ansi-blue-fg">.</span>size<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">==</span> input<span class="ansi-blue-fg">.</span>size<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   2204</span>         warnings.warn("Using a target size ({}) that is different to the input size ({}). "
+<span class="ansi-green-intense-fg ansi-bold">   2205</span>                       <span class="ansi-blue-fg">"This will likely lead to incorrect results due to broadcasting. "</span>
+
+<span class="ansi-green-fg">~/Research/stochastic-expatriate-descent/env/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__getattr__</span><span class="ansi-blue-fg">(self, name)</span>
+<span class="ansi-green-intense-fg ansi-bold">    574</span>                 <span class="ansi-green-fg">return</span> modules<span class="ansi-blue-fg">[</span>name<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">    575</span>         raise AttributeError("'{}' object has no attribute '{}'".format(
+<span class="ansi-green-fg">--&gt; 576</span><span class="ansi-red-fg">             type(self).__name__, name))
+</span><span class="ansi-green-intense-fg ansi-bold">    577</span> 
+<span class="ansi-green-intense-fg ansi-bold">    578</span>     <span class="ansi-green-fg">def</span> __setattr__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">,</span> value<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">AttributeError</span>: 'Sequential' object has no attribute 'size'</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="davidrpugh/stochastic-expatriate-descent"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/stochastic-expatriate-descent/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/stochastic-expatriate-descent/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An expat scientist&#39;s musings about machine learning, deep learning, and living abroad.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/davidrpugh" title="davidrpugh"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/TheSandyCoder" title="TheSandyCoder"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
