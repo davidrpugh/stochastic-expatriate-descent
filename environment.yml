@@ -1,0 +1,17 @@
+name: null
+
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  - hvplot=0.5
+  - jupyterlab=2.0
+  - jupyterlab-git=0.9
+  - matplotlib=3.2
+  - nodejs=13
+  - pandas=1.0
+  - pip=20.0
+  - python=3.7
+  - pytorch=1.4
