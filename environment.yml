@@ -13,5 +13,7 @@ dependencies:
   - nodejs=13
   - pandas=1.0
   - pip=20.0
+  - pip:
+    - -r file:requirements.txt
   - python=3.7
   - pytorch=1.4
