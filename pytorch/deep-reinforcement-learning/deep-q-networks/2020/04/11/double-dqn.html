@@ -13,11 +13,11 @@
 <link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
 <meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
 <meta property="og:site_name" content="Stochastic Expatriate Descent" />
-<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/double-dqn-figure-2.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-11T00:00:00-05:00" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-11T00:00:00-05:00","headline":"Improving the DQN algorithm using Double Q-Learning","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg","description":"Notes on improving the DQN algorithm using Double Q-learning.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html","dateModified":"2020-04-11T00:00:00-05:00","@context":"https://schema.org"}</script>
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-11T00:00:00-05:00","headline":"Improving the DQN algorithm using Double Q-Learning","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/double-dqn-figure-2.png","description":"Notes on improving the DQN algorithm using Double Q-learning.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html","dateModified":"2020-04-11T00:00:00-05:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/stochastic-expatriate-descent/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" /><link rel="shortcut icon" type="image/x-icon" href="/stochastic-expatriate-descent/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Improving the DQN algorithm using Double Q-Learning | Stochastic Expatriate Descent</title>
@@ -30,11 +30,11 @@
 <link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
 <meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
 <meta property="og:site_name" content="Stochastic Expatriate Descent" />
-<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/double-dqn-figure-2.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-11T00:00:00-05:00" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-11T00:00:00-05:00","headline":"Improving the DQN algorithm using Double Q-Learning","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg","description":"Notes on improving the DQN algorithm using Double Q-learning.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html","dateModified":"2020-04-11T00:00:00-05:00","@context":"https://schema.org"}</script>
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-11T00:00:00-05:00","headline":"Improving the DQN algorithm using Double Q-Learning","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/double-dqn-figure-2.png","description":"Notes on improving the DQN algorithm using Double Q-learning.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html","dateModified":"2020-04-11T00:00:00-05:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
