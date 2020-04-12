@@ -113,7 +113,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      10 min read
+      9 min read
     
 </span></p>
 
@@ -176,7 +176,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>I am continuing to work my way through the <a href="https://www.udacity.com/">Udacity</a> <a href="https://www.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893"><em>Deep Reinforcement Learning Nanodegree</em></a>. In this blog post I discuss and implement the Double DQN algorithm from <a href="https://arxiv.org/abs/1509.06461"><em>Deep Reinforcement Learning with Double Q-Learning</em></a> (Van Hasselt et al 2015). The Double DQN algorithm is a minor, but important, modification of the original DQN algorithm that I covered in a <a href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html">previous post</a>.</p>
-<p>Van Hasselt et al 2015 has several important contributions.</p>
+<p>The Van Hasselt et al 2015 paper makes several important contributions.</p>
 <ol>
 <li>Demonstration of how Q-learning can be overly optimistic in large-scale, even 
 deterministic, problems due to the inherent estimation errors of learning. </li>
@@ -324,6 +324,13 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Making-the-code-more-reusable">Making the code more reusable<a class="anchor-link" href="#Making-the-code-more-reusable"> </a></h3><p>In order to make the code used in my previous blog post more maintainable going forward, I have moved the various class definitions and training functions out of Jupyter notebooks and into scripts. The <code>agents.py</code> scripts contains the various agent classes, in particular the <code>DeepQAgent</code> class which implements both the DQN and Double DQN algorithms; the <code>experience_replay.py</code> script containing the <code>Experience</code> and <code>ExperienceReplayBuffer</code> classes; and the <code>training.py</code> script contains the functions that train an <code>agents.Agent</code> to solve some <code>gym.Env</code> environment.</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -332,6 +339,9 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+
+<span class="kn">import</span> <span class="nn">agents</span>  <span class="c1"># module containing the DeepQAgent class  </span>
+<span class="kn">import</span> <span class="nn">training</span>  <span class="c1"># module containing the training functions</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;LunarLander-v2&#39;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -341,44 +351,42 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ModuleNotFoundError</span>                       Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-3-1d5be9a5fd70&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> gym
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> agents  <span class="ansi-red-fg"># module containing the DeepQAgent class</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-green-fg">import</span> training  <span class="ansi-red-fg"># module containing the training loop</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span> 
+
+<span class="ansi-green-fg">~/Research/stochastic-expatriate-descent/_notebooks/agents.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span> <span class="ansi-green-fg">from</span> torch<span class="ansi-blue-fg">.</span>nn <span class="ansi-green-fg">import</span> functional <span class="ansi-green-fg">as</span> F
+<span class="ansi-green-intense-fg ansi-bold">      7</span> 
+<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> experience_replay
+<span class="ansi-green-intense-fg ansi-bold">      9</span> 
+<span class="ansi-green-intense-fg ansi-bold">     10</span> 
+
+<span class="ansi-red-fg">ModuleNotFoundError</span>: No module named &#39;experience_replay&#39;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Defining-a-generic-Agent-and-train-loop">Defining a generic <code>Agent</code> and <code>train</code> loop<a class="anchor-link" href="#Defining-a-generic-Agent-and-train-loop"> </a></h3><p>In the cell below I define a fairly generic training loop for training and <code>Agent</code> to solve a task in a given <code>gym.Env</code> environment. In working through the hands-on portions of the <a href="https://www.udacity.com/">Udacity</a> <a href="https://www.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893"><em>Deep Reinforcement Learning Nanodegree</em></a> I found myself writing similar code over and over again to train the agent to solve a task. This is my first attempt to write something that I might be able to reuse on the course going forward.</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">agents</span>
-<span class="kn">import</span> <span class="nn">training</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Creating-a-DoubleDeepQAgent">Creating a <code>DoubleDeepQAgent</code><a class="anchor-link" href="#Creating-a-DoubleDeepQAgent"> </a></h3><p>The code in the cell below encapsulates much of the logic of the DQN algorithm in a <code>DoubleDeepQAgent</code> class. Since the <code>LunarLander-v2</code> task is not well suited for convolutional neural networks, the agent uses a simple three layer dense neural network with ReLU activation functions to approximate the action-value function $Q$.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Epsilon-decay-schedule">Epsilon decay schedule<a class="anchor-link" href="#Epsilon-decay-schedule"> </a></h4><p>In the DQN algorithm the agent chooses its action using an $\epsilon$-greedy policy. When using an $\epsilon$-greedy policy, with probability $\epsilon$, the agent explores the state space by choosing an action uniformly at random from the set of feasible actions; with probability $1-\epsilon$, the agent exploits its current knowledge by choosing the optimal action given that current state.</p>
+<h3 id="Creating-a-DeepQAgent">Creating a <code>DeepQAgent</code><a class="anchor-link" href="#Creating-a-DeepQAgent"> </a></h3><h4 id="Epsilon-decay-schedule">Epsilon decay schedule<a class="anchor-link" href="#Epsilon-decay-schedule"> </a></h4><p>In the DQN algorithm the agent chooses its action using an $\epsilon$-greedy policy. When using an $\epsilon$-greedy policy, with probability $\epsilon$, the agent explores the state space by choosing an action uniformly at random from the set of feasible actions; with probability $1-\epsilon$, the agent exploits its current knowledge by choosing the optimal action given that current state.</p>
 <p>As the agent learns and acquires additional knowledge about it environment it makes sense to <em>decrease</em> exploration and <em>increase</em> exploitation by decreasing $\epsilon$. In practice, it isn't a good idea to decrease $\epsilon$ to zero; instead one typically decreases $\epsilon$ over time according to some schedule until it reaches some minimum value.</p>
 
 </div>
@@ -471,6 +479,7 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
     <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span>
     <span class="s2">&quot;update_frequency&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;double_dqn&quot;</span><span class="p">:</span> <span class="kc">True</span>
     <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">deep_q_agent</span> <span class="o">=</span> <span class="n">agents</span><span class="o">.</span><span class="n">DeepQAgent</span><span class="p">(</span><span class="o">**</span><span class="n">_agent_kwargs</span><span class="p">)</span>
@@ -704,8 +713,7 @@ Name: scores, dtype: float64</pre>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Where-to-go-from-here?">Where to go from here?<a class="anchor-link" href="#Where-to-go-from-here?"> </a></h2><p>I am a bit frustrated by lack of stability that I am seeing in my implmentation of the Deep Q algorithm: sometimes the algorithm converges and sometimes not. Perhaps more tuning of hyper-parameters or use of a different optimization algorithm would exhibit better convergence. I have already spent more time than I had allocated on playing around with this agorithm so I am not going to try and fine-tune the hyperparamters or explore alternative optimization algorithms for now.</p>
-<p>Rather than spending time tuning hyperparameters I think it would be better use of my time to explore algorithmic improvements. In future posts I plan to cover the following extensions of the DQN algorithm: <a href="https://arxiv.org/abs/1509.06461">Double Q-Learning</a>, <a href="https://arxiv.org/abs/1509.06461">Prioritized Experience Replay</a>, and <a href="https://arxiv.org/abs/1511.06581">Dueling Network Architectures</a></p>
+<h2 id="Where-to-go-from-here?">Where to go from here?<a class="anchor-link" href="#Where-to-go-from-here?"> </a></h2><p>In my next post I plan to cover <a href="https://arxiv.org/abs/1509.06461">Prioritized Experience Replay</a> which improves the sampling scheme used by the <code>ExperienceReplayBuffer</code> so as to replay important transitions more frequently which should lead to more efficient learning.</p>
 
 </div>
 </div>
