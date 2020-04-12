@@ -41,6 +41,7 @@ class DeepQAgent(Agent):
                  alpha: float,
                  gamma: float,
                  update_frequency: int,
+                 double_dqn: bool = False,
                  seed: int = None) -> None:
         """
         Initialize a DeepQAgent.
@@ -57,6 +58,7 @@ class DeepQAgent(Agent):
         alpha (float): rate at which the target q-network parameters are updated.
         gamma (float): Controls how much that agent discounts future rewards (0 < gamma <= 1).
         update_frequency (int): frequency (measured in time steps) with which q-network parameters are updated.
+        double_dqn (bool): whether to use vanilla DQN algorithm or use the Double DQN algorithm.
         seed (int): random seed
         
         """
@@ -133,7 +135,7 @@ class DeepQAgent(Agent):
                                   actions: torch.Tensor,
                                   rewards: torch.Tensor,
                                   dones: torch.Tensor,
-                                  q_network: nn.Module) -> : torch.Tensor:
+                                  q_network: nn.Module) -> torch.Tensor:
         """Action evaluation step of Q-learning."""
         next_q_values = q_network(states).gather(dim=1, index=actions)        
         q_values = rewards + (self._gamma * next_q_values * (1 - dones))
@@ -170,13 +172,21 @@ class DeepQAgent(Agent):
         rewards = rewards.unsqueeze(dim=1)
         dones = dones.unsqueeze(dim=1)
         
-        # get the target Q values using double q-learning update
-        target_q_values = self._double_q_learning_update(self._online_q_network,
-                                                         self._target_q_network,
-                                                         next_states,
-                                                         rewards,
-                                                         dones
-                                                        )
+        if self._double_dqn:
+            target_q_values = self._double_q_learning_update(self._online_q_network,
+                                                             self._target_q_network,
+                                                             next_states,
+                                                             rewards,
+                                                             dones
+                                                            )
+        else:
+            target_q_values = self._q_learning_update(self._online_q_network,
+                                                      self._target_q_network,
+                                                      next_states,
+                                                      rewards,
+                                                      dones
+                                                      )
+            
         # get expected Q values from online model
         online_q_values = (self._online_q_network(states)
                                .gather(dim=1, index=actions))
