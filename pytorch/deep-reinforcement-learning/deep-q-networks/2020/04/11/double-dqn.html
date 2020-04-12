@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Improving the DQN algorithm using Double Q-Learning | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Improving the DQN algorithm using Double Q-Learning" />
+<meta name="author" content="David R. Pugh" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Notes on improving the DQN algorithm using Double Q-learning." />
+<meta property="og:description" content="Notes on improving the DQN algorithm using Double Q-learning." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-11T00:00:00-05:00","headline":"Improving the DQN algorithm using Double Q-Learning","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg","description":"Notes on improving the DQN algorithm using Double Q-learning.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html","dateModified":"2020-04-11T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/stochastic-expatriate-descent/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" /><link rel="shortcut icon" type="image/x-icon" href="/stochastic-expatriate-descent/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Improving the DQN algorithm using Double Q-Learning | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Improving the DQN algorithm using Double Q-Learning" />
+<meta name="author" content="David R. Pugh" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Notes on improving the DQN algorithm using Double Q-learning." />
+<meta property="og:description" content="Notes on improving the DQN algorithm using Double Q-learning." />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-11T00:00:00-05:00","headline":"Improving the DQN algorithm using Double Q-Learning","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/q-network-architecture.jpg","description":"Notes on improving the DQN algorithm using Double Q-learning.","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html","dateModified":"2020-04-11T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/stochastic-expatriate-descent/">Stochastic Expatriate Descent</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/stochastic-expatriate-descent/about/">About Me</a><a class="page-link" href="/stochastic-expatriate-descent/search/">Search</a><a class="page-link" href="/stochastic-expatriate-descent/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Improving the DQN algorithm using Double Q-Learning</h1><p class="page-description">Notes on improving the DQN algorithm using Double Q-learning.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-04-11T00:00:00-05:00" itemprop="datePublished">
+        Apr 11, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">David R. Pugh</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      10 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#pytorch">pytorch</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#deep-reinforcement-learning">deep-reinforcement-learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#deep-q-networks">deep-q-networks</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/davidrpugh/stochastic-expatriate-descent/tree/2020-04-11-double-dqn/_notebooks/2020-04-11-double-dqn.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/davidrpugh/stochastic-expatriate-descent/2020-04-11-double-dqn?filepath=_notebooks%2F2020-04-11-double-dqn.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/davidrpugh/stochastic-expatriate-descent/blob/2020-04-11-double-dqn/_notebooks/2020-04-11-double-dqn.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-04-11-double-dqn.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I am continuing to work my way through the <a href="https://www.udacity.com/">Udacity</a> <a href="https://www.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893"><em>Deep Reinforcement Learning Nanodegree</em></a>. In this blog post I discuss and implement the Double DQN algorithm from <a href="https://arxiv.org/abs/1509.06461"><em>Deep Reinforcement Learning with Double Q-Learning</em></a> (Van Hasselt et al 2015). The Double DQN algorithm is a minor, but important, modification of the original DQN algorithm that I covered in a <a href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html">previous post</a>.</p>
+<p>Van Hasselt et al 2015 has several important contributions.</p>
+<ol>
+<li>Demonstration of how Q-learning can be overly optimistic in large-scale, even 
+deterministic, problems due to the inherent estimation errors of learning. </li>
+<li>Demonstration that over-estimations are more common and severe in practice than previously 
+acknowledged. </li>
+<li>Implementation of Double Q-learning called Double DQN that extends, with minor 
+modifications, the popular DQN algorithm and that can be used at scale to successfully 
+reduce over-estimations with the result being more stable and reliable learning.</li>
+<li>Demonstation that Double DQN finds better policies by obtaining new state-of-the-art 
+results on the Atari 2600 dataset.</li>
+</ol>
+<h2 id="Why-does-Q-learning-over-estimate-Q-values?">Why does Q-learning over-estimate Q-values?<a class="anchor-link" href="#Why-does-Q-learning-over-estimate-Q-values?"> </a></h2><p>No matter what type of function approximation scheme used to approximate the action-value function $Q$ there will always be approximation error. The presence of the max operator in the Bellman equation used to compute the $Q$-values means that the approximate $Q$-values will almost always be strictly greater than the corresponding $Q$ value from the true action-value function (i.e., the approximation errors will almost always be positive). This potentially significant source of bias can impede learning and is often exacerbated by the use of flexible, non-linear function approximators such as neural networks. Figure 2 (with caption) below, which is taken from Van Hasselt et al 2015, provides additional intuition.</p>
+<p><img src="/stochastic-expatriate-descent/images/copied_from_nb/my_icons/double-dqn-figure-2.png" alt="" /></p>
+<p><img src="/stochastic-expatriate-descent/images/copied_from_nb/my_icons/double-dqn-figure-3.png" alt="" /></p>
+<h2 id="Implementing-the-Double-DQN-algorithm">Implementing the Double DQN algorithm<a class="anchor-link" href="#Implementing-the-Double-DQN-algorithm"> </a></h2><p>The key idea behind Double Q-learning is to reduce over-estimations of Q-values by separating the selection of actions from the evaluation of those actions so that a different Q-network can be used in each step. When applying Double Q-learning to extend the DQN algorithm one can use the online Q-network, $Q(S, a; \theta)$, to select the actions and then the target Q-network, $Q(S, a; \theta^{-})$, to evaluate the selected actions.</p>
+<p>Before implement the Double DQN algorithm, I am going to re-implement the Q-learning update from the DQN algorithm in a way that explicitly separates action selection from action evaluation. Once I have implemented this new version of Q-learning, implementing the Double DQN algorithm will be much easier. Here are the maths...</p>
+<p>
+$$ Y_t^{DQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax}}\ Q(S_{t+1}, a; \theta_t); \theta_t\big) $$
+</p>
+<p>...and here is my Python implementation.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+
+<span class="k">def</span> <span class="nf">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">q_network</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Select the greedy action for the current state given some Q-network.&quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">actions</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">actions</span>
+
+
+<span class="k">def</span> <span class="nf">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                              <span class="n">actions</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                              <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                              <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                              <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                              <span class="n">q_network</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Compute the Q-values by evaluating the actions given the current states and Q-network.&quot;&quot;&quot;</span>
+    <span class="n">next_q_values</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>        
+    <span class="n">q_values</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span> <span class="o">*</span> <span class="n">next_q_values</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dones</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">q_values</span>
+
+
+<span class="k">def</span> <span class="nf">q_learning_update</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                      <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                      <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                      <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                      <span class="n">q_network</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Q-Learning update with explicitly decoupled action selection and evaluation steps.&quot;&quot;&quot;</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">q_network</span><span class="p">)</span>
+    <span class="n">q_values</span> <span class="o">=</span> <span class="n">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q_network</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">q_values</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now I am ready to implement the Double DQN algorithm. All I need is a second action-value function. The target network in the DQN architecture provides a natural candidate for the second action-value function without having to introduce additional networks; Hasselt et al 2015 suggest using the online Q-network to select the greedy policy actions before using the target Q-network to estimate the value of the selected actions. Once again here are the maths...</p>
+<p>
+$$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax}}\ Q(S_{t+1}, a; \theta_t), \theta_t^{-}\big) $$
+</p>
+<p>...and here is the the Python implementation. Note that the function <code>double_q_learning_update</code> is almost identical to the <code>q_learning_update</code> function above: all that is needed is to introduce a second Q-network parameter, <code>q_network_2</code>, to the function. This second Q-network will be use to evaluate the actions chosen using the original Q-network parameter, now called <code>q_network_1</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">double_q_learning_update</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                             <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                             <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                             <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                             <span class="n">q_network_1</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+                             <span class="n">q_network_2</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Double Q-Learning uses Q-network 1 to select actions and Q-network 2 to evaluate the selected actions.&quot;&quot;&quot;</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">q_network_1</span><span class="p">)</span>
+    <span class="n">q_values</span> <span class="o">=</span> <span class="n">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q_network_2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">q_values</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Solving-the-LunarLander-v2-environment">Solving the <code>LunarLander-v2</code> environment<a class="anchor-link" href="#Solving-the-LunarLander-v2-environment"> </a></h2><p>In the rest of this blog post I will use the DQN algorithm to train an agent to solve the <a href="https://gym.openai.com/envs/LunarLander-v2/">LunarLander-v2</a> environment from <a href="https://openai.com/">OpenAI</a>.</p>
+<p>In this environment the landing pad is always at coordinates (0,0). The reward for moving the lander from the top of the screen to landing pad and arriving at zero speed is typically between 100 and 140 points. Firing the main engine is -0.3 points each frame (so the lander is incentivized to fire the engine as few times possible). If the lander moves away from landing pad it loses reward (so the lander is incentived to land in the designated landing area). The lander is also incentived to land "gracefully" (and not crash in the landing area!).</p>
+<p>A training episode finishes if the lander crashes (-100 points) or comes to rest (+100 points). Each leg with ground contact receives and additional +10 points. The task is considered "solved" if the lander is able to achieve 200 points (I will actually be more stringent and define "solved" as achieving over 200 points on average in the most recent 100 training episodes).</p>
+<h3 id="Action-Space">Action Space<a class="anchor-link" href="#Action-Space"> </a></h3><p>There are four discrete actions available:</p>
+<ol>
+<li>Do nothing.</li>
+<li>Fire the left orientation engine.</li>
+<li>Fire main engine.</li>
+<li>Fire the right orientation engine.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Colab-specific-environment-setup">Colab specific environment setup<a class="anchor-link" href="#Colab-specific-environment-setup"> </a></h2><p>If you are playing around with this notebook on Google Colab, then you will need to run the following cell in order to install the required OpenAI dependencies into the environment.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install gym<span class="o">[</span>box2d<span class="o">]==</span><span class="m">0</span>.17.*
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;LunarLander-v2&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Defining-a-generic-Agent-and-train-loop">Defining a generic <code>Agent</code> and <code>train</code> loop<a class="anchor-link" href="#Defining-a-generic-Agent-and-train-loop"> </a></h3><p>In the cell below I define a fairly generic training loop for training and <code>Agent</code> to solve a task in a given <code>gym.Env</code> environment. In working through the hands-on portions of the <a href="https://www.udacity.com/">Udacity</a> <a href="https://www.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893"><em>Deep Reinforcement Learning Nanodegree</em></a> I found myself writing similar code over and over again to train the agent to solve a task. This is my first attempt to write something that I might be able to reuse on the course going forward.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">agents</span>
+<span class="kn">import</span> <span class="nn">training</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Creating-a-DoubleDeepQAgent">Creating a <code>DoubleDeepQAgent</code><a class="anchor-link" href="#Creating-a-DoubleDeepQAgent"> </a></h3><p>The code in the cell below encapsulates much of the logic of the DQN algorithm in a <code>DoubleDeepQAgent</code> class. Since the <code>LunarLander-v2</code> task is not well suited for convolutional neural networks, the agent uses a simple three layer dense neural network with ReLU activation functions to approximate the action-value function $Q$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Epsilon-decay-schedule">Epsilon decay schedule<a class="anchor-link" href="#Epsilon-decay-schedule"> </a></h4><p>In the DQN algorithm the agent chooses its action using an $\epsilon$-greedy policy. When using an $\epsilon$-greedy policy, with probability $\epsilon$, the agent explores the state space by choosing an action uniformly at random from the set of feasible actions; with probability $1-\epsilon$, the agent exploits its current knowledge by choosing the optimal action given that current state.</p>
+<p>As the agent learns and acquires additional knowledge about it environment it makes sense to <em>decrease</em> exploration and <em>increase</em> exploitation by decreasing $\epsilon$. In practice, it isn't a good idea to decrease $\epsilon$ to zero; instead one typically decreases $\epsilon$ over time according to some schedule until it reaches some minimum value.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">power_decay_schedule</span><span class="p">(</span><span class="n">episode_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                         <span class="n">decay_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                         <span class="n">minimum_epsilon</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Power decay schedule found in other practical applications.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">decay_factor</span><span class="o">**</span><span class="n">episode_number</span><span class="p">,</span> <span class="n">minimum_epsilon</span><span class="p">)</span>
+
+<span class="n">_epsilon_decay_schedule_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;decay_factor&quot;</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span>
+    <span class="s2">&quot;minimum_epsilon&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">epsilon_decay_schedule</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="n">power_decay_schedule</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">**</span><span class="n">_epsilon_decay_schedule_kwargs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Choosing-an-optimizer">Choosing an optimizer<a class="anchor-link" href="#Choosing-an-optimizer"> </a></h4><p>As is the case in training any neural network, the choice of optimizer and the tuning of its hyper-parameters (in particular the learning rate) is important. Here I am going to more or less follow the Minh et al 2015 paper and use the <a href="https://pytorch.org/docs/stable/optim.html#torch.optim.RMSprop">RMSProp</a> optimizer.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">optim</span>
+
+
+<span class="n">_optimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="mf">1e-08</span><span class="p">,</span>
+    <span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;momentum&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;centered&quot;</span><span class="p">:</span> <span class="kc">False</span>
+<span class="p">}</span>
+<span class="n">optimizer_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">optim</span><span class="o">.</span><span class="n">RMSprop</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">_optimizer_kwargs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>At this point I am ready to create an instance of the <code>DeepQAgent</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_agent_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;state_size&quot;</span><span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;action_size&quot;</span><span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> 
+    <span class="s2">&quot;number_hidden_units&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="s2">&quot;optimizer_fn&quot;</span><span class="p">:</span> <span class="n">optimizer_fn</span><span class="p">,</span>
+    <span class="s2">&quot;epsilon_decay_schedule&quot;</span><span class="p">:</span> <span class="n">epsilon_decay_schedule</span><span class="p">,</span>
+    <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="s2">&quot;buffer_size&quot;</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span>
+    <span class="s2">&quot;update_frequency&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">deep_q_agent</span> <span class="o">=</span> <span class="n">agents</span><span class="o">.</span><span class="n">DeepQAgent</span><span class="p">(</span><span class="o">**</span><span class="n">_agent_kwargs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Training-the-DeepQAgent">Training the <code>DeepQAgent</code><a class="anchor-link" href="#Training-the-DeepQAgent"> </a></h3><p>Now I am finally ready to train the <code>deep_q_agent</code>. The target score for the <code>LunarLander-v2</code> environment is 200 points on average for at least 100 consecutive episodes. If the <code>deep_q_agent</code> is able to "solve" the environment, then training will terminate early.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">deep_q_agent</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="s2">&quot;checkpoint.pth&quot;</span><span class="p">,</span> <span class="n">number_episodes</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">target_score</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Episode 100	Average Score: -125.01
+Episode 200	Average Score: -90.38
+Episode 300	Average Score: -57.09
+Episode 400	Average Score: 19.33
+Episode 500	Average Score: 104.55
+Episode 600	Average Score: 75.25
+Episode 700	Average Score: 69.66
+Episode 800	Average Score: 138.07
+Episode 900	Average Score: 143.24
+Episode 1000	Average Score: 179.81
+
+Environment solved in 1097 episodes!	Average Score: 200.07
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Analyzing-DeepQAgent-performance">Analyzing <code>DeepQAgent</code> performance<a class="anchor-link" href="#Analyzing-DeepQAgent-performance"> </a></h3><h4 id="Plotting-the-time-series-of-scores">Plotting the time series of scores<a class="anchor-link" href="#Plotting-the-time-series-of-scores"> </a></h4><p>I can use <a href="https://pandas.pydata.org/">Pandas</a> to quickly plot the time series of scores along with a 100 episode moving average. Note that training stops as soon as the rolling average crosses the target score.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;scores&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scores</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>count    2000.000000
+mean       48.832966
+std       196.504239
+min      -770.591032
+25%       -97.692346
+50%        30.859738
+75%       236.902026
+max       312.016872
+Name: scores, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Scores&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+           <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;Rolling Average&quot;</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Target Score&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Episode Number&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Score&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+" />
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Kernel-density-plot-of-the-scores">Kernel density plot of the scores<a class="anchor-link" href="#Kernel-density-plot-of-the-scores"> </a></h4><p>Kernel density plot of scores is bimodal with one mode less than -100 and a second mode greater than 200. The negative mode corresponds to those training episodes where the agent crash landed and thus scored at most -100; the positive mode corresponds to those training episodes where the agent "solved" the task. The kernel density or scores typically exhibits negative skewness (i.e., a fat left tail): there are lots of ways in which landing the lander can go horribly wrong (resulting in the agent getting a very low score) and only relatively few paths to a gentle landing (and a high score).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;kde&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Score&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+" />
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Where-to-go-from-here?">Where to go from here?<a class="anchor-link" href="#Where-to-go-from-here?"> </a></h2><p>I am a bit frustrated by lack of stability that I am seeing in my implmentation of the Deep Q algorithm: sometimes the algorithm converges and sometimes not. Perhaps more tuning of hyper-parameters or use of a different optimization algorithm would exhibit better convergence. I have already spent more time than I had allocated on playing around with this agorithm so I am not going to try and fine-tune the hyperparamters or explore alternative optimization algorithms for now.</p>
+<p>Rather than spending time tuning hyperparameters I think it would be better use of my time to explore algorithmic improvements. In future posts I plan to cover the following extensions of the DQN algorithm: <a href="https://arxiv.org/abs/1509.06461">Double Q-Learning</a>, <a href="https://arxiv.org/abs/1509.06461">Prioritized Experience Replay</a>, and <a href="https://arxiv.org/abs/1511.06581">Dueling Network Architectures</a></p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="davidrpugh/stochastic-expatriate-descent"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/11/double-dqn.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/stochastic-expatriate-descent/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/stochastic-expatriate-descent/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An expat scientist&#39;s musings about machine learning, deep learning, and living abroad.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/davidrpugh" title="davidrpugh"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/TheSandyCoder" title="TheSandyCoder"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
