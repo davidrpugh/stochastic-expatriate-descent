@@ -286,7 +286,7 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Solving-the-LunarLander-v2-environment">Solving the <code>LunarLander-v2</code> environment<a class="anchor-link" href="#Solving-the-LunarLander-v2-environment"> </a></h2><p>In the rest of this blog post I will use the DQN algorithm to train an agent to solve the <a href="https://gym.openai.com/envs/LunarLander-v2/">LunarLander-v2</a> environment from <a href="https://openai.com/">OpenAI</a>.</p>
+<h2 id="Solving-the-LunarLander-v2-environment">Solving the <code>LunarLander-v2</code> environment<a class="anchor-link" href="#Solving-the-LunarLander-v2-environment"> </a></h2><p>In the rest of this blog post I will use the Double DQN algorithm to train an agent to solve the <a href="https://gym.openai.com/envs/LunarLander-v2/">LunarLander-v2</a> environment from <a href="https://openai.com/">OpenAI</a> and the compare it to the the results obtained using the vanilla DQN algorithm.</p>
 <p>In this environment the landing pad is always at coordinates (0,0). The reward for moving the lander from the top of the screen to landing pad and arriving at zero speed is typically between 100 and 140 points. Firing the main engine is -0.3 points each frame (so the lander is incentivized to fire the engine as few times possible). If the lander moves away from landing pad it loses reward (so the lander is incentived to land in the designated landing area). The lander is also incentived to land "gracefully" (and not crash in the landing area!).</p>
 <p>A training episode finishes if the lander crashes (-100 points) or comes to rest (+100 points). Each leg with ground contact receives and additional +10 points. The task is considered "solved" if the lander is able to achieve 200 points (I will actually be more stringent and define "solved" as achieving over 200 points on average in the most recent 100 training episodes).</p>
 <h3 id="Action-Space">Action Space<a class="anchor-link" href="#Action-Space"> </a></h3><p>There are four discrete actions available:</p>
@@ -302,7 +302,7 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Colab-specific-environment-setup">Colab specific environment setup<a class="anchor-link" href="#Colab-specific-environment-setup"> </a></h2><p>If you are playing around with this notebook on Google Colab, then you will need to run the following cell in order to install the required OpenAI dependencies into the environment.</p>
+<h3 id="Colab-specific-environment-setup">Colab specific environment setup<a class="anchor-link" href="#Colab-specific-environment-setup"> </a></h3><p>If you are playing around with this notebook on Google Colab, then you will need to run the following cell in order to install the required OpenAI dependencies into the environment.</p>
 
 </div>
 </div>
@@ -386,7 +386,7 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Creating-a-DeepQAgent">Creating a <code>DeepQAgent</code><a class="anchor-link" href="#Creating-a-DeepQAgent"> </a></h3><h4 id="Epsilon-decay-schedule">Epsilon decay schedule<a class="anchor-link" href="#Epsilon-decay-schedule"> </a></h4><p>In the DQN algorithm the agent chooses its action using an $\epsilon$-greedy policy. When using an $\epsilon$-greedy policy, with probability $\epsilon$, the agent explores the state space by choosing an action uniformly at random from the set of feasible actions; with probability $1-\epsilon$, the agent exploits its current knowledge by choosing the optimal action given that current state.</p>
+<h3 id="Creating-a-DeepQAgent">Creating a <code>DeepQAgent</code><a class="anchor-link" href="#Creating-a-DeepQAgent"> </a></h3><h4 id="Epsilon-decay-schedule">Epsilon decay schedule<a class="anchor-link" href="#Epsilon-decay-schedule"> </a></h4><p>As was the case with the DQN algorithm, when using the Double DQN algorithm the agent chooses its action using an $\epsilon$-greedy policy. When using an $\epsilon$-greedy policy, with probability $\epsilon$, the agent explores the state space by choosing an action uniformly at random from the set of feasible actions; with probability $1-\epsilon$, the agent exploits its current knowledge by choosing the optimal action given that current state.</p>
 <p>As the agent learns and acquires additional knowledge about it environment it makes sense to <em>decrease</em> exploration and <em>increase</em> exploitation by decreasing $\epsilon$. In practice, it isn't a good idea to decrease $\epsilon$ to zero; instead one typically decreases $\epsilon$ over time according to some schedule until it reaches some minimum value.</p>
 
 </div>
@@ -421,7 +421,7 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Choosing-an-optimizer">Choosing an optimizer<a class="anchor-link" href="#Choosing-an-optimizer"> </a></h4><p>As is the case in training any neural network, the choice of optimizer and the tuning of its hyper-parameters (in particular the learning rate) is important. Here I am going to more or less follow the Minh et al 2015 paper and use the <a href="https://pytorch.org/docs/stable/optim.html#torch.optim.RMSprop">RMSProp</a> optimizer.</p>
+<h4 id="Choosing-an-optimizer">Choosing an optimizer<a class="anchor-link" href="#Choosing-an-optimizer"> </a></h4><p>As is the case in training any neural network, the choice of optimizer and the tuning of its hyper-parameters (in particular the learning rate) is important. Here I am going to use the <a href="https://pytorch.org/docs/stable/optim.html#torch.optim.Adam">Adam</a> optimizer.</p>
 
 </div>
 </div>
@@ -437,14 +437,13 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 
 
 <span class="n">_optimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span>
-    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="s2">&quot;betas&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">),</span>
     <span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="mf">1e-08</span><span class="p">,</span>
     <span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s2">&quot;momentum&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s2">&quot;centered&quot;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="s2">&quot;amsgrad&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">optimizer_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">optim</span><span class="o">.</span><span class="n">RMSprop</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">_optimizer_kwargs</span><span class="p">)</span>
+<span class="n">optimizer_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">_optimizer_kwargs</span><span class="p">)</span>
 </pre></div>
 
     </div>
