@@ -113,7 +113,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      21 min read
+      20 min read
     
 </span></p>
 
@@ -188,10 +188,10 @@ reduce overestimations with the result being more stable and reliable learning.<
 <li>Demonstation that Double DQN finds better policies by obtaining new state-of-the-art 
 results on the Atari 2600 dataset.</li>
 </ol>
-<h2 id="Why-does-Q-learning-overestimate-Q-values?">Why does Q-learning overestimate Q-values?<a class="anchor-link" href="#Why-does-Q-learning-overestimate-Q-values?"> </a></h2><p>No matter what type of function approximation scheme used to approximate the action-value function $Q$ there will always be approximation error. The presence of the max operator in the Bellman equation used to compute the $Q$-values means that the approximate $Q$-values will almost always be strictly greater than the corresponding $Q$ values from the true action-value function (i.e., the approximation errors will almost always be positive). This potentially significant source of bias can impede learning and is often exacerbated by the use of flexible, non-linear function approximators such as neural networks.</p>
+<h2 id="Q-learning-overestimates-Q-values">Q-learning overestimates Q-values<a class="anchor-link" href="#Q-learning-overestimates-Q-values"> </a></h2><p>No matter what type of function approximation scheme used to approximate the action-value function $Q$ there will always be approximation error. The presence of the max operator in the Bellman equation used to compute the $Q$-values means that the approximate $Q$-values will almost always be strictly greater than the corresponding $Q$ values from the true action-value function (i.e., the approximation errors will almost always be positive). This potentially significant source of bias can impede learning and is often exacerbated by the use of flexible, non-linear function approximators such as neural networks.</p>
 <p>Double Q-learning addresses these issues by explicitly separating action selection from action evaluation which allows each step to use a different function approximator resulting in a better overall approximation of the action-value function. Figure 2 (with caption) below, which is taken from Van Hasselt et al 2015, summarizes these ideas. See the <a href="https://arxiv.org/pdf/1509.06461.pdf">paper</a> for more details.</p>
 <p><img src="/stochastic-expatriate-descent/images/copied_from_nb/my_icons/double-dqn-figure-2.png" alt="" /></p>
-<h2 id="Implementing-the-Double-DQN-algorithm">Implementing the Double DQN algorithm<a class="anchor-link" href="#Implementing-the-Double-DQN-algorithm"> </a></h2><p>The key idea behind Double Q-learning is to reduce over-estimations of Q-values by separating the selection of actions from the evaluation of those actions so that a different Q-network can be used in each step. When applying Double Q-learning to extend the DQN algorithm one can use the online Q-network, $Q(S, a; \theta)$, to select the actions and then the target Q-network, $Q(S, a; \theta^{-})$, to evaluate the selected actions.</p>
+<h2 id="Implementing-the-Double-DQN-algorithm">Implementing the Double DQN algorithm<a class="anchor-link" href="#Implementing-the-Double-DQN-algorithm"> </a></h2><p>The key idea behind Double Q-learning is to reduce overestimations of Q-values by separating the selection of actions from the evaluation of those actions so that a different Q-network can be used in each step. When applying Double Q-learning to extend the DQN algorithm one can use the online Q-network, $Q(S, a; \theta)$, to select the actions and then the target Q-network, $Q(S, a; \theta^{-})$, to evaluate the selected actions.</p>
 <p>Before implement the Double DQN algorithm, I am going to re-implement the Q-learning update from the DQN algorithm in a way that explicitly separates action selection from action evaluation. Once I have implemented this new version of Q-learning, implementing the Double DQN algorithm will be much easier. Formally separating action selection from action evaluation involves re-writing the Q-learning Bellman equation as follows.</p>
 <p>
 $$ Y_t^{DQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax}}\ Q(S_{t+1}, a; \theta_t); \theta_t\big) $$
@@ -226,7 +226,7 @@ $$ Y_t^{DQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax}}\ Q(
                               <span class="n">q_network</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Compute the Q-values by evaluating the actions given the current states and Q-network.&quot;&quot;&quot;</span>
     <span class="n">next_q_values</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>        
-    <span class="n">q_values</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span> <span class="o">*</span> <span class="n">next_q_values</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dones</span><span class="p">))</span>
+    <span class="n">q_values</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">+</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">next_q_values</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dones</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">q_values</span>
 
 
@@ -294,7 +294,7 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Refactoring-the-DeepQAgent-class">Refactoring the <code>DeepQAgent</code> class<a class="anchor-link" href="#Refactoring-the-DeepQAgent-class"> </a></h3><p>Now that I have an implementation of the Double Q-learning algorithm I can refactor the <code>DeepQAgent</code> class from my <a href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html">previous post</a> to incorporate the functionality above.</p>
+<h3 id="Experience-Replay">Experience Replay<a class="anchor-link" href="#Experience-Replay"> </a></h3><p>Just like the DQN algorithm, the Double DQN algorithm uses an <code>ExperienceReplayBuffer</code> to stabilize the learning process.</p>
 
 </div>
 </div>
@@ -377,7 +377,7 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The functions defined above can be added to the <code>DeepQAgent</code> as static methods or simply included as module level functions, depending.</p>
+<h3 id="Refactoring-the-DeepQAgent-class">Refactoring the <code>DeepQAgent</code> class<a class="anchor-link" href="#Refactoring-the-DeepQAgent-class"> </a></h3><p>Now that I have an implementation of the Double Q-learning algorithm I can refactor the <code>DeepQAgent</code> class from my <a href="https://davidrpugh.github.io/stochastic-expatriate-descent/pytorch/deep-reinforcement-learning/deep-q-networks/2020/04/03/deep-q-networks.html">previous post</a> to incorporate the functionality above. The functions defined above can be added to the <code>DeepQAgent</code> as either static methods or simply included as module level functions, depending. I tend to prefer module level functions instead of static methods as module level function can be imported independently of class definitions which makes them a bit more re-usable.</p>
 
 </div>
 </div>
@@ -504,54 +504,6 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
             <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">number_hidden_units</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_size</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">q_network</span>
-    
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_select_greedy_action</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">q_network</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Greedy action selection step of Q-learning.&quot;&quot;&quot;</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">actions</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">actions</span>
-    
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_evaluate_selected_action</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                                  <span class="n">actions</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                                  <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                                  <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                                  <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                  <span class="n">q_network</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Action evaluation step of Q-learning.&quot;&quot;&quot;</span>
-        <span class="n">next_q_values</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>        
-        <span class="n">q_values</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">+</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">next_q_values</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dones</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">q_values</span>
-        
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_q_learning_update</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-                           <span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                           <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                           <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                           <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                           <span class="n">q_network</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Q-learning update rule.&quot;&quot;&quot;</span>
-        <span class="n">actions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_select_greedy_action</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">q_network</span><span class="p">)</span>
-        <span class="n">q_values</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_evaluate_selected_action</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q_network</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">q_values</span>
-    
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_double_q_learning_update</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-                                  <span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                                  <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                                  <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                                  <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                  <span class="n">q_network_1</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
-                                  <span class="n">q_network_2</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Double Q-learning update rule.&quot;&quot;&quot;</span>
-        <span class="n">actions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_select_greedy_action</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">q_network_1</span><span class="p">)</span>
-        <span class="n">q_values</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_evaluate_selected_action</span><span class="p">(</span><span class="n">states</span><span class="p">,</span>
-                                                 <span class="n">actions</span><span class="p">,</span>
-                                                 <span class="n">rewards</span><span class="p">,</span>
-                                                 <span class="n">dones</span><span class="p">,</span>
-                                                 <span class="n">gamma</span><span class="p">,</span>
-                                                 <span class="n">q_network_2</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">q_values</span>
                  
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_soft_update_q_network_parameters</span><span class="p">(</span><span class="n">q_network_1</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
@@ -623,20 +575,18 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
         <span class="n">dones</span> <span class="o">=</span> <span class="n">dones</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_double_dqn</span><span class="p">:</span>
-            <span class="n">target_q_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_double_q_learning_update</span><span class="p">(</span><span class="n">next_states</span><span class="p">,</span>
-                                                             <span class="n">rewards</span><span class="p">,</span>
-                                                             <span class="n">dones</span><span class="p">,</span>
-                                                             <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">,</span>
-                                                             <span class="bp">self</span><span class="o">.</span><span class="n">_online_q_network</span><span class="p">,</span>
-                                                             <span class="bp">self</span><span class="o">.</span><span class="n">_target_q_network</span>
-                                                            <span class="p">)</span>
+            <span class="n">target_q_values</span> <span class="o">=</span> <span class="n">double_q_learning_update</span><span class="p">(</span><span class="n">next_states</span><span class="p">,</span>
+                                                       <span class="n">rewards</span><span class="p">,</span>
+                                                       <span class="n">dones</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">_online_q_network</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">_target_q_network</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">target_q_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_learning_update</span><span class="p">(</span><span class="n">next_states</span><span class="p">,</span>
-                                                      <span class="n">rewards</span><span class="p">,</span>
-                                                      <span class="n">dones</span><span class="p">,</span>
-                                                      <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">,</span>
-                                                      <span class="bp">self</span><span class="o">.</span><span class="n">_target_q_network</span>
-                                                      <span class="p">)</span>
+            <span class="n">target_q_values</span> <span class="o">=</span> <span class="n">q_learning_update</span><span class="p">(</span><span class="n">next_states</span><span class="p">,</span>
+                                                <span class="n">rewards</span><span class="p">,</span>
+                                                <span class="n">dones</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_gamma</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_target_q_network</span><span class="p">)</span>
 
         <span class="n">online_q_values</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_online_q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
                                <span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">))</span>
@@ -862,13 +812,6 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Making-my-code-more-maintainable">Making my code more maintainable<a class="anchor-link" href="#Making-my-code-more-maintainable"> </a></h3><p>In order to make the code used in this and in my previous blog post more maintainable for future posts, I have moved the various class definitions and training functions in my previous post out of Jupyter notebooks and into scripts. The <code>agents.py</code> scripts contains the various agent classes, in particular the <code>DeepQAgent</code> class which implements both the DQN and Double DQN algorithms; the <code>experience_replay.py</code> script containing the <code>Experience</code> and <code>ExperienceReplayBuffer</code> classes; and the <code>training.py</code> script contains the functions that train an <code>agents.Agent</code> to solve some <code>gym.Env</code> environment.</p>
-
-</div>
-</div>
-</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -906,7 +849,8 @@ $$ Y_t^{DoubleDQN} = R_{t+1} + \gamma Q\big(S_{t+1}, \underset{a}{\mathrm{argmax
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Creating-a-DeepQAgent">Creating a <code>DeepQAgent</code><a class="anchor-link" href="#Creating-a-DeepQAgent"> </a></h3><h4 id="Epsilon-decay-schedule">Epsilon decay schedule<a class="anchor-link" href="#Epsilon-decay-schedule"> </a></h4><p>As was the case with the DQN algorithm, when using the Double DQN algorithm the agent chooses its action using an $\epsilon$-greedy policy. When using an $\epsilon$-greedy policy, with probability $\epsilon$, the agent explores the state space by choosing an action uniformly at random from the set of feasible actions; with probability $1-\epsilon$, the agent exploits its current knowledge by choosing the optimal action given that current state.</p>
+<h3 id="Creating-a-DeepQAgent">Creating a <code>DeepQAgent</code><a class="anchor-link" href="#Creating-a-DeepQAgent"> </a></h3><p>Before creating an instance of the <code>DeepQAgent</code> I need to define an $\epsilon$-decay schedule and choose an optimizer.</p>
+<h4 id="Epsilon-decay-schedule">Epsilon decay schedule<a class="anchor-link" href="#Epsilon-decay-schedule"> </a></h4><p>As was the case with the DQN algorithm, when using the Double DQN algorithm the agent chooses its action using an $\epsilon$-greedy policy. When using an $\epsilon$-greedy policy, with probability $\epsilon$, the agent explores the state space by choosing an action uniformly at random from the set of feasible actions; with probability $1-\epsilon$, the agent exploits its current knowledge by choosing the optimal action given that current state.</p>
 <p>As the agent learns and acquires additional knowledge about it environment it makes sense to <em>decrease</em> exploration and <em>increase</em> exploitation by decreasing $\epsilon$. In practice, it isn't a good idea to decrease $\epsilon$ to zero; instead one typically decreases $\epsilon$ over time according to some schedule until it reaches some minimum value.</p>
 
 </div>
@@ -1067,23 +1011,8 @@ Environment solved in 698 episodes!	Average Score: 200.20
     <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">dqn_agent</span> <span class="o">=</span> <span class="n">DeepQAgent</span><span class="p">(</span><span class="o">**</span><span class="n">_agent_kwargs</span><span class="p">)</span>
-</pre></div>
 
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dqn_scores</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">dqn_agent</span><span class="p">,</span>
+<span class="n">dqn_scores</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">dqn_agent</span><span class="p">,</span>
                    <span class="n">env</span><span class="p">,</span>
                    <span class="s2">&quot;dqn-checkpoint.pth&quot;</span><span class="p">,</span>
                    <span class="n">number_episodes</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
@@ -1100,16 +1029,13 @@ Environment solved in 698 episodes!	Average Score: 200.20
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Episode 100	Average Score: -180.70
-Episode 200	Average Score: -129.81
-Episode 300	Average Score: -82.39
-Episode 400	Average Score: -29.52
-Episode 500	Average Score: -19.16
-Episode 600	Average Score: 14.74
-Episode 700	Average Score: 129.72
-Episode 800	Average Score: 200.00
+<pre>Episode 100	Average Score: -154.20
+Episode 200	Average Score: -52.41
+Episode 300	Average Score: 42.07
+Episode 400	Average Score: 15.85
+Episode 500	Average Score: 149.99
 
-Environment solved in 801 episodes!	Average Score: 200.34
+Environment solved in 581 episodes!	Average Score: 201.22
 </pre>
 </div>
 </div>
@@ -1364,7 +1290,8 @@ Episode 2000	Average Score: 266.62
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Kernel-density-plot-of-the-scores">Kernel density plot of the scores<a class="anchor-link" href="#Kernel-density-plot-of-the-scores"> </a></h4><p>Kernel density plot of scores is bimodal with one mode less than -100 and a second mode greater than 200. The negative mode corresponds to those training episodes where the agent crash landed and thus scored at most -100; the positive mode corresponds to those training episodes where the agent "solved" the task. The kernel density or scores typically exhibits negative skewness (i.e., a fat left tail): there are lots of ways in which landing the lander can go horribly wrong (resulting in the agent getting a very low score) and only relatively few paths to a gentle landing (and a high score).</p>
+<h4 id="Kernel-density-plot-of-the-scores">Kernel density plot of the scores<a class="anchor-link" href="#Kernel-density-plot-of-the-scores"> </a></h4><p>In general, the kernel density plot will be bimodal with one mode less than -100 and a second mode greater than 200. The negative mode corresponds to those training episodes where the agent crash landed and thus scored at most -100; the positive mode corresponds to those training episodes where the agent "solved" the task. The kernel density or scores typically exhibits negative skewness (i.e., a fat left tail): there are lots of ways in which landing the lander can go horribly wrong (resulting in the agent getting a very low score) and only relatively few paths to a gentle landing (and a high score).</p>
+<p>Depending, you may see that the distribution of scores for Double DQN has a significantly higher positive mode and lower negative mode when compared to the distribution for DQN which indicates that the agent trained with Double DQN solved the task <em>more</em> frequently and crashed and burned <em>less</em> frequently than the agent trained with DQN.</p>
 
 </div>
 </div>
