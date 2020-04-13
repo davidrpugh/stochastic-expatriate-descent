@@ -84,6 +84,7 @@ class DeepQAgent(Agent):
         self._epsilon_decay_schedule = epsilon_decay_schedule
         self._alpha = alpha
         self._gamma = gamma
+        self._double_dqn = double_dqn
         
         # initialize Q-Networks
         self._update_frequency = update_frequency
@@ -173,18 +174,17 @@ class DeepQAgent(Agent):
         dones = dones.unsqueeze(dim=1)
         
         if self._double_dqn:
-            target_q_values = self._double_q_learning_update(self._online_q_network,
-                                                             self._target_q_network,
-                                                             next_states,
+            target_q_values = self._double_q_learning_update(next_states,
                                                              rewards,
-                                                             dones
+                                                             dones,
+                                                             self._online_q_network,
+                                                             self._target_q_network
                                                             )
         else:
-            target_q_values = self._q_learning_update(self._online_q_network,
-                                                      self._target_q_network,
-                                                      next_states,
+            target_q_values = self._q_learning_update(next_states,
                                                       rewards,
-                                                      dones
+                                                      dones,
+                                                      self._target_q_network
                                                       )
             
         # get expected Q values from online model
