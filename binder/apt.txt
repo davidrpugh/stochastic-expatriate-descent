@@ -1,3 +1,2 @@
-#!/bin/bash
-
-apt-get install -y xvfb x11-utils
+xvfb
+x11-utils
