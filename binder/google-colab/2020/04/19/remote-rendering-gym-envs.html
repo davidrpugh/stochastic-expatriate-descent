@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Rendering OpenAI Gym Envs on Binder and Google Colab | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Rendering OpenAI Gym Envs on Binder and Google Colab" />
+<meta name="author" content="David R. Pugh" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="???" />
+<meta property="og:description" content="???" />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-19T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-19T00:00:00-05:00","headline":"Rendering OpenAI Gym Envs on Binder and Google Colab","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/","description":"???","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html","dateModified":"2020-04-19T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/stochastic-expatriate-descent/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" /><link rel="shortcut icon" type="image/x-icon" href="/stochastic-expatriate-descent/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Rendering OpenAI Gym Envs on Binder and Google Colab | Stochastic Expatriate Descent</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Rendering OpenAI Gym Envs on Binder and Google Colab" />
+<meta name="author" content="David R. Pugh" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="???" />
+<meta property="og:description" content="???" />
+<link rel="canonical" href="https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html" />
+<meta property="og:url" content="https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html" />
+<meta property="og:site_name" content="Stochastic Expatriate Descent" />
+<meta property="og:image" content="https://davidrpugh.github.io/stochastic-expatriate-descent/images/" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-19T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"David R. Pugh"},"datePublished":"2020-04-19T00:00:00-05:00","headline":"Rendering OpenAI Gym Envs on Binder and Google Colab","image":"https://davidrpugh.github.io/stochastic-expatriate-descent/images/","description":"???","mainEntityOfPage":{"@type":"WebPage","@id":"https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html"},"@type":"BlogPosting","url":"https://davidrpugh.github.io/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html","dateModified":"2020-04-19T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://davidrpugh.github.io/stochastic-expatriate-descent/feed.xml" title="Stochastic Expatriate Descent" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/stochastic-expatriate-descent/">Stochastic Expatriate Descent</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/stochastic-expatriate-descent/about/">About Me</a><a class="page-link" href="/stochastic-expatriate-descent/search/">Search</a><a class="page-link" href="/stochastic-expatriate-descent/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Rendering OpenAI Gym Envs on Binder and Google Colab</h1><p class="page-description">???</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-04-19T00:00:00-05:00" itemprop="datePublished">
+        Apr 19, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">David R. Pugh</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#binder">binder</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/stochastic-expatriate-descent/categories/#google-colab">google-colab</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/davidrpugh/stochastic-expatriate-descent/tree/2020-04-16-remote-rendering-gym-envs/_notebooks/2020-4-16-2020-04-16-remote-rendering-gym-envs.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/davidrpugh/stochastic-expatriate-descent/2020-04-16-remote-rendering-gym-envs?filepath=_notebooks%2F2020-4-16-2020-04-16-remote-rendering-gym-envs.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/davidrpugh/stochastic-expatriate-descent/blob/2020-04-16-remote-rendering-gym-envs/_notebooks/2020-4-16-2020-04-16-remote-rendering-gym-envs.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/stochastic-expatriate-descent/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-4-16-2020-04-16-remote-rendering-gym-envs.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Google-Colab-Preamble">Google Colab Preamble<a class="anchor-link" href="#Google-Colab-Preamble"> </a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Install-X11-system-dependencies">Install X11 system dependencies<a class="anchor-link" href="#Install-X11-system-dependencies"> </a></h2><p>Install necessary <a href="https://en.wikipedia.org/wiki/X_Window_System">X11</a> dependencies, in particular <a href="https://www.x.org/releases/X11R7.7/doc/man/man1/Xvfb.1.xhtml">Xvfb</a>, which is an X server that can run on machines with no display hardware and no physical input devices.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>apt-get install -y xvfb x11-utils
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Install-additional-Python-dependencies">Install additional Python dependencies<a class="anchor-link" href="#Install-additional-Python-dependencies"> </a></h2><p>Now that you have installed Xvfb, you need to install a Python wrapper 
+<code>pyvirtualdisplay</code> in order to interact with Xvfb 
+virtual displays from within Python. Next you need to install the Python bindings for 
+<a href="https://www.opengl.org/">OpenGL</a>: <a href="http://pyopengl.sourceforge.net/">PyOpenGL</a> and 
+<a href="https://pypi.org/project/PyOpenGL-accelerate/">PyOpenGL-accelerate</a>. The former are the actual 
+Python bindings, the latter is and optional set of C (Cython) extensions providing acceleration of 
+common operations for slow points in PyOpenGL 3.x.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install <span class="nv">pyvirtualdisplay</span><span class="o">==</span><span class="m">0</span>.2.* <span class="nv">PyOpenGL</span><span class="o">==</span><span class="m">3</span>.1.* PyOpenGL-accelerate<span class="o">==</span><span class="m">3</span>.1.*
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Install-OpenAI-Gym">Install OpenAI Gym<a class="anchor-link" href="#Install-OpenAI-Gym"> </a></h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install gym<span class="o">[</span>box2d<span class="o">]==</span><span class="m">0</span>.17.* 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Create-a-virtual-display-in-the-background">Create a virtual display in the background<a class="anchor-link" href="#Create-a-virtual-display-in-the-background"> </a></h2><p>Next you need to create a virtual display in the background which the Gym Envs can connect to for rendering purposes. You can check that there is no display at present by confirming that the value of the <code>DISPLAY</code> environment variable has not yet been set.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span><span class="nb">echo</span> <span class="nv">$DISPLAY</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The code in the cell below creates a virtual display in the background that your Gym Envs can connect to for rendering. You can adjust the <code>size</code> of the virtual buffer as you like but you must set <code>visible=False</code> when working with Xvfb.</p>
+<p><strong>This code only needs to be run once per session to start the display.</strong></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pyvirtualdisplay</span>
+
+
+<span class="n">_display</span> <span class="o">=</span> <span class="n">pyvirtualdisplay</span><span class="o">.</span><span class="n">Display</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># use False with Xvfb</span>
+                                    <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1400</span><span class="p">,</span> <span class="mi">900</span><span class="p">))</span>
+<span class="n">_display</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After running the cell above you can echo out the value of the <code>DISPLAY</code> environment variable again to confirm that you now have a display running.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span><span class="nb">echo</span> <span class="nv">$DISPLAY</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Binder-Preamble">Binder Preamble<a class="anchor-link" href="#Binder-Preamble"> </a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="No-additional-installation-required!">No additional installation required!<a class="anchor-link" href="#No-additional-installation-required!"> </a></h2><p>Unlike Google Colab, with Binder you can bake all the required dependencies (including the X11 system dependencies!) into the Docker image on which the Binder instance is based using Binder config files. These config files can either live in the root directory of your Git repo or in a <code>binder</code> sub-directory as is this case here. If you are interested in learning more about Binder, then check out the documentation for <a href="https://binderhub.readthedocs.io/en/latest/">BinderHub</a> which is the underlying technology behind the Binder project.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># config file for system dependencies</span>
+<span class="o">!</span>cat ../binder/apt.txt
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>#!/bin/bash
+
+apt-get install -y xvfb x11-utils
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># config file describing the conda environment</span>
+<span class="o">!</span>cat ../binder/environment.yml
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>name: null
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - gym-box2d=0.17
+  - jupyterlab=2.0
+  - matplotlib=3.2
+  - pip=20.0
+  - python=3.7
+  - pyvirtualdisplay=0.2
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># config file containing python deps not avaiable via conda channels</span>
+<span class="o">!</span>cat ../binder/requirements.txt
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>PyOpenGL==3.1.*
+PyOpenGL-accelerate==3.1.*
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Create-a-virtual-display-in-the-background">Create a virtual display in the background<a class="anchor-link" href="#Create-a-virtual-display-in-the-background"> </a></h2><p>Next you need to create a virtual display in the background which the Gym Envs can connect to for rendering purposes. You can check that there is no display at present by confirming that the value of the <code>DISPLAY</code> environment variable has not yet been set.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span><span class="nb">echo</span> <span class="nv">$DISPLAY</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The code in the cell below creates a virtual display in the background that your Gym Envs can connect to for rendering. You can adjust the <code>size</code> of the virtual buffer as you like but you must set <code>visible=False</code> when working with Xvfb.</p>
+<p><strong>This code only needs to be run once per session to start the display.</strong></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pyvirtualdisplay</span>
+
+
+<span class="n">_display</span> <span class="o">=</span> <span class="n">pyvirtualdisplay</span><span class="o">.</span><span class="n">Display</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># use False with Xvfb</span>
+                                    <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1400</span><span class="p">,</span> <span class="mi">900</span><span class="p">))</span>
+<span class="n">_display</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After running the cell above you can echo out the value of the <code>DISPLAY</code> environment variable again to confirm that you now have a display running.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span><span class="nb">echo</span> <span class="nv">$DISPLAY</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>/private/tmp/com.apple.launchd.CPYx1vyZ97/org.macosforge.xquartz:0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Demo">Demo<a class="anchor-link" href="#Demo"> </a></h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">gym</span>
+
+
+<span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">))</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">))</span> 
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+        <span class="n">display</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">())</span>
+        <span class="n">display</span><span class="o">.</span><span class="n">clear_output</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>       
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">uniform_random_policy</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+                          <span class="n">number_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                          <span class="n">random_state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">random_state</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">number_actions</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">make_agent</span><span class="p">(</span><span class="n">number_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+               <span class="n">random_state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">_random_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span> <span class="k">if</span> <span class="n">random_state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">random_state</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="n">uniform_random_policy</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">number_actions</span><span class="p">,</span> <span class="n">_random_state</span><span class="p">)</span>
+    
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Agent</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">class</span> <span class="nc">UniformRandomAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_actions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_number_actions</span> <span class="o">=</span> <span class="n">number_actions</span>
+        
+    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">uniform_random_policy</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_state</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Choose an environment (note that not all of the Open AI Gym environments support rendering).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lunar_lander_v2</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;LunarLander-v2&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">lunar_lander_v2</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">random_agent</span> <span class="o">=</span> <span class="n">make_agent</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+<span class="n">simulate</span><span class="p">(</span><span class="n">random_agent</span><span class="p">,</span> <span class="n">lunar_lander_v2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="davidrpugh/stochastic-expatriate-descent"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/stochastic-expatriate-descent/binder/google-colab/2020/04/19/remote-rendering-gym-envs.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/stochastic-expatriate-descent/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/stochastic-expatriate-descent/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An expat scientist&#39;s musings about machine learning, deep learning, and living abroad.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/davidrpugh" title="davidrpugh"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/TheSandyCoder" title="TheSandyCoder"><svg class="svg-icon grey"><use xlink:href="/stochastic-expatriate-descent/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
