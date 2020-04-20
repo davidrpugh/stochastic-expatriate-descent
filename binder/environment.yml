@@ -1,0 +1,13 @@
+name: null
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - gym-box2d=0.17
+  - jupyterlab=2.0
+  - matplotlib=3.2
+  - pip=20.0
+  - python=3.7
+  - pyvirtualdisplay=0.2
