@@ -113,7 +113,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      23 min read
+      22 min read
     
 </span></p>
 
@@ -257,7 +257,7 @@ $$ Q^*(s, a) = \max_{\pi} \mathbb{E}\Bigg[\sum_{s=0}^{\infty} \gamma^s r_{t+s} |
     
     <span class="k">def</span> <span class="nf">deep_q_network_fn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">QNetwork</span><span class="p">:</span>
         <span class="n">q_network</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
@@ -451,7 +451,17 @@ $$ D_t = \{e1, e2, ..., e_t \} $$
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Solving-the-LunarLander-v2-environment">Solving the <code>LunarLander-v2</code> environment<a class="anchor-link" href="#Solving-the-LunarLander-v2-environment"> </a></h2>
+<h2 id="Solving-the-LunarLander-v2-environment">Solving the <code>LunarLander-v2</code> environment<a class="anchor-link" href="#Solving-the-LunarLander-v2-environment"> </a></h2><p>In the rest of this blog post I will use the DQN algorithm to train an agent to solve the <a href="https://gym.openai.com/envs/LunarLander-v2/">LunarLander-v2</a> environment from <a href="https://openai.com/">OpenAI</a>.</p>
+<p>In this environment the landing pad is always at coordinates (0,0). The reward for moving the lander from the top of the screen to landing pad and arriving at zero speed is typically between 100 and 140 points. Firing the main engine is -0.3 points each frame (so the lander is incentivized to fire the engine as few times possible). If the lander moves away from landing pad it loses reward (so the lander is incentived to land in the designated landing area). The lander is also incentived to land "gracefully" (and not crash in the landing area!).</p>
+<p>A training episode finishes if the lander crashes (-100 points) or comes to rest (+100 points). Each leg with ground contact receives and additional +10 points. The task is considered "solved" if the lander is able to achieve 200 points (I will actually be more stringent and define "solved" as achieving over 200 points on average in the most recent 100 training episodes).</p>
+<h3 id="Action-Space">Action Space<a class="anchor-link" href="#Action-Space"> </a></h3><p>There are four discrete actions available:</p>
+<ol>
+<li>Do nothing.</li>
+<li>Fire the left orientation engine.</li>
+<li>Fire main engine.</li>
+<li>Fire the right orientation engine.</li>
+</ol>
+
 </div>
 </div>
 </div>
@@ -547,17 +557,7 @@ pip install gym<span class="o">[</span>box2d<span class="o">]==</span><span clas
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Creating-the-Gym-environment">Creating the Gym environment<a class="anchor-link" href="#Creating-the-Gym-environment"> </a></h3><p>In the rest of this blog post I will use the DQN algorithm to train an agent to solve the <a href="https://gym.openai.com/envs/LunarLander-v2/">LunarLander-v2</a> environment from <a href="https://openai.com/">OpenAI</a>.</p>
-<p>In this environment the landing pad is always at coordinates (0,0). The reward for moving the lander from the top of the screen to landing pad and arriving at zero speed is typically between 100 and 140 points. Firing the main engine is -0.3 points each frame (so the lander is incentivized to fire the engine as few times possible). If the lander moves away from landing pad it loses reward (so the lander is incentived to land in the designated landing area). The lander is also incentived to land "gracefully" (and not crash in the landing area!).</p>
-<p>A training episode finishes if the lander crashes (-100 points) or comes to rest (+100 points). Each leg with ground contact receives and additional +10 points. The task is considered "solved" if the lander is able to achieve 200 points (I will actually be more stringent and define "solved" as achieving over 200 points on average in the most recent 100 training episodes).</p>
-<h4 id="Action-Space">Action Space<a class="anchor-link" href="#Action-Space"> </a></h4><p>There are four discrete actions available:</p>
-<ol>
-<li>Do nothing.</li>
-<li>Fire the left orientation engine.</li>
-<li>Fire main engine.</li>
-<li>Fire the right orientation engine.</li>
-</ol>
-
+<h3 id="Creating-the-Gym-environment">Creating the Gym environment<a class="anchor-link" href="#Creating-the-Gym-environment"> </a></h3>
 </div>
 </div>
 </div>
@@ -575,56 +575,6 @@ pip install gym<span class="o">[</span>box2d<span class="o">]==</span><span clas
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-3-9d3fa797859f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> gym
-<span class="ansi-green-intense-fg ansi-bold">      2</span> 
-<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span>env <span class="ansi-blue-fg">=</span> gym<span class="ansi-blue-fg">.</span>make<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;LunarLander-v2&#39;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      4</span> _ <span class="ansi-blue-fg">=</span> env<span class="ansi-blue-fg">.</span>seed<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">42</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">~/Research/stochastic-expatriate-descent/env/lib/python3.7/site-packages/gym/envs/registration.py</span> in <span class="ansi-cyan-fg">make</span><span class="ansi-blue-fg">(id, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    140</span> 
-<span class="ansi-green-intense-fg ansi-bold">    141</span> <span class="ansi-green-fg">def</span> make<span class="ansi-blue-fg">(</span>id<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 142</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">return</span> registry<span class="ansi-blue-fg">.</span>make<span class="ansi-blue-fg">(</span>id<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    143</span> 
-<span class="ansi-green-intense-fg ansi-bold">    144</span> <span class="ansi-green-fg">def</span> spec<span class="ansi-blue-fg">(</span>id<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-green-fg">~/Research/stochastic-expatriate-descent/env/lib/python3.7/site-packages/gym/envs/registration.py</span> in <span class="ansi-cyan-fg">make</span><span class="ansi-blue-fg">(self, path, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">     85</span>             logger<span class="ansi-blue-fg">.</span>info<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;Making new env: %s&#39;</span><span class="ansi-blue-fg">,</span> path<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     86</span>         spec <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>spec<span class="ansi-blue-fg">(</span>path<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 87</span><span class="ansi-red-fg">         </span>env <span class="ansi-blue-fg">=</span> spec<span class="ansi-blue-fg">.</span>make<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     88</span>         <span class="ansi-red-fg"># We used to have people override _reset/_step rather than</span>
-<span class="ansi-green-intense-fg ansi-bold">     89</span>         <span class="ansi-red-fg"># reset/step. Set _gym_disable_underscore_compat = True on</span>
-
-<span class="ansi-green-fg">~/Research/stochastic-expatriate-descent/env/lib/python3.7/site-packages/gym/envs/registration.py</span> in <span class="ansi-cyan-fg">make</span><span class="ansi-blue-fg">(self, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">     56</span>             env <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>entry_point<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">**</span>_kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     57</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">---&gt; 58</span><span class="ansi-red-fg">             </span>cls <span class="ansi-blue-fg">=</span> load<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>entry_point<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     59</span>             env <span class="ansi-blue-fg">=</span> cls<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">**</span>_kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     60</span> 
-
-<span class="ansi-green-fg">~/Research/stochastic-expatriate-descent/env/lib/python3.7/site-packages/gym/envs/registration.py</span> in <span class="ansi-cyan-fg">load</span><span class="ansi-blue-fg">(name)</span>
-<span class="ansi-green-intense-fg ansi-bold">     16</span>     mod_name<span class="ansi-blue-fg">,</span> attr_name <span class="ansi-blue-fg">=</span> name<span class="ansi-blue-fg">.</span>split<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;:&#34;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     17</span>     mod <span class="ansi-blue-fg">=</span> importlib<span class="ansi-blue-fg">.</span>import_module<span class="ansi-blue-fg">(</span>mod_name<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 18</span><span class="ansi-red-fg">     </span>fn <span class="ansi-blue-fg">=</span> getattr<span class="ansi-blue-fg">(</span>mod<span class="ansi-blue-fg">,</span> attr_name<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     19</span>     <span class="ansi-green-fg">return</span> fn
-<span class="ansi-green-intense-fg ansi-bold">     20</span> 
-
-<span class="ansi-red-fg">AttributeError</span>: module &#39;gym.envs.box2d&#39; has no attribute &#39;LunarLander&#39;</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -1256,7 +1206,7 @@ Environment solved in 1388 episodes!	Average Score: 201.22
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Analyzing-DeepQAgent-performance">Analyzing <code>DeepQAgent</code> performance<a class="anchor-link" href="#Analyzing-DeepQAgent-performance"> </a></h3><p>Now that I have trained the agent, let's rerun the simulation to see the difference in performance.</p>
+<h3 id="Analyzing-DeepQAgent-performance">Analyzing <code>DeepQAgent</code> performance<a class="anchor-link" href="#Analyzing-DeepQAgent-performance"> </a></h3><p>Now that I have trained the agent, let's re-run the simulation to see the difference in performance. You should see that the agent is able to pilot the lunar lander to successful landing inside the landing area (or nearby).</p>
 
 </div>
 </div>
