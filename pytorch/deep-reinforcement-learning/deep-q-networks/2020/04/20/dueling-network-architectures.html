@@ -249,36 +249,43 @@ $$ y_i^{DQN} = r + \gamma \underset{a'}{max}\ Q(s', a'; \theta^{-}) $$
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
 
+
+<span class="n">States</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+<span class="n">Actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+<span class="n">Rewards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+<span class="n">Dones</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
 <span class="n">QNetwork</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span>
-
-<span class="k">def</span> <span class="nf">synchronize_q_networks</span><span class="p">(</span><span class="n">q_network_1</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">,</span> <span class="n">q_network_2</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;In place, synchronization of q_network_1 and q_network_2.&quot;&quot;&quot;</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">q_network_1</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">q_network_2</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+<span class="n">QValues</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
 
 
-<span class="k">def</span> <span class="nf">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">synchronize_q_networks</span><span class="p">(</span><span class="n">q1</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">,</span> <span class="n">q2</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;In place, synchronization of q1 and q2.&quot;&quot;&quot;</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">q1</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">q2</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Actions</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Select the greedy action for the current state given some Q-network.&quot;&quot;&quot;</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">actions</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">actions</span>
 
 
-<span class="k">def</span> <span class="nf">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                              <span class="n">actions</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                              <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                              <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">States</span><span class="p">,</span>
+                              <span class="n">actions</span><span class="p">:</span> <span class="n">Actions</span><span class="p">,</span>
+                              <span class="n">rewards</span><span class="p">:</span> <span class="n">Rewards</span><span class="p">,</span>
+                              <span class="n">dones</span><span class="p">:</span> <span class="n">Dones</span><span class="p">,</span>
                               <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                              <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+                              <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QValues</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Compute the Q-values by evaluating the actions given the current states and Q-network.&quot;&quot;&quot;</span>
     <span class="n">next_q_values</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>        
     <span class="n">q_values</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">+</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">next_q_values</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dones</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">q_values</span>
 
 
-<span class="k">def</span> <span class="nf">q_learning_update</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                      <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                      <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">q_learning_update</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">States</span><span class="p">,</span>
+                      <span class="n">rewards</span><span class="p">:</span> <span class="n">Rewards</span><span class="p">,</span>
+                      <span class="n">dones</span><span class="p">:</span> <span class="n">Dones</span><span class="p">,</span>
                       <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                      <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+                      <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QValues</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Q-Learning uses a q-network to select and evaluate actions.&quot;&quot;&quot;</span>
     <span class="n">actions</span> <span class="o">=</span> <span class="n">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">q_network</span><span class="p">)</span>
     <span class="n">q_values</span> <span class="o">=</span> <span class="n">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q_network</span><span class="p">)</span>
@@ -317,15 +324,15 @@ $$ y_i^{DDQN} = r + \gamma Q\big(s', \underset{a'}{\mathrm{argmax}}Q(s', a'; \th
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">double_q_learning_update</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                             <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                             <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">double_q_learning_update</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">States</span><span class="p">,</span>
+                             <span class="n">rewards</span><span class="p">:</span> <span class="n">Rewards</span><span class="p">,</span>
+                             <span class="n">dones</span><span class="p">:</span> <span class="n">Dones</span><span class="p">,</span>
                              <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                             <span class="n">q_network_1</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">,</span>
-                             <span class="n">q_network_2</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Double Q-Learning uses Q-network 1 to select actions and Q-network 2 to evaluate the selected actions.&quot;&quot;&quot;</span>
-    <span class="n">actions</span> <span class="o">=</span> <span class="n">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">q_network_1</span><span class="p">)</span>
-    <span class="n">q_values</span> <span class="o">=</span> <span class="n">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q_network_2</span><span class="p">)</span>
+                             <span class="n">q1</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">,</span>
+                             <span class="n">q2</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Double Q-Learning uses q1 to select actions and q2 to evaluate the selected actions.&quot;&quot;&quot;</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">select_greedy_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">q1</span><span class="p">)</span>
+    <span class="n">q_values</span> <span class="o">=</span> <span class="n">evaluate_selected_actions</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">q_values</span>
 </pre></div>
 
@@ -358,13 +365,16 @@ ideas from Schaul et al (2016).</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">q_learning_error</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                     <span class="n">actions</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                     <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                     <span class="n">next_states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                     <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">TDErrors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+
+
+<span class="k">def</span> <span class="nf">q_learning_error</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">States</span><span class="p">,</span>
+                     <span class="n">actions</span><span class="p">:</span> <span class="n">Actions</span><span class="p">,</span>
+                     <span class="n">rewards</span><span class="p">:</span> <span class="n">Rewards</span><span class="p">,</span>
+                     <span class="n">next_states</span><span class="p">:</span> <span class="n">States</span><span class="p">,</span>
+                     <span class="n">dones</span><span class="p">:</span> <span class="n">Dones</span><span class="p">,</span>
                      <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                     <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+                     <span class="n">q_network</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TDErrors</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Q-learning temporal-difference (TD) error.&quot;&quot;&quot;</span>
     <span class="n">expected_q_values</span> <span class="o">=</span> <span class="n">q_learning_update</span><span class="p">(</span><span class="n">next_states</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q_network</span><span class="p">)</span>
     <span class="n">q_values</span> <span class="o">=</span> <span class="n">q_network</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>
@@ -372,17 +382,17 @@ ideas from Schaul et al (2016).</p>
     <span class="k">return</span> <span class="n">delta</span>
 
 
-<span class="k">def</span> <span class="nf">double_q_learning_error</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                            <span class="n">actions</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                            <span class="n">rewards</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                            <span class="n">next_states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                            <span class="n">dones</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">double_q_learning_error</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">States</span><span class="p">,</span>
+                            <span class="n">actions</span><span class="p">:</span> <span class="n">Actions</span><span class="p">,</span>
+                            <span class="n">rewards</span><span class="p">:</span> <span class="n">Rewards</span><span class="p">,</span>
+                            <span class="n">next_states</span><span class="p">:</span> <span class="n">States</span><span class="p">,</span>
+                            <span class="n">dones</span><span class="p">:</span> <span class="n">Dones</span><span class="p">,</span>
                             <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                            <span class="n">q_network_1</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">,</span>
-                            <span class="n">q_network_2</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+                            <span class="n">q1</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">,</span>
+                            <span class="n">q2</span><span class="p">:</span> <span class="n">QNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Double Q-learning temporal-difference (TD) error.&quot;&quot;&quot;</span>
-    <span class="n">expected_q_values</span> <span class="o">=</span> <span class="n">double_q_learning_update</span><span class="p">(</span><span class="n">next_states</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q_network_1</span><span class="p">,</span> <span class="n">q_network_2</span><span class="p">)</span>
-    <span class="n">q_values</span> <span class="o">=</span> <span class="n">q_network_1</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>
+    <span class="n">expected_q_values</span> <span class="o">=</span> <span class="n">double_q_learning_update</span><span class="p">(</span><span class="n">next_states</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">)</span>
+    <span class="n">q_values</span> <span class="o">=</span> <span class="n">q1</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>
     <span class="n">delta</span> <span class="o">=</span> <span class="n">expected_q_values</span> <span class="o">-</span> <span class="n">q_values</span>
     <span class="k">return</span> <span class="n">delta</span>
 </pre></div>
@@ -405,6 +415,10 @@ ideas from Schaul et al (2016).</p>
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="n">Experiences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="n">SamplingWeights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span>
 
 
 <span class="n">_field_names</span> <span class="o">=</span> <span class="p">[</span>
@@ -457,19 +471,6 @@ ideas from Schaul et al (2016).</p>
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Current number of prioritized experience tuple stored in buffer.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_length</span>
-    
-    <span class="k">def</span> <span class="nf">_unpack</span><span class="p">(</span><span class="n">experiences</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-        <span class="n">_states</span><span class="p">,</span> <span class="n">_actions</span><span class="p">,</span> <span class="n">_rewards</span><span class="p">,</span> <span class="n">_next_states</span><span class="p">,</span> <span class="n">_dones</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">experiences</span><span class="p">))</span>  
-        <span class="n">states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">_states</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">actions</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">_actions</span><span class="p">)</span>
-                        <span class="o">.</span><span class="n">long</span><span class="p">()</span>
-                        <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">rewards</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">_rewards</span><span class="p">)</span>
-                        <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">next_states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">_next_states</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">dones</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">_rewards</span><span class="p">)</span>
-                        <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">next_states</span><span class="p">,</span> <span class="n">dones</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -507,7 +508,7 @@ ideas from Schaul et al (2016).</p>
         <span class="sd">&quot;&quot;&quot;True if the buffer is full; False otherwise.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span>
     
-    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episode_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episode_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">Experiences</span><span class="p">,</span> <span class="n">SamplingWeights</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Sample a batch of experiences from memory.&quot;&quot;&quot;</span>
         <span class="c1"># use sampling scheme to determine which experiences to use for learning</span>
         <span class="n">ps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_length</span><span class="p">][</span><span class="s2">&quot;priority&quot;</span><span class="p">]</span>
@@ -909,7 +910,7 @@ bias correction (i.e., the importance sampling weights) to increase as training 
                                 <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">))</span>
                 <span class="n">next_states</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">_next_states</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
                                     <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">))</span>
-                <span class="n">dones</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">_rewards</span><span class="p">)</span>
+                <span class="n">dones</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">_dones</span><span class="p">)</span>
                                <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                                <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">))</span>
                 
