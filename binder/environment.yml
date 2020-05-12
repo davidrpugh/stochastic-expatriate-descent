@@ -1,11 +1,13 @@
 name: null
 
 channels:
+  - pytorch
   - conda-forge
   - defaults
 
 dependencies:
-  - gym-box2d=0.17
+  - cudatoolkit=10.1
+  - gym-classic_control=0.17
   - jupyterlab=2.0
   - matplotlib=3.2
   - pip=20.0
@@ -13,3 +15,5 @@ dependencies:
     - -r file:requirements.txt
   - python=3.7
   - pyvirtualdisplay=0.2
+  - pytorch=1.5
+  - scipy=1.4
