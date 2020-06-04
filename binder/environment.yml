@@ -1,0 +1,19 @@
+name: null
+
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  - gym-classic_control=0.17
+  - joblib=0.15
+  - jupyterlab=2.0
+  - matplotlib=3.2
+  - pip=20.0
+  - pip:
+    - -r file:requirements.txt
+  - python=3.7
+  - pyvirtualdisplay=0.2
+  - pytorch=1.5
+  - scipy=1.4
