@@ -6,8 +6,8 @@ channels:
   - defaults
 
 dependencies:
-  - cudatoolkit=10.1
   - gym-classic_control=0.17
+  - joblib=0.15
   - jupyterlab=2.0
   - matplotlib=3.2
   - pip=20.0
